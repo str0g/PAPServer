@@ -1,0 +1,11 @@
+Repository:
+Files, folder names, and source files are in English.
+Documentation:
+All documentation is in Polish.
+Bin:
+Binaries were compiled on:
+Ubuntu 9.10 x64 with CodeBlocks IDE for Intel Core 2 duo Architecture.
+Doc:
+Contains documentation done with doxygen, project requirements and brief for design done with LateX.
+License:
+GNU/GPL General Public License.
