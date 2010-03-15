@@ -1,0 +1,11 @@
+[Version 0.0.107]
+Daemon
+Redirecting streams
+TCP Server with simple client handler
+Logging and debug capabilities update
+AutoVersion
+Documentation update
+[Version 0.0.1]
+myLibrary4Server
+Config file in xml
+
