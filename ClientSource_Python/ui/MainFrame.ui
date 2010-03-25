@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Łukasz Buśko</author>
+ <class>TabWidget_MainFrame</class>
+ <widget class="QTabWidget" name="TabWidget_MainFrame">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>667</width>
+    <height>424</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>myClient</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>img/tux_linux_inside_48.png</normaloff>img/tux_linux_inside_48.png</iconset>
+  </property>
+  <property name="toolTip">
+   <string extracomment="Shared files"/>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <property name="movable">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="tab_MainFrame">
+   <property name="toolTip">
+    <string extracomment="Main Window"/>
+   </property>
+   <attribute name="title">
+    <string>Strona główna</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="pushButton_ConnDiscon">
+      <property name="toolTip">
+       <string>Połącz/rozłacz</string>
+      </property>
+      <property name="text">
+       <string>Połącz</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="pushButton_DNSelected">
+      <property name="text">
+       <string>Pobierz</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2" rowspan="2">
+     <widget class="QPushButton" name="pushButton_UnMark">
+      <property name="text">
+       <string>Odznacz</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="pushButton_Quit">
+      <property name="toolTip">
+       <string>Wyjście</string>
+      </property>
+      <property name="text">
+       <string>Wyjście</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton_AdminPanel">
+      <property name="text">
+       <string>Panel administracyjny</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QPushButton" name="pushButton_Author">
+      <property name="text">
+       <string>Autor</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="5">
+     <widget class="QDockWidget" name="dockWidget_SharedByServer">
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="floating">
+       <bool>true</bool>
+      </property>
+      <property name="windowTitle">
+       <string>Lista Plików udostępnianych przez Serwer</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents_2">
+       <widget class="QTableWidget" name="tableWidget_SharedByServer">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>661</width>
+          <height>151</height>
+         </rect>
+        </property>
+        <property name="showDropIndicator" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="columnCount">
+         <number>7</number>
+        </property>
+        <column>
+         <property name="text">
+          <string>Pełna ścieżka</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Nazwa Pliku</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Rozmiar</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Data</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>MD5</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Pobierane</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string/>
+         </property>
+        </column>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="5">
+     <widget class="QDockWidget" name="dockWidget">
+      <property name="floating">
+       <bool>true</bool>
+      </property>
+      <property name="windowTitle">
+       <string>Konsola działań klient serwer</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents_4">
+       <widget class="QScrollArea" name="scrollArea_Console">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>661</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>657</width>
+           <height>97</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tab_Shared">
+   <property name="toolTip">
+    <string extracomment="Shared files"/>
+   </property>
+   <attribute name="title">
+    <string>Udostępniane</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0" colspan="4">
+     <widget class="QDockWidget" name="dockWidget_2">
+      <property name="windowTitle">
+       <string>Udostępniane Pliki</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents_6">
+       <widget class="QTableWidget" name="tableWidget_SharedFileByMySelf">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>661</width>
+          <height>241</height>
+         </rect>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DropOnly</enum>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="columnCount">
+         <number>7</number>
+        </property>
+        <column>
+         <property name="text">
+          <string>Pełna ścieżka</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Nazwa Pliku</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Rozmiar</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Data</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>MD5</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Pobierane</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ilosc klientów</string>
+         </property>
+        </column>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton_ADD">
+      <property name="toolTip">
+       <string>Dodaj pliki do listy udostępnionych</string>
+      </property>
+      <property name="text">
+       <string>Dodaj</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="pushButton_Del">
+      <property name="toolTip">
+       <string>Usuń pliki z listy udostępnionych</string>
+      </property>
+      <property name="text">
+       <string>Usun</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="pushButton_DELALL">
+      <property name="toolTip">
+       <string>Wyczyść listę</string>
+      </property>
+      <property name="text">
+       <string>Wyczyść listę</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QProgressBar" name="progressBar_2">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tab_Options">
+   <property name="toolTip">
+    <string extracomment="Options"/>
+   </property>
+   <attribute name="title">
+    <string>Opcje</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QDockWidget" name="dockWidget_Connect">
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="floating">
+       <bool>false</bool>
+      </property>
+      <property name="features">
+       <set>QDockWidget::AllDockWidgetFeatures</set>
+      </property>
+      <property name="allowedAreas">
+       <set>Qt::AllDockWidgetAreas</set>
+      </property>
+      <property name="windowTitle">
+       <string>Adres Serwera</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents_5">
+       <widget class="QLineEdit" name="lineEdit_IP">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>191</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Wprowadź login</string>
+        </property>
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+        <property name="maxLength">
+         <number>16</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_Port">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>30</y>
+          <width>191</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="inputMask">
+         <string/>
+        </property>
+        <property name="text">
+         <string>6666</string>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1" rowspan="2">
+     <widget class="QDockWidget" name="dockWidget_3">
+      <property name="floating">
+       <bool>false</bool>
+      </property>
+      <property name="windowTitle">
+       <string>Opcje</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents_8">
+       <widget class="QCheckBox" name="checkBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>92</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Jakisc chBoxx</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QDockWidget" name="dockWidget_ServAuth">
+      <property name="floating">
+       <bool>false</bool>
+      </property>
+      <property name="windowTitle">
+       <string>Autoryzacja</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents">
+       <widget class="QLineEdit" name="lineEdit_Login">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>191</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Wprowadź login</string>
+        </property>
+        <property name="text">
+         <string>user</string>
+        </property>
+        <property name="maxLength">
+         <number>16</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>30</y>
+          <width>191</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>password</string>
+        </property>
+        <property name="maxLength">
+         <number>16</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tab_ProjectSite">
+   <attribute name="title">
+    <string>Strona Projektu</string>
+   </attribute>
+   <widget class="QWebView" name="webView_ProjectSite">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>661</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="url">
+     <url>
+      <string>http://github.com/str0g/PAPServer</string>
+     </url>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_Quit</sender>
+   <signal>clicked()</signal>
+   <receiver>TabWidget_MainFrame</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>283</x>
+     <y>160</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
