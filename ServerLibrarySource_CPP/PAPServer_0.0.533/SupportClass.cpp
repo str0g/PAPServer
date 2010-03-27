@@ -87,6 +87,34 @@ string TimeCout::GetLocalTime(){
     return buffer2;
 }
 
+string TimeCout::GetTimeAfter1970(){
+    char *buffer = new char[BUFFER];
+
+    sprintf(buffer,"%ld",GetTimeAfter1970AsTime());
+    string strReturn = buffer;
+    delete[] buffer;
+
+    return strReturn;
+}
+
+time_t TimeCout::GetTimeAfter1970AsTime(){
+    return time(NULL);
+}
+
+long int TimeCout::CoutTimeAfter1970(time_t newTime,time_t oldTime){
+    return newTime - oldTime;
+}
+
+string TimeCout::AliveTime(time_t newTime, time_t oldTime){
+    char *buffer = new char[BUFFER];
+
+    sprintf(buffer,"Alive for: %ld",CoutTimeAfter1970(newTime,oldTime));
+    string strReturn = buffer;
+    delete[] buffer;
+
+    return strReturn+"s";
+}
+
 void TimeCout::Set_strTimeFormatter(string strFormatter){
     strTimeFormatter = strFormatter;
 }

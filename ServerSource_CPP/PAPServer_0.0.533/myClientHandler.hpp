@@ -53,6 +53,7 @@ class myClientHandler:public TimeCout{
         ///Statistics
         int intIndex4Zombie;//!<Unikalny index
         double dCreationTime;//!<Czas utworzenia procesu od właczenia programu
+        time_t tt_CreationTime;//!<Czas utworzenia procesu od 1970
         ui64 ui64DataSend;//!<Wyslane bajty danych
         ui64 ui64DataRecieved;//!<Odebrane bajty danych
         ui64 ui64SendMsgCouter;//!<Licznik wiadomosc wyslanych
@@ -67,7 +68,7 @@ class myClientHandler:public TimeCout{
         bool Send(string ="");
         string SendInfoAboutServer();
         void RecivedDataParser(string*);
-        void Authorization(boost::ptr_list<BannedNode*>::iterator&);//#
+        void Authorization(list<BannedNode*>::iterator&);//#
         /// KillServer
         void BreakServerLoop();
         void RestartShutdownServer(string);
@@ -78,7 +79,7 @@ class myClientHandler:public TimeCout{
                         string,string,string,
                         int,bool&);
         virtual ~myClientHandler();
-        void myClientRun(boost::ptr_list<BannedNode*>::iterator&);
+        void myClientRun(list<BannedNode*>::iterator&);
         void myclientShutdownServer();
         int GetSessionID();
 };

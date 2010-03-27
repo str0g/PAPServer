@@ -18,7 +18,7 @@ using std::endl;
 ///Globals Varuabels
 
 int myServerAPP::intValueOnExit = 1;
-myServerAPP::myServerAPP(): p_strClassNameE(NULL), bServerLoop(true){
+myServerAPP::myServerAPP(): p_strClassNameE(NULL), bServerLoop(true),dCreationTime(GetTime()),tt_CreationTime(GetTimeAfter1970AsTime()){
     p_strClassNameE = new string("[myServer]->");
     cerr<<GetLocalTime()<<*p_strClassNameE<<"PID:"<<getppid()<<endl;
     intValueOnExit = 0;
@@ -36,10 +36,10 @@ void myServerAPP::RunServer(){
     pid_t pid;
 
     BannedNode *p_bnNode = NULL;
-    boost::ptr_list<BannedNode*> BannedList2;
-    boost::ptr_list<BannedNode*>::iterator iterBN_List;
-    boost::ptr_list<BannedNode*>::iterator p_iterBN_List;
-    boost::ptr_list<BannedNode*>::pointer p_NodeList;
+    list<BannedNode*> BannedList2;
+    list<BannedNode*>::iterator iterBN_List;
+    list<BannedNode*>::iterator p_iterBN_List;
+//    list<BannedNode*>::pointer p_NodeList;
     ///!-------
     try{
         ///Potrzebne do połączenia z klientem
@@ -56,17 +56,17 @@ void myServerAPP::RunServer(){
             acceptor.accept(socket);
             boost::asio::ip::tcp::endpoint endpoint = socket.local_endpoint();
             ++intIndexZombie;
-            ///TEST
+            ///Sprawdzam na liscie czy uzytkownik laczyl sie w czesniej.
             if (BannedList2.begin() == BannedList2.end()){
                     p_bnNode = new BannedNode(endpoint.address().to_string(),boost::asio::ip::host_name(),intIndexZombie);
-                    BannedList2.push_back(&p_bnNode);
+                    BannedList2.push_back(p_bnNode);
             }
-            for ( p_iterBN_List = BannedList2.begin(); iterBN_List != BannedList2.end(); ++p_iterBN_List){cerr<<"???"<<endl;
-                if( (*p_iterBN_List)->SearchForIPandLocalName(endpoint.address().to_string(),boost::asio::ip::host_name()) == true){cerr<<"T"<<endl;
+            for ( p_iterBN_List = BannedList2.begin(); iterBN_List != BannedList2.end(); ++p_iterBN_List){
+                if( (*p_iterBN_List)->SearchForIPandLocalName(endpoint.address().to_string(),boost::asio::ip::host_name()) == true){
                     break;
                 }else{
                     p_bnNode = new BannedNode(endpoint.address().to_string(),boost::asio::ip::host_name(),intIndexZombie);
-                    BannedList2.push_back(&p_bnNode);
+                    BannedList2.push_back(p_bnNode);
                     p_iterBN_List = BannedList2.end();
                     break;
                 }
@@ -74,8 +74,8 @@ void myServerAPP::RunServer(){
                cout<<"----------"<<endl;
                (*p_iterBN_List)->PrintInfo();
                cout<<"----------"<<endl;
-            ///!---
-            if ( (*p_iterBN_List)->AskIfBanned() == false){
+
+            if ( (*p_iterBN_List)->AskIfBanned() == false){///Jezeli uzytkownik byl zbanowany to nie zostanie podlaczony.
                 if ( *ServerConfigs::p_intMultiThreading == 1){
                 /**
                 *Wielo watkowa oblsuga klientow*/
@@ -104,19 +104,22 @@ void myServerAPP::RunServer(){
                     }//if pid
                 }//if *ServerConfigs
             }else{
-                cerr<<*p_strMethodName<<endpoint.address().to_string()<<boost::asio::ip::host_name()<<"::has been banned and tried to connect again"<<endl;
+                cerr<<*p_strMethodName<<endpoint.address().to_string()<<" "<<boost::asio::ip::host_name()<<"::has been banned but tried to connect again"<<endl;
                 syslog(3, "PAP Server banned user is tried to connect");
                 socket.close();
             }// if *p_iterBN_List
         }//while bServerLoop
+        if (BannedList2.begin() != BannedList2.end()){
             for(iterBN_List = BannedList2.begin(); iterBN_List != BannedList2.end(); ++iterBN_List){
                 delete *iterBN_List;
-                *iterBN_List =NULL;
-            }//for zwalnianie pamieci //ZWALNIA Poprawnie
-        BannedList2.clear();//Zjebane zwalnianie pamieci :x
+            }//for zwalnianie pamieci
+        }else{
+            delete *p_iterBN_List;
+        }
+        BannedList2.clear();
     }catch (std::exception& e){
         cerr<<*p_strMethodName<<e.what()<<endl;
     }
-    cout<<*p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<endl;
+    cout<<*p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<endl;
     delete p_strMethodName;
 }

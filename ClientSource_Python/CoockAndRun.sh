@@ -5,7 +5,7 @@
 #
 LOG=build.log
 DATA=$(date +%F"_"%X)
-./Makefile.py >>$LOG
+./Makefile.py >$LOG
 if [ $? -eq 1 ]; then
  touch "Compilation_Failed_"$DATA
  exit $?

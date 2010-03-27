@@ -10,8 +10,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
-    <height>424</height>
+    <width>740</width>
+    <height>426</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,7 +34,7 @@
    <string notr="true"/>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>1</number>
   </property>
   <property name="movable">
    <bool>true</bool>
@@ -64,21 +64,14 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2" rowspan="2">
-     <widget class="QPushButton" name="pushButton_UnMark">
-      <property name="text">
-       <string>Odznacz</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QProgressBar" name="progressBar">
-      <property name="value">
-       <number>24</number>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="4">
+     <widget class="QProgressBar" name="progressBar_MainServerShared">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
      <widget class="QPushButton" name="pushButton_Quit">
       <property name="toolTip">
        <string>Wyjście</string>
@@ -95,14 +88,14 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="4">
+    <item row="1" column="5">
      <widget class="QPushButton" name="pushButton_Author">
       <property name="text">
        <string>Autor</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="5">
+    <item row="2" column="0" colspan="6">
      <widget class="QDockWidget" name="dockWidget_SharedByServer">
       <property name="contextMenuPolicy">
        <enum>Qt::DefaultContextMenu</enum>
@@ -111,7 +104,7 @@
        <bool>false</bool>
       </property>
       <property name="floating">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="windowTitle">
        <string>Lista Plików udostępnianych przez Serwer</string>
@@ -122,7 +115,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>661</width>
+          <width>671</width>
           <height>151</height>
          </rect>
         </property>
@@ -186,39 +179,59 @@
       </widget>
      </widget>
     </item>
-    <item row="3" column="0" colspan="5">
+    <item row="3" column="0" colspan="6">
      <widget class="QDockWidget" name="dockWidget">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
       <property name="floating">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="windowTitle">
        <string>Konsola działań klient serwer</string>
       </property>
       <widget class="QWidget" name="dockWidgetContents_4">
-       <widget class="QScrollArea" name="scrollArea_Console">
+       <widget class="QListWidget" name="listWidget_console">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>661</width>
-          <height>101</height>
+          <width>721</width>
+          <height>121</height>
          </rect>
         </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
+        <property name="toolTip">
+         <string>Consola połączenia</string>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>657</width>
-           <height>97</height>
-          </rect>
-         </property>
-        </widget>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
        </widget>
       </widget>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="pushButton_UnMark">
+      <property name="text">
+       <string>Odznacz</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QLineEdit" name="lineEdit_Search">
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="pushButton_Search">
+      <property name="text">
+       <string>Szukaj</string>
+      </property>
      </widget>
     </item>
    </layout>
@@ -242,9 +255,18 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>661</width>
+          <width>711</width>
           <height>241</height>
          </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
         </property>
         <property name="dragDropMode">
          <enum>QAbstractItemView::DropOnly</enum>
@@ -334,9 +356,9 @@
      </widget>
     </item>
     <item row="1" column="3">
-     <widget class="QProgressBar" name="progressBar_2">
+     <widget class="QProgressBar" name="progressBar_Shared">
       <property name="value">
-       <number>24</number>
+       <number>0</number>
       </property>
      </widget>
     </item>
@@ -350,78 +372,13 @@
     <string>Opcje</string>
    </attribute>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QDockWidget" name="dockWidget_Connect">
-      <property name="acceptDrops">
-       <bool>false</bool>
-      </property>
-      <property name="floating">
-       <bool>false</bool>
-      </property>
-      <property name="features">
-       <set>QDockWidget::AllDockWidgetFeatures</set>
-      </property>
-      <property name="allowedAreas">
-       <set>Qt::AllDockWidgetAreas</set>
-      </property>
-      <property name="windowTitle">
-       <string>Adres Serwera</string>
-      </property>
-      <widget class="QWidget" name="dockWidgetContents_5">
-       <widget class="QLineEdit" name="lineEdit_IP">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>191</width>
-          <height>26</height>
-         </rect>
-        </property>
-        <property name="toolTip">
-         <string>Wprowadź login</string>
-        </property>
-        <property name="text">
-         <string>127.0.0.1</string>
-        </property>
-        <property name="maxLength">
-         <number>16</number>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_Port">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>30</y>
-          <width>191</width>
-          <height>26</height>
-         </rect>
-        </property>
-        <property name="inputMask">
-         <string/>
-        </property>
-        <property name="text">
-         <string>6666</string>
-        </property>
-        <property name="maxLength">
-         <number>8</number>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-    </item>
-    <item row="0" column="1" rowspan="2">
+    <item row="2" column="0">
      <widget class="QDockWidget" name="dockWidget_3">
       <property name="floating">
        <bool>false</bool>
       </property>
       <property name="windowTitle">
-       <string>Opcje</string>
+       <string>Adres Serwera</string>
       </property>
       <widget class="QWidget" name="dockWidgetContents_8">
        <widget class="QCheckBox" name="checkBox">
@@ -437,58 +394,264 @@
          <string>Jakisc chBoxx</string>
         </property>
        </widget>
-      </widget>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QDockWidget" name="dockWidget_ServAuth">
-      <property name="floating">
-       <bool>false</bool>
-      </property>
-      <property name="windowTitle">
-       <string>Autoryzacja</string>
-      </property>
-      <widget class="QWidget" name="dockWidgetContents">
-       <widget class="QLineEdit" name="lineEdit_Login">
+       <widget class="QDockWidget" name="dockWidget_Connect">
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
-          <width>191</width>
-          <height>26</height>
+          <y>-20</y>
+          <width>329</width>
+          <height>367</height>
          </rect>
         </property>
-        <property name="toolTip">
-         <string>Wprowadź login</string>
+        <property name="acceptDrops">
+         <bool>false</bool>
         </property>
-        <property name="text">
-         <string>user</string>
+        <property name="floating">
+         <bool>false</bool>
         </property>
-        <property name="maxLength">
-         <number>16</number>
+        <property name="features">
+         <set>QDockWidget::AllDockWidgetFeatures</set>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="allowedAreas">
+         <set>Qt::AllDockWidgetAreas</set>
         </property>
+        <property name="windowTitle">
+         <string>Adres Serwera</string>
+        </property>
+        <widget class="QWidget" name="dockWidgetContents_5">
+         <widget class="QLineEdit" name="lineEdit_IP">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>191</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Wprowadź login</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="maxLength">
+           <number>16</number>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Port">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>30</y>
+            <width>191</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="maxLength">
+           <number>8</number>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QDockWidget" name="dockWidget_ServAuth">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>180</y>
+            <width>329</width>
+            <height>183</height>
+           </rect>
+          </property>
+          <property name="floating">
+           <bool>false</bool>
+          </property>
+          <property name="windowTitle">
+           <string>Autoryzacja</string>
+          </property>
+          <widget class="QWidget" name="dockWidgetContents">
+           <widget class="QLineEdit" name="lineEdit_Login">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>191</width>
+              <height>26</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string>Wprowadź login</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="maxLength">
+             <number>16</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_Password">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>30</y>
+              <width>191</width>
+              <height>26</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="maxLength">
+             <number>16</number>
+            </property>
+            <property name="echoMode">
+             <enum>QLineEdit::PasswordEchoOnEdit</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </widget>
+         </widget>
+        </widget>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_2">
+       <widget class="QGroupBox" name="groupBox_Debug">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>30</y>
-          <width>191</width>
-          <height>26</height>
+          <x>500</x>
+          <y>0</y>
+          <width>172</width>
+          <height>199</height>
          </rect>
         </property>
-        <property name="text">
-         <string>password</string>
+        <property name="title">
+         <string>Zmienne</string>
         </property>
-        <property name="maxLength">
-         <number>16</number>
+        <property name="flat">
+         <bool>false</bool>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0" colspan="2">
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QCheckBox" name="checkBox_Debug">
+           <property name="toolTip">
+            <string>Wyjście na konsole</string>
+           </property>
+           <property name="text">
+            <string>Debug</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QSpinBox" name="spinBox_TimeOut">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Limit Czasu</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QLineEdit" name="lineEdit_PathSharedFile"/>
+         </item>
+         <item row="6" column="0" colspan="2">
+          <widget class="QPushButton" name="pushButton_Shared">
+           <property name="text">
+            <string>Plik udostępnione</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QDockWidget" name="dockWidget_Save">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>260</y>
+          <width>221</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="windowTitle">
+         <string>Tu pojawi się wersja programu</string>
+        </property>
+        <widget class="QWidget" name="dockWidgetContents_3">
+         <widget class="QDialogButtonBox" name="buttonBox_Save">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>221</width>
+            <height>38</height>
+           </rect>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::DefaultContextMenu</enum>
+          </property>
+          <property name="toolTip">
+           <string>Resetuj przywróci ustawienia z przed zmiany</string>
+          </property>
+          <property name="statusTip">
+           <string/>
+          </property>
+          <property name="standardButtons">
+           <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
+          </property>
+          <property name="centerButtons">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </widget>
        </widget>
       </widget>
      </widget>
@@ -499,30 +662,58 @@
    <attribute name="title">
     <string>Strona Projektu</string>
    </attribute>
-   <widget class="QWebView" name="webView_ProjectSite">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>661</width>
-      <height>391</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="acceptDrops">
-     <bool>false</bool>
-    </property>
-    <property name="url">
-     <url>
-      <string>http://github.com/str0g/PAPServer</string>
-     </url>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0" colspan="2">
+     <widget class="QWebView" name="webView_ProjectSite">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="url">
+       <url>
+        <string>http://github.com/str0g/PAPServer</string>
+       </url>
+      </property>
+      <property name="zoomFactor">
+       <double>0.699999988079071</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QSlider" name="horizontalSlider_Zoom">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QProgressBar" name="progressBar_Zoom">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>1</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>
@@ -532,23 +723,95 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButton_ConnDiscon</tabstop>
+  <tabstop>pushButton_DNSelected</tabstop>
+  <tabstop>pushButton_Author</tabstop>
+  <tabstop>pushButton_Quit</tabstop>
+  <tabstop>pushButton_ADD</tabstop>
+  <tabstop>pushButton_UnMark</tabstop>
+  <tabstop>pushButton_AdminPanel</tabstop>
+  <tabstop>lineEdit_Search</tabstop>
+  <tabstop>pushButton_Search</tabstop>
+  <tabstop>pushButton_Del</tabstop>
+  <tabstop>pushButton_DELALL</tabstop>
+  <tabstop>tableWidget_SharedFileByMySelf</tabstop>
+  <tabstop>lineEdit_Login</tabstop>
+  <tabstop>lineEdit_Password</tabstop>
+  <tabstop>lineEdit_IP</tabstop>
+  <tabstop>lineEdit_Port</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>webView_ProjectSite</tabstop>
+  <tabstop>tableWidget_SharedByServer</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_Quit</sender>
+   <sender>pushButton_Search</sender>
    <signal>clicked()</signal>
-   <receiver>TabWidget_MainFrame</receiver>
-   <slot>close()</slot>
+   <receiver>dockWidget_SharedByServer</receiver>
+   <slot>update()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>62</y>
+     <x>235</x>
+     <y>93</y>
     </hint>
     <hint type="destinationlabel">
-     <x>283</x>
-     <y>160</y>
+     <x>342</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_DELALL</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_SharedFileByMySelf</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>396</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Del</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_SharedFileByMySelf</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>144</x>
+     <y>396</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ADD</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_SharedFileByMySelf</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>396</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>185</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <slots>
+  <slot>MsgOnExit()</slot>
+ </slots>
 </ui>

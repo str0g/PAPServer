@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/AdminPanel.ui'
 #
-# Created: Thu Mar 25 20:39:28 2010
+# Created: Sat Mar 27 23:31:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -10,6 +10,8 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_ToolBox_AdminPanel(object):
+    def __init__(self):
+	print "ToolBox Constructor"
     def setupUi(self, ToolBox_AdminPanel):
         ToolBox_AdminPanel.setObjectName("ToolBox_AdminPanel")
         ToolBox_AdminPanel.resize(423, 300)
@@ -90,8 +92,8 @@ class Ui_ToolBox_AdminPanel(object):
         ToolBox_AdminPanel.addItem(self.strona, "")
 
         self.retranslateUi(ToolBox_AdminPanel)
-        ToolBox_AdminPanel.setCurrentIndex(2)
-        QtCore.QObject.connect(self.pushButton_RestartServer, QtCore.SIGNAL("clicked()"), self.lcdNumber_CountertoServerUP.show)
+        ToolBox_AdminPanel.setCurrentIndex(0)
+        QtCore.QObject.connect(self.pushButton_RestartServer, QtCore.SIGNAL("clicked()"), self.lcdNumber_CountertoServerUP.update)
         QtCore.QMetaObject.connectSlotsByName(ToolBox_AdminPanel)
 
     def retranslateUi(self, ToolBox_AdminPanel):

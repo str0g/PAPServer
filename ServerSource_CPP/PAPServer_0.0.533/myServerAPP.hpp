@@ -39,6 +39,8 @@ class myServerAPP:TimeCout{
     protected:
         string *p_strClassNameE;//!<Nazwa klasy
         bool bServerLoop;//!<Petla servera zalezy od tej zmiennej
+        double dCreationTime;
+        time_t tt_CreationTime;
     public:
         static int intValueOnExit;//!<Wartość błędu
         myServerAPP();

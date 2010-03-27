@@ -76,6 +76,10 @@ class TimeCout: public konwertery{
         double GetTime();
         string ExcutionTime(double,double);
         string GetLocalTime();
+        string GetTimeAfter1970();
+        string AliveTime(time_t,time_t);
+        time_t GetTimeAfter1970AsTime();
+        long int CoutTimeAfter1970(time_t,time_t);
         void Set_strTimeFormatter(string);
         void Set_intFormatterLenght(int);
 };

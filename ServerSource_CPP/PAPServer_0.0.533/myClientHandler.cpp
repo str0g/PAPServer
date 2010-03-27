@@ -30,9 +30,9 @@ myClientHandler::myClientHandler(boost::asio::ip::tcp::socket &Socket,
                                  string IP,string user, string pass,
                                  int index ,bool &loop):
                                  p_strClassName(NULL), ClientSocket(Socket),
-                                 ClientIP(IP),ClientUserLocal(user),ClientPassword(pass),ClientUser("unknow"),
+                                 ClientIP(IP),ClientUserLocal(user),ClientUser("unknow"),ClientPassword(pass),
                                  id_Session(0),intGID(0),
-                                 intIndex4Zombie(index), dCreationTime(GetTime()),
+                                 intIndex4Zombie(index), dCreationTime(GetTime()),tt_CreationTime(GetTimeAfter1970AsTime()),
                                  ui64DataSend(0),ui64DataRecieved(0),ui64SendMsgCouter(0),ui64RecivedMsgCouter(0)
                                  ,bServerLoop(loop){//,p_strClientXMLFile(NULL){
     p_strClassName = new string("[myClassHandler]->[Zombie::"+liczba_na_string(intIndex4Zombie)+"]->");
@@ -41,32 +41,35 @@ myClientHandler::myClientHandler(boost::asio::ip::tcp::socket &Socket,
 
 myClientHandler::~myClientHandler(){
     ClientSocket.close();
-    cerr<<*p_strClassName<<"Summary:\n"<<ExcutionTime(GetTime(),dCreationTime)<<", Data in/out::"<<ui64DataRecieved<<"/"<<ui64DataSend<<"bajts, Msg in/out::"<<ui64RecivedMsgCouter<<"/"<<ui64SendMsgCouter<<"\n----------"<<endl;
+    cerr<<*p_strClassName<<"Summary:\n"<<ExcutionTime(GetTime(),dCreationTime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<", Data in/out::"<<ui64DataRecieved<<"/"<<ui64DataSend<<"bajts, Msg in/out::"<<ui64RecivedMsgCouter<<"/"<<ui64SendMsgCouter<<"\n----------"<<endl;
     delete p_strClassName;
 }
 /**
 *Authorization
 */
 
-void myClientHandler::Authorization(boost::ptr_list<BannedNode*>::iterator &myList2){
+void myClientHandler::Authorization(list<BannedNode*>::iterator &myList2){
 ///Porownuje uzytkownika z dostepnymi uzytkownikami, nasptenie prosi o haslo i ustawia intGID.
     string *p_strSocketBuffer = NULL;
     Send("Login:");
     p_strSocketBuffer = &GetDataFromSocket();
     if (p_strSocketBuffer){
         if (*p_strSocketBuffer == "unknow" ){
-            intGID = -1;
+            intGID = -1; cout<<"unknow"<<endl;
             if((*myList2)->WarnClient() == 1){cerr<<"BANNED"<<endl;}
         }else if (*p_strSocketBuffer == "user" ){
             intGID = 2;
+            ClientUser = "user";
         }else if (*p_strSocketBuffer == "debug"){
             intGID = 1;
+            ClientUser = "debug";
         }else if (*p_strSocketBuffer == "root"){
             intGID = 0;
             syslog(3, "PAP Server someone is logged as root");
             cerr<<GetLocalTime()<<*p_strClassName<<" Logged as root::"<<ClientUser<<"@"<<ClientIP<<"("<<ClientUserLocal<<")"<<endl;
+            ClientUser = "root";
         }else{
-            intGID = -1;
+            intGID = -1; cout<<"else"<<endl;
             if((*myList2)->WarnClient() == 1){cerr<<"BANNED"<<endl;}
         }//if *p_strSocketBuffer ==
         delete p_strSocketBuffer;
@@ -76,7 +79,7 @@ void myClientHandler::Authorization(boost::ptr_list<BannedNode*>::iterator &myLi
 *Main Loop
 */
 
-void myClientHandler::myClientRun(boost::ptr_list<BannedNode*>::iterator &myList2){
+void myClientHandler::myClientRun(list<BannedNode*>::iterator &myList2){
 ///Tutaj  przebiega cala interakcja z clietem.; Przerywalna petela dba o poprawnosc komunikacji pod warunkiem pozytywnej autoryzacji.;Tutaj zwracana jest infromacja o zakonczeniu polaczenie.
     string *p_strSocketBuffer = NULL;
     string strSocketBuffer;
@@ -90,7 +93,7 @@ void myClientHandler::myClientRun(boost::ptr_list<BannedNode*>::iterator &myList
             while (bloop == true){
                 p_strSocketBuffer = &GetDataFromSocket();
                 if (p_strSocketBuffer){
-                    if (*p_strSocketBuffer == "KILLME" or Cout(GetTime(),XTime) >= *ServerConfigs::p_intClientTimeOut){
+                    if (*p_strSocketBuffer == "DisconnectMe" or Cout(GetTime(),XTime) >= *ServerConfigs::p_intClientTimeOut){
                         bloop = false;
                         if(*ServerConfigs::p_intClientTimeOut - Cout(GetTime(),XTime)<= 0){strError = "::TimeOut";}
                     }else if (p_strSocketBuffer->length()>1) {
@@ -125,7 +128,7 @@ string &myClientHandler::GetDataFromSocket(){
     catch (const std::exception &e)
     {
         cerr<<GetLocalTime()<<*p_strClassName<<e.what()<<endl;
-        p_strReturn = new string("KILLME");
+        p_strReturn = new string("DisconnectMe");
         return *p_strReturn;
     }
     std::istream isBuffer(&basbBuffer);
@@ -148,10 +151,10 @@ string &myClientHandler::GetDataFromSocket(){
 void myClientHandler::RecivedDataParser(string *p_strData){
     cout<<"Recived:"<<*p_strData<<endl;
     if (intGID == 0 or intGID == 1){
-        if(*p_strData == "BreakLoop"){
+        if(*p_strData == "Shutdown"){
             BreakServerLoop();
         }else if (*p_strData == "ShowBannedList"){
-        }else if (*p_strData == "Shutdown"){
+        }else if (*p_strData == "ShutdownForced"){
             RestartShutdownServer("stop");
         }else if(*p_strData == "Restart"){
             RestartShutdownServer("restart");
@@ -160,7 +163,9 @@ void myClientHandler::RecivedDataParser(string *p_strData){
     }
 
     if(*p_strData == "GetServerInfo"){
+            Send(SendInfoAboutServer());
     }else if(*p_strData == "GetServerTime"){
+            Send(GetTimeAfter1970());
     }else{}
 }
 
@@ -169,7 +174,7 @@ bool myClientHandler::Send(string strData){
 ///Wysyła do klienta odpowiedz, dodajac jego login i znak zachety, w przypadku bledu zakonczy prace forka()
     try
     {
-        strData.append("\n"+ClientUser+"~$");
+        strData.append("\n"+ClientUser+"~$ ");
         ui64DataSend += strData.length();
         boost::asio::write(ClientSocket,boost::asio::buffer(strData),boost::asio::transfer_all());
     }
@@ -184,11 +189,11 @@ bool myClientHandler::Send(string strData){
 }
 
 string myClientHandler::SendInfoAboutServer(){
-    string strCommandlist = "XML=1.0,\nServer_Version";
+    string strCommandlist = "XML=1.0,\nServer_Version=";
     strCommandlist.append(AutoVersion::FULLVERSION_STRING);
-    strCommandlist.append("\nCommands=UploadFile,KILLME,GetServerInfo,GetServerTime,");
+    strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,");
     if( intGID == 0 or intGID == 1){
-        strCommandlist.append("Shutdown,Restart,DisconnectEveryOne,BreakLoop");
+        strCommandlist.append("Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
     }
     return strCommandlist;
 }
