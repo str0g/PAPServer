@@ -31,15 +31,22 @@ else:
     time.sleep(2)
 
 class myConfigs(MsgsLib.MsgDeffinition):
+    '''
+    Ta klasa trzyma ustawienia ,wersje programu oraz wymagania, ktore musza zostac spelnione
+    '''
     def __init__(self):
-	self.ClassName = "[myConfigs]->"
-	self.ClientVersion = "0.0.2"
-	self.myPyVersion = "2.6.4"
-	self.myQt4Version = ""
-	self.maxServerVersion = ""
-	self.ConsoleTimeFormat = "[%Y.%m.%d %H:%M:%S]"
-	self.FILE_CFG = 'configs/config.conf'
+        self.ClassName = "[myConfigs]->"
+        self.ClientVersion = "0.0.5"
+        self.myPyVersion = "2.6.4"
+        self.myQt4Version = ""
+        self.maxServerVersion = ""
+        self.ConsoleTimeFormat = "[%Y.%m.%d %H:%M:%S]"
+        self.FILE_CFG = 'configs/config.conf'
     def LoadCFG(self):
+        '''
+        Metoda laduje dane z pliku
+        '''
+        MethodName = self.ClassName+"[LoadCFG]->"
         try:
             config = ConfigParser.ConfigParser()
             fp = open( self.FILE_CFG)
@@ -47,14 +54,18 @@ class myConfigs(MsgsLib.MsgDeffinition):
             fp.close()
             #Set
             self.Host = config.get('server','Host')
-	    self.Port = config.getint('server','Port')
-	    self.User = config.get('connection','user')
-	    self.Password = config.get('connection','password')
-	    self.TimeOut = config.getint('connection','timeout')
-	    self.SharedFiles = config.get('sharedfiles','filexml')
-	    self.Debug = config.getint('client','debug')
-	    self.Zoom = config.getint('client','zoom')
-	    del config
+            self.Port = config.getint('server','Port')
+            self.User = config.get('connection','user')
+            self.Password = config.get('connection','password')
+            self.TimeOut = config.getint('connection','timeout')
+            self.SharedFiles = config.get('sharedfiles','sharedfiles')
+            self.ValidateBeforeSend = config.getint('sharedfiles','ValidateBeforeSend')
+            self.ValidateFilesOnStarup = config.getint('sharedfiles','ValidateFilesOnStarup')
+            self.CountCheckSumWhenAdd = config.getint('sharedfiles','CountCheckSumWhenAdd')
+            self.LetDownloadFilesWhichFaildValidation = config.getint('sharedfiles','LetDownloadFilesWhichFaildValidation')
+            self.Debug = config.getint('client','debug')
+            self.Zoom = config.getint('client','zoom')
+            del config
         except IOError, error:
             self.Quit(MethodName+str(error), 2, 1)
         except ConfigParser.NoOptionError, error:
@@ -64,28 +75,35 @@ class myConfigs(MsgsLib.MsgDeffinition):
         except ConfigParser.MissingSectionHeaderError,  error:
             self.Quit(MethodName+str(error), 2, 1)
     def StoreCFG(self):
-	MethodName=self.ClassName+"[StoreCFG]->"
-	intRet = -1
-	try:
+        '''
+        Metoda zapisuje ustawienia do pliku i zwraca czy sie udalo
+        '''
+        MethodName=self.ClassName+"[StoreCFG]->"
+        intRet = -1
+        try:
             config = ConfigParser.ConfigParser()
             fp = open(self.FILE_CFG)
             config.readfp(fp)
             fp.close()
-	    config.set('server','host', self.Host)
-	    config.set('server','port', self.Port)
-	    config.set('connection','user', self.User)
-	    config.set('connection','password', self.Password)
-	    config.set('connection','timeout', self.TimeOut)
-	    config.set('sharedfiles','sharedfiles', self.SharedFiles)
-	    config.set('client','debug', self.Debug)
-	    config.set('client','zoom', self.Zoom)
+            config.set('server','host', self.Host)
+            config.set('server','port', self.Port)
+            config.set('connection','user', self.User)
+            config.set('connection','password', self.Password)
+            config.set('connection','timeout', self.TimeOut)
+            config.set('sharedfiles','sharedfiles', self.SharedFiles)
+            config.set('sharedfiles','ValidateBeforeSend',self.ValidateBeforeSend)
+            config.set('sharedfiles','ValidateFilesOnStarup', self.ValidateFilesOnStarup)
+            config.set('sharedfiles', 'CountCheckSumWhenAdd', self.CountCheckSumWhenAdd)
+            config.set('sharedfiles', 'LetDownloadFilesWhichFaildValidation', self.LetDownloadFilesWhichFaildValidation)
+            config.set('client','debug', self.Debug)
+            config.set('client','zoom', self.Zoom)
             try:
                 with open(self.FILE_CFG, 'wb') as configfile:
                     config.write(configfile)
-		intRet = 0
+                intRet = 0
             except IOError, error:
                 self.MsgWithDelay(MethodName+str(error), 1)
-	except IOError, error:
+        except IOError, error:
             self.MsgWithDelay(MethodName+str(error), 2, 1)
         except ConfigParser.NoOptionError, error:
             self.MsgWithDelay(MethodName+str(error), 2, 1)
@@ -95,18 +113,24 @@ class myConfigs(MsgsLib.MsgDeffinition):
             self.MsgWithDelay(MethodName+str(error), 2, 1)
         finally:
             del config
-	    return intRet
+            return intRet
     def LoadSharedXMLFile(self):
-	try:
-	    fp = open( self.FILE_CFG)
+        '''
+        Metoda pobiera plik z udostepnionymi plikami i zwraca go
+        '''
+        try:
+            fp = open( self.FILE_CFG)
             self.SharedFilesXML = fp.readbf()
             fp.close()
             #Set
-	    del config
+            del config
         except IOError, error:
             self.Quit(MethodName+str(error), 2, 1)
     def CheckRequirements(self):
+        '''
+        Metoda sprawdza wersje Pythona jezeli jest nizsza od zdefiniowanej przezmnie program sie zakonczy
+        '''
         if sys.version[:string.find(sys.version," ")] < self.myPyVersion:
             self.Quit("Too old Python!\nRequired atleast Python",self.myPyVersion, 2, 1)
-	#print PyQt4.pyqt_version_str
+        #print PyQt4.pyqt_version_str
         #if qt4 < self.myQt4Version:

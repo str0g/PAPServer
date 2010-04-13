@@ -17,7 +17,9 @@ except ImportError, error:
     sys.exit(1)
 
 def Main():
-    print "[Menu]->"
+    '''
+    Main starter, zwraca to co zwraca Qt4 na wyjsciu
+    '''
     return myClient()
 
 #MAIN

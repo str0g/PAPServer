@@ -91,14 +91,17 @@ void myClientHandler::myClientRun(list<BannedNode*>::iterator &myList2){
         if (intIndex4Zombie > 0 and intGID >= 0){
             Send(SendInfoAboutServer());
             while (bloop == true){
+                cout<<*p_strClassName+"Ready for new data"<<endl;
                 p_strSocketBuffer = &GetDataFromSocket();
+                cout<<*p_strClassName+"Something recived"<<endl;
                 if (p_strSocketBuffer){
                     if (*p_strSocketBuffer == "DisconnectMe" or Cout(GetTime(),XTime) >= *ServerConfigs::p_intClientTimeOut){
                         bloop = false;
                         if(*ServerConfigs::p_intClientTimeOut - Cout(GetTime(),XTime)<= 0){strError = "::TimeOut";}
                     }else if (p_strSocketBuffer->length()>1) {
-                        RecivedDataParser(p_strSocketBuffer);
+                        RecivedDataParser(p_strSocketBuffer,myList2);
                         XTime = GetTime();
+                        if ((*myList2)->AskIfBanned() == true){ bloop = false; }
                     }//p_strSocketBuffer
                     delete p_strSocketBuffer;
                 }else{
@@ -148,7 +151,11 @@ string &myClientHandler::GetDataFromSocket(){
     return *p_strReturn;
 }
 
-void myClientHandler::RecivedDataParser(string *p_strData){
+void myClientHandler::RecivedDataParser(string *p_strData,list<BannedNode*>::iterator &myList2){
+    string strSearchFor = "SearchFor: ";
+    int intCounter = 0 ;
+    int intIndexHelperBegin = 0;
+    int intIndexHelperEnd = 0;
     cout<<"Recived:"<<*p_strData<<endl;
     if (intGID == 0 or intGID == 1){
         if(*p_strData == "Shutdown"){
@@ -160,13 +167,36 @@ void myClientHandler::RecivedDataParser(string *p_strData){
             RestartShutdownServer("restart");
         }else if(*p_strData == "DisconnectEveryOne"){
         }else{}
+        /*
+        *Generator XML dla listy uzytkownikow
+        *Generatro XML dla listy plikow
+        *Listy zapytan
+        */
     }
 
     if(*p_strData == "GetServerInfo"){
             Send(SendInfoAboutServer());
     }else if(*p_strData == "GetServerTime"){
             Send(GetTimeAfter1970());
+    }else if(p_strData->find("SearchFor: ") != -1){
+            strSearchFor = p_strData->substr( p_strData->find(strSearchFor)+strSearchFor.length(),p_strData->rfind("\r\n\r\n"));
+            if (strSearchFor.length() > 1){
+                /*intCounter = 0;
+                do{
+                    intIndexHelperBegin = strSearchFor.find(intIndexHelperEnd,",")
+                    if
+                    //metoda(strSearchFor);
+                }while(intIndexHelperEnd != -1 and intIndexHelperBegin != -1)*/
+                Send("<SharedFiles><File1><FilePath>hahha/haha</FilePath><FileName>haha</FileName><FileSize>1</FileSize><FileHashType>md5</FileHashType><FileHash>aaa</FileHash><FileLastModification>1.1</FileLastModification></File1></SharedFiles>");
+            }else{
+                (*myList2)->BanClient();
+            }
     }else{}
+    /*
+    * XML parser
+    * status
+    * pliki z listy plikow
+    */
 }
 
 
@@ -191,7 +221,7 @@ bool myClientHandler::Send(string strData){
 string myClientHandler::SendInfoAboutServer(){
     string strCommandlist = "XML=1.0,\nServer_Version=";
     strCommandlist.append(AutoVersion::FULLVERSION_STRING);
-    strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,");
+    strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,SearchFor: <arg0,arg1,arg2>");
     if( intGID == 0 or intGID == 1){
         strCommandlist.append("Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
     }

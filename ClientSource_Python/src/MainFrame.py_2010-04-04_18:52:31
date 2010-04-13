@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/MainFrame.ui'
 #
-# Created: Sun Apr  4 18:52:31 2010
+# Created: Sat Apr  3 17:50:50 2010
 #      by: PyQt4 UI code generator 4.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -103,11 +103,7 @@ class Ui_TabWidget_MainFrame(object):
         self.verticalLayout = QtGui.QVBoxLayout(self.dockWidgetContents_4)
         self.verticalLayout.setObjectName("verticalLayout")
         self.listWidget_console = QtGui.QListWidget(self.dockWidgetContents_4)
-        self.listWidget_console.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.listWidget_console.setTabKeyNavigation(False)
-        self.listWidget_console.setProperty("showDropIndicator", False)
         self.listWidget_console.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
-        self.listWidget_console.setMovement(QtGui.QListView.Snap)
         self.listWidget_console.setObjectName("listWidget_console")
         self.verticalLayout.addWidget(self.listWidget_console)
         self.dockWidget.setWidget(self.dockWidgetContents_4)
@@ -359,7 +355,7 @@ class Ui_TabWidget_MainFrame(object):
         TabWidget_MainFrame.addTab(self.tab_ProjectSite, "")
 
         self.retranslateUi(TabWidget_MainFrame)
-        TabWidget_MainFrame.setCurrentIndex(0)
+        TabWidget_MainFrame.setCurrentIndex(1)
         QtCore.QObject.connect(self.pushButton_Search, QtCore.SIGNAL("clicked()"), self.dockWidget_SharedByServer.update)
         QtCore.QObject.connect(self.pushButton_DELALL, QtCore.SIGNAL("clicked()"), self.tableWidget_SharedFileByMySelf.clearContents)
         QtCore.QObject.connect(self.pushButton_Del, QtCore.SIGNAL("clicked()"), self.tableWidget_SharedFileByMySelf.update)
@@ -402,8 +398,8 @@ class Ui_TabWidget_MainFrame(object):
         self.tableWidget_SharedByServer.horizontalHeaderItem(3).setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Data", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget_SharedByServer.horizontalHeaderItem(4).setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Suma kontrolna", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget_SharedByServer.horizontalHeaderItem(5).setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Pobierane", None, QtGui.QApplication.UnicodeUTF8))
-        self.dockWidget.setWindowTitle(QtGui.QApplication.translate("TabWidget_MainFrame", "Konsola", None, QtGui.QApplication.UnicodeUTF8))
-        self.listWidget_console.setToolTip(QtGui.QApplication.translate("TabWidget_MainFrame", "Konsola", None, QtGui.QApplication.UnicodeUTF8))
+        self.dockWidget.setWindowTitle(QtGui.QApplication.translate("TabWidget_MainFrame", "Konsola działań klient serwer", None, QtGui.QApplication.UnicodeUTF8))
+        self.listWidget_console.setToolTip(QtGui.QApplication.translate("TabWidget_MainFrame", "Consola połączenia", None, QtGui.QApplication.UnicodeUTF8))
         TabWidget_MainFrame.setTabText(TabWidget_MainFrame.indexOf(self.tab_MainFrame), QtGui.QApplication.translate("TabWidget_MainFrame", "Strona główna", None, QtGui.QApplication.UnicodeUTF8))
         self.dockWidget_2.setWindowTitle(QtGui.QApplication.translate("TabWidget_MainFrame", "Udostępniane Pliki", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget_SharedFileByMySelf.setSortingEnabled(True)

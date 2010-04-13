@@ -67,7 +67,7 @@ class myClientHandler:public TimeCout{
         string GetDataFromSocket2();
         bool Send(string ="");
         string SendInfoAboutServer();
-        void RecivedDataParser(string*);
+        void RecivedDataParser(string*,list<BannedNode*>::iterator&);
         void Authorization(list<BannedNode*>::iterator&);//#
         /// KillServer
         void BreakServerLoop();
