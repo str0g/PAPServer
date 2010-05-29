@@ -1,3 +1,15 @@
+[Version 0.0.821]
+Change from dynamic banned list to Database banned list
+More administrative commands
+Database support for searching, inserting, deleting, dropping, and creating.
+Clean after forked process.
+XML documents: Load from buffer or file, Creating, modifying, inserting, walking and printing.
+Speed improvement
+Memory consumption decried.
+Code clean ups
+Messages clean ups
+Documentation clean ups and updates.
+
 [Version 0.0.107]
 Daemon
 Redirecting streams
