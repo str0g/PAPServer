@@ -4,8 +4,16 @@ Documentation:
 All documentation files are in Polish.
 Bin:
 Binaries were compiled on:
-Ubuntu 9.10 x64 with CodeBlocks IDE for Intel Core 2 duo Architecture.
+Ubuntu 10.04 x64*  with CodeBlocks IDE for Intel Core 2 duo Architecture.
 Doc:
-Contains documentation done with doxygen, project requirements and brief for design done with LateX.
+Contains documentation done with doxygen, project requirements and brief for design done with LateX(will be done).
 License:
 GNU/GPL General Public License.
+
+
+
+
+
+
+
+* older then 0.0.821 Ubuntu 9.10 x64 and boost 1.38
