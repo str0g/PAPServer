@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/MainFrame.ui'
 #
-# Created: Sun May 30 22:56:23 2010
+# Created: Sun May 30 22:48:05 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -135,7 +135,6 @@ class Ui_TabWidget_MainFrame(object):
         sizePolicy.setHeightForWidth(self.tableWidget_SharedFileByMySelf.sizePolicy().hasHeightForWidth())
         self.tableWidget_SharedFileByMySelf.setSizePolicy(sizePolicy)
         self.tableWidget_SharedFileByMySelf.setAcceptDrops(True)
-        self.tableWidget_SharedFileByMySelf.setEditTriggers(QtGui.QAbstractItemView.SelectedClicked)
         self.tableWidget_SharedFileByMySelf.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.tableWidget_SharedFileByMySelf.setAlternatingRowColors(True)
         self.tableWidget_SharedFileByMySelf.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
@@ -372,7 +371,7 @@ class Ui_TabWidget_MainFrame(object):
         TabWidget_MainFrame.addTab(self.tab_ProjectSite, "")
 
         self.retranslateUi(TabWidget_MainFrame)
-        TabWidget_MainFrame.setCurrentIndex(1)
+        TabWidget_MainFrame.setCurrentIndex(0)
         QtCore.QObject.connect(self.pushButton_Search, QtCore.SIGNAL("clicked()"), self.dockWidget_SharedByServer.update)
         QtCore.QObject.connect(self.pushButton_DELALL, QtCore.SIGNAL("clicked()"), self.tableWidget_SharedFileByMySelf.clearContents)
         QtCore.QObject.connect(self.pushButton_Del, QtCore.SIGNAL("clicked()"), self.tableWidget_SharedFileByMySelf.update)

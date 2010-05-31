@@ -26,7 +26,7 @@ class XMLFileGenerator():
         Poza inicjalizacja clasy sprawdza czy plik profilu udostepnianych plikow istnieje i jest poprawny.
         Jezeli nie podjemuje akcje typu tworzenie pliku, nadpisywanie pliku.
         '''
-        self.ClassName = "[XMLFileGenerator]->"
+        XMLFileGenerator.ClassName = "[XMLFileGenerator]->"
         self.Templates()
     def CreateXMLSharedFilesList(self):
         '''
@@ -137,6 +137,7 @@ class XMLFileGenerator():
         '''
         Sprawdza poprawnosc dokumentu zwraca True/False
         '''
+        MethodName = XMLFileGenerator.ClassName+"[ValidateXMLDocument]->"
         if intOption == 0:
             return etree.RelaxNG(etree.parse(TemplateSharedFiles)).validate(etree.parse(PastDoc))
         elif intOption == 1:
@@ -144,7 +145,7 @@ class XMLFileGenerator():
         elif intOption == 2:
             pass
         else:
-            print "Due to limitation of lxml 2.2.6 library, validation will be aborder and True will be returned"
+            print MethodName,"Due to limitation of lxml 2.2.6 library, validation will be aborder and True will be returned"
             return 0
     def GenerateResponsForServer(self, strStatus ="aboard", intChunk = None, bufData = None):
         '''

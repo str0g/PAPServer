@@ -34,7 +34,7 @@
    <string notr="true"/>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>1</number>
   </property>
   <property name="movable">
    <bool>true</bool>
@@ -133,6 +133,9 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTableWidget" name="tableWidget_SharedByServer">
+          <property name="editTriggers">
+           <set>QAbstractItemView::SelectedClicked</set>
+          </property>
           <property name="showDropIndicator" stdset="0">
            <bool>false</bool>
           </property>
@@ -154,6 +157,9 @@
           <property name="columnCount">
            <number>7</number>
           </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>120</number>
+          </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>120</number>
           </attribute>
@@ -270,6 +276,9 @@
           <property name="acceptDrops">
            <bool>true</bool>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::SelectedClicked</set>
+          </property>
           <property name="dragDropMode">
            <enum>QAbstractItemView::DropOnly</enum>
           </property>
@@ -288,6 +297,12 @@
           <property name="columnCount">
            <number>7</number>
           </property>
+          <attribute name="horizontalHeaderCascadingSectionResizes">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>120</number>
+          </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>false</bool>
           </attribute>
@@ -412,7 +427,7 @@ md5 już złamany jednak szybszy</string>
       <x>9</x>
       <y>9</y>
       <width>170</width>
-      <height>101</height>
+      <height>103</height>
      </rect>
     </property>
     <property name="acceptDrops">
@@ -476,7 +491,7 @@ md5 już złamany jednak szybszy</string>
       <x>9</x>
       <y>136</y>
       <width>164</width>
-      <height>101</height>
+      <height>103</height>
      </rect>
     </property>
     <property name="floating">
@@ -661,7 +676,7 @@ md5 już złamany jednak szybszy</string>
      <rect>
       <x>530</x>
       <y>10</y>
-      <width>361</width>
+      <width>362</width>
       <height>173</height>
      </rect>
     </property>

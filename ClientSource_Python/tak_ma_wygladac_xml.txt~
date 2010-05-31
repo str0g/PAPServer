@@ -17,11 +17,6 @@
     <TimeOut></TimeOut>		#TimeOut, dla pewnosci zeby dane zdazyly sie przeslac
 </Negotiation>
 
-<StreamedFilePreper>
-    <size></size>
-    <checksum></checksum> #rsa512
-</StreamedFilePreper>
-
 <?xml version="1.0" encoding="utf-8"?> 			# wersja xml ma byc dodawan po konsultacji z serwerem
 <StreamedFile>		#przesyl pliku
     <status></status>   #Status ok,wait, resend, aboard

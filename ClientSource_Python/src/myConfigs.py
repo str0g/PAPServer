@@ -36,7 +36,7 @@ class myConfigs(MsgsLib.MsgDeffinition):
     '''
     def __init__(self):
         self.ClassName = "[myConfigs]->"
-        self.ClientVersion = "0.0.5"
+        self.ClientVersion = "0.0.6"
         self.myPyVersion = "2.6.4"
         self.myQt4Version = ""
         self.maxServerVersion = ""

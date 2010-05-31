@@ -6,7 +6,7 @@
 ####Licenes GPL                        
 '''
 
-import telnetlib
+import telnetlib, socket
 import time, string
 from lxml import etree
 #Moje
@@ -16,43 +16,48 @@ class myTelnet():
     """
     This module keeps connection alive until disconnected method was run.
     """
-    def __init__(self, obj_myConfigs):
-        self.ClassName="[myTelnet]->"
+    def __init__(self, obj_myConfigs_T):
+        myTelnet.ClassName="[myTelnet]->"
         self.strSpecialChar = "\r\n\r\n"
         self.XMLVersion = 1.0
         self.ServerVersion = "0.0.0.0"
         self.intAmIroot = -1
-        self.obj_myConfigs = obj_myConfigs
+        self.strLogin =""
+        self.obj_myConfigs = obj_myConfigs_T
         self.TelnetConnect()
         self.RecivedData = 0
         self.UploadedData = 0
-        self.TimeOut = obj_myConfigs.TimeOut
+        self.TimeOut = obj_myConfigs_T.TimeOut
         self.SizeOfPacket = 1024*1024
         self.KB=1024
         self.MB=self.KB*1024
         print self.ClassName
     def Bandwidth(self, fVal1, fVal2, intdata):
-        fVal2 = int(intdata/(fVal2 - fVal1))
+        '''
+        Zwraca przepustowosc w B, KB, MB w zaleznosci od osiagnietej przepustowosci
+        '''
+        fVal2 = float(intdata/(fVal2 - fVal1))
         if fVal2 < self.KB:
-            return str(fVal2)+"B"
+            return str(int(fVal2))+"B"
         elif fVal2 < self.MB:
-            return str(fVal2)+"KB"
+            return str(round(fVal2/self.KB, 1))+"KB"
         else:
-            return str(fVal2)+"MB"
+            return str(round(fVal2/self.MB, 2))+"MB"
     def TelnetConnect(self):
         '''
         Lacze sie z serwerem i pobiera z niego podstawowe informacje
         '''
-        MethodName = self.ClassName+"[TelnetConnect]->"
+        MethodName = myTelnet.ClassName+"[TelnetConnect]->"
         print MethodName
         strBuffer = ""
         strBufferValue = ""
+        self.intAmIroot = -3
+        self.Telnet = None
         try:
             self.Telnet = telnetlib.Telnet(self.obj_myConfigs.Host,
                                            self.obj_myConfigs.Port,
                                            self.obj_myConfigs.TimeOut)
             self.Telnet.write(self.obj_myConfigs.User + self.strSpecialChar)
-            #self.Telnet.read_until(self.obj_myConfigs.User+"~$ ",self.TimeOut)
             strBuffer = self.Telnet.read_until(self.obj_myConfigs.User+"~$ ",self.obj_myConfigs.TimeOut)
             self.UploadedData = len(self.obj_myConfigs.User + self.strSpecialChar)
             self.RecivedData = len(strBuffer)
@@ -66,50 +71,71 @@ class myTelnet():
             print "ServerVersion["+self.ServerVersion+"]"
 
             strBufferValue = strBufferValue[:strBuffer.rfind("~$")]
-            strBufferValue = strBufferValue[strBufferValue.rfind("\n")+len("\n"):]
-            print "Who am I["+strBufferValue+"]"
-            if strBufferValue == "root~$ ":
+            self.strLogin = strBufferValue[strBufferValue.rfind("\n")+len("\n"):]
+            print "Who am I["+self.strLogin+"]"
+            if self.strLogin == "root~$ ":
                 self.intAmIroot = 1
-            elif strBufferValue == "unknow~$ ":
+            elif self.strLogin == "unknow~$ ":
                 self.intAmIroot = -1
             else:
                 self.intAmIroot = 0
+            return 0
         except EOFError,error:
             print MethodName,error
             self.intAmIroot = -2
+            return 1
+        except socket.error, error:
+            print MethodName,error
+            self.intAmIroot = -2
+            return 2
         
-    def TelnetCommunicate(self, command):
+    def TelnetCommunicate(self, command, timeout = 2):
         '''
         Ta metoda wysyla informacje do serwera, w przypadku bledu zwraca puste dane
         '''
-        MethodName = self.ClassName+"[TelnetCommunicate]->"
+        MethodName = myTelnet.ClassName+"[TelnetCommunicate]->"
         data=""
         try:
-            self.Telnet.write(command+ self.strSpecialChar)
-            self.UploadedData += len(self.obj_myConfigs.User + self.strSpecialChar)
-            data = self.Telnet.read_until(self.obj_myConfigs.User+"~$ ",self.obj_myConfigs.TimeOut)
-            self.RecivedData += len(data)
-            print "DATA RECIVED:",data,"<]>",self.RecivedData,"bajts""<]"
+            if self.Telnet != None:
+                self.Telnet.write(command+ self.strSpecialChar)
+                self.UploadedData += len(self.obj_myConfigs.User + self.strSpecialChar)
+                data = self.Telnet.read_until(self.obj_myConfigs.User+"~$ ",timeout)
+                self.RecivedData += len(data)
+                print "DATA RECIVED:",data,"<]>",self.RecivedData,"bajts""<]"
+                data = data[:data.rfind("\n"+self.strLogin)]
         except EOFError, error:
-            print MethodName+"----------------------"
             print MethodName,error
-            print MethodName+"----------------------"
+            data=""
+        except socket.error, error:
+            print MethodName,error
             data=""
 
         return data
+    def CheckIfConnectionIsAlive(self):
+        if self.TelnetCommunicate("Alive", 10) != "YES":
+            return 1
+        else:
+            return 0
     def SendWithSpecSize(self,data):
         return
     def TelnetDisconnect(self):
         '''
         Rozlaczam polaczenie
         '''
-        print self.ClassName+"Connection has been closed"
-        strReturn = self.TelnetCommunicate("DisconnectMe")
-        print "Recived Data[", self.RecivedData,"/",len(self.Telnet.read_all()),"] bajts"
-        print "Uploaded data[", self.UploadedData, "] bajts"
-        self.Telnet.close
+        if self.Telnet != None:
+            print myTelnet.ClassName+"Connection has been closed"
+            strReturn = self.TelnetCommunicate("DisconnectMe")
+            print "Recived Data[", self.RecivedData,"/"#,len(self.Telnet.read_all()),"] bajts"
+            print "Uploaded data[", self.UploadedData, "] bajts"
+            self.Telnet.close
+        else:
+            print myTelnet.ClassName+"Cleaning after connection fail"
+            strReturn = None
         return strReturn
     def TotalTransfer(self):
+        '''
+        Zwraca liczbowa wartosc ile danych zostal przetransferowanynch w bajtach
+        '''
         return self.RecivedData,self.UploadedData
     def NegSet(self, intSize, intTime):
         self.SizeOfPacket = intSize
@@ -119,10 +145,11 @@ class myTelnetParser(myTelnet, XMLFileGenerator):
     def __init__(self, obj_myConfigs,obj_listWidget_Console):
         myTelnet.__init__(self,obj_myConfigs)
         XMLFileGenerator.__init__(self)
-        self.obj_myConfigs = obj_myConfigs
+        #self.obj_myConfigs = obj_myConfigs
         self.obj_listWidget_Console = obj_listWidget_Console
         self.XMLListFromServer = None
-        print self.ClassName+"[Pareser]->"
+        myTelnetParser.ClassName= self.ClassName+"[Pareser]->"
+        print self.ClassName
     def AmIRoot(self):
         '''
         Zwraca wartosc zmiennej czy jestem rootem na serwerze
@@ -135,7 +162,10 @@ class myTelnetParser(myTelnet, XMLFileGenerator):
         '''
         print self.ClassName+"Asking Server for time as int"
         strRet = self.TelnetCommunicate("GetServerTime")
-        return time.ctime(int(strRet[:strRet.rfind("\n")]))
+        if strRet == "":
+            return "Server did not responed"
+        else:
+            return time.ctime(int(strRet))
     def AskForServerInfo(self):
         strReturn = self.TelnetCommunicate("GetServerInfo")
         return "Moze bedzie cos"
@@ -145,16 +175,16 @@ class myTelnetParser(myTelnet, XMLFileGenerator):
         Zwraca czy sie udalo
         '''
         retcode = 1
-        strReturn = self.TelnetCommunicate("SearchFor: "+strWords)
+        strReturn = self.TelnetCommunicate("SearchFor: "+strWords, 3)
         if  len(strReturn) >10:
-            self.XMLListFromServer = CreateXMLServerFilesList(strReturn)
+            self.XMLListFromServer = self.CreateXMLServerFilesList(strReturn)
             retcode = 0
         return retcode
     def GetXMLListFromServer(self):
         '''
         Jezeli z lista jest wszystko w porzadku to ja zwracam
         '''
-        if len(self.XMLListFromServer) >1:
+        if len(self.XMLListFromServer) >0:
             return self.XMLListFromServer
         else:
             return None
@@ -196,7 +226,7 @@ class myTelnetParser(myTelnet, XMLFileGenerator):
                     objBarWidget.setValue(100)
                     retcode = 0
             else:
-                print self.ClassName+"List is empty nothing send aborded"
+                print self.ClassName+"List is empty! Sending has been aborded"
         else:
             print self.ClassName+"List does NOT exist!"
         return retcode

@@ -58,6 +58,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.buf_XMLSerwerFilesList = None
 
     def SetUpObjects(self):
+        '''
+        Inicjuje ustawienia programu
+        '''
         self.SetConfigsOnPanel()
         self.SetSignals()
         self.MsgToConsole("Welcome")
@@ -67,12 +70,16 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.InicializeSharedList()
     ###XML LISTY
     def XMLLIstFromFIle(self):
+        '''
+        Sprawdza czy jest ustawiona wlasciwa sciezka dostepu do pliku
+        Tworzy pliku profilu udostepniania oraz validuje go
+        '''
         if myConfigs.SharedFiles == "":                                                                              #tworze plik w sciezce config/shared.xml
             print self.ClassName+"Path haven't been set, using default path"
             self.CreateXMLSharedFilesList()
             myConfigs.SharedFiles = "/config/shared.xml"
             self.lineEdit_PathSharedFile.setText(QtCore.QString(myConfigs.SharedFiles))
-            self.MsgBoxUniversal("Using default shared file")
+            self.MsgBoxUniversal("Using default shared file profile")
             self.WriteXMLToFile(myConfigs.SharedFiles, self.GetGeneratedXMLFile(self.buf_XMLSharedFilesList))
             #self.MsgBoxUniversal(u"Ustaw sciżkę do pliki , wktórym mają być lub są trzymane akutalnie udostępniane pliki")
         else:
@@ -127,34 +134,68 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             objTableWidget.clearContents
                 
     def InicializeSharedList(self, intOffset =0):
-        intLenOfBuffer = len(self.buf_XMLSharedFilesList)
-        intRowCount = self.tableWidget_SharedFileByMySelf.rowCount()
-        self.PurgeAnyList(self.buf_XMLSharedFilesList, self.tableWidget_SharedFileByMySelf)
+        if self.buf_XMLSharedFilesList != None:
+            intLenOfBuffer = len(self.buf_XMLSharedFilesList)
+            intRowCount = self.tableWidget_SharedFileByMySelf.rowCount()
+            self.PurgeAnyList(self.buf_XMLSharedFilesList, self.tableWidget_SharedFileByMySelf)
             
-        print "Wazna INF:", intLenOfBuffer, intRowCount
-        indexRow = intOffset
-        intValueForBar = 0
-        if intLenOfBuffer == 0:
-            ValueForBarOffset = 100
-        else:
-            ValueForBarOffset = 100/intLenOfBuffer
-        if intLenOfBuffer > 100:
-            ValueForBarOffset = intLenOfBuffer/100
-        self.progressBar_Shared.setValue(intValueForBar)
-        while indexRow < intLenOfBuffer:
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 0, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][0].text))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 1, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][1].text))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][2].text))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 3, QtGui.QTableWidgetItem(time.ctime(float(self.buf_XMLSharedFilesList[indexRow][5].text))))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 4, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][3].text+":"+self.buf_XMLSharedFilesList[indexRow][4].text))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 5, QtGui.QTableWidgetItem("0"))
-            self.tableWidget_SharedFileByMySelf.setItem(indexRow, 6, QtGui.QTableWidgetItem("0"))
-            indexRow += 1
-            self.tableWidget_SharedFileByMySelf.insertRow(indexRow)
-            intValueForBar += ValueForBarOffset
+            print "Wazna INF:", intLenOfBuffer, intRowCount
+            indexRow = intOffset
+            intValueForBar = 0
+            if intLenOfBuffer == 0:
+                ValueForBarOffset = 100
+            else:
+                ValueForBarOffset = 100/intLenOfBuffer
+            if intLenOfBuffer > 100:
+                ValueForBarOffset = intLenOfBuffer/100
             self.progressBar_Shared.setValue(intValueForBar)
-        self.progressBar_Shared.setValue(100)
-        self.MsgToConsole("...Done")
+            while indexRow < intLenOfBuffer:
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 0, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][0].text))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 1, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][1].text))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][2].text))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 3, QtGui.QTableWidgetItem(time.ctime(float(self.buf_XMLSharedFilesList[indexRow][5].text))))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 4, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][3].text+":"+self.buf_XMLSharedFilesList[indexRow][4].text))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 5, QtGui.QTableWidgetItem("0"))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 6, QtGui.QTableWidgetItem("0"))
+                indexRow += 1
+                self.tableWidget_SharedFileByMySelf.insertRow(indexRow)
+                intValueForBar += ValueForBarOffset
+                self.progressBar_Shared.setValue(intValueForBar)
+            self.progressBar_Shared.setValue(100)
+            self.MsgToConsole("...Done")
+        else:
+            self.MsgToConsole("Error: SharedList is Empty")
+    def InicializedSharedServerList(self, intOffset =0):
+        if self.buf_XMLSerwerFilesList != None:
+            intLenOfBuffer = len(self.buf_XMLSerwerFilesList)
+            intRowCount = self.tableWidget_SharedByServer.rowCount()
+            self.PurgeAnyList(self.buf_XMLSerwerFilesList, self.tableWidget_SharedByServer)
+        
+            indexRow = intOffset
+            intValueForBar = 0
+            if intLenOfBuffer == 0:
+                ValueForBarOffset = 100
+            else:
+                ValueForBarOffset = 100/intLenOfBuffer
+            if intLenOfBuffer > 100:
+                ValueForBarOffset = intLenOfBuffer/100
+            self.progressBar_MainServerShared.setValue(intValueForBar)
+            while indexRow < intLenOfBuffer:
+                self.tableWidget_SharedByServer.setItem(indexRow, 0, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][0].text))
+                self.tableWidget_SharedByServer.setItem(indexRow, 1, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][1].text))
+                self.tableWidget_SharedByServer.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][2].text))
+                self.tableWidget_SharedByServer.setItem(indexRow, 3, QtGui.QTableWidgetItem(time.ctime(float(self.buf_XMLSerwerFilesList[indexRow][5].text))))
+                self.tableWidget_SharedByServer.setItem(indexRow, 4, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][3].text+":"+self.buf_XMLSerwerFilesList[indexRow][4].text))
+        
+                indexRow += 1
+                self.tableWidget_SharedByServer.insertRow(indexRow)
+                intValueForBar += ValueForBarOffset
+                self.progressBar_MainServerShared.setValue(intValueForBar)
+            self.progressBar_MainServerShared.setValue(100)
+            self.MsgToConsole("...Done")
+        else:
+            self.MsgToConsole("Error: XMLServerList is Empty")
+        
     def AddFilesToSharedList(self):
         '''
         Metoda dodaje wskazane pliki i foldery do listy udostepnionych plikow.
@@ -198,6 +239,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         #
     ###Połaczenie
     def ConnectToServer(self):
+        '''
+        Laczy z serwerem oraz updatuje przyciski i console
+        '''
         MethodName = self.ClassName+"[ConnectToServer]->"
         strRet =""
         if self.ConnectedAs > -1:
@@ -214,11 +258,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             self.myTelnet = myTelnet.myTelnetParser(myConfigs,self.listWidget_console)
             self.MsgToConsole("Connecting to "+myConfigs.Host+"::"+str(myConfigs.Port))
             self.ConnectedAs = self.myTelnet.AmIRoot()
-            if self.ConnectedAs == -1:
-                self.myTelnet.TelnetDisconnect()
-                del self.myTelnet
-                self.MsgToConsole("Authorization failed, client is going to disconnect it self from server "+myConfigs.Host+"::"+str(myConfigs.Port))
-            else:
+            if self.ConnectedAs > -1:
                 self.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Rozłącz", None, QtGui.QApplication.UnicodeUTF8))
                 self.LocalServerTime = self.myTelnet.AskForServerTime()
                 self.MsgToConsole("Connected and authorized successful, local server time is: "+str(self.LocalServerTime))
@@ -229,9 +269,23 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
                     self.MsgToConsole("...done")
                 else:
                     self.MsgToConsole("...FAILD")
+            else:
+                self.myTelnet.TelnetDisconnect()
+                del self.myTelnet
+                if self.ConnectedAs == -1:
+                    self.MsgToConsole("Authorization failed, client is going to disconnect it self from server "+myConfigs.Host+"::"+str(myConfigs.Port))
+                elif self.ConnectedAs == -2:
+                    self.MsgToConsole("Server is not reachable "+myConfigs.Host+"::"+str(myConfigs.Port))
+                else:
+                    self.MsgToConsole("Unsupported and unkown error"+myConfigs.Host+"::"+str(myConfigs.Port))
     #odswierzyc layout
     def MsgToConsole(self,Msg1):
-        self.listWidget_console.insertItem(self.ConsoleMsgCounter,QtCore.QString(time.strftime(myConfigs.ConsoleTimeFormat)+" "+Msg1))
+        '''
+        Wpisuje odpowidenia wiadomosc do widgeta consoli oraz ustawia na niej focus consoli
+        '''
+        item = QtGui.QListWidgetItem(QtCore.QString(time.strftime(myConfigs.ConsoleTimeFormat)+" "+Msg1))
+        self.listWidget_console.insertItem(self.ConsoleMsgCounter, item)
+        self.listWidget_console.scrollToItem(item)
         self.ConsoleMsgCounter+=1
     ####SINGALS
     def SetSignals(self):
@@ -306,6 +360,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         print self.ClassName+"Bye Bye"
     ##Options
     def SetConfigsOnPanel(self):
+        '''
+        Ustawia wlasciwe wartosci startowe dla poszczegolnych elementow
+        '''
         print self.ClassName+"Setting up Option lables..."
         ###Options
         ##Floating windows
@@ -403,18 +460,31 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.progressBar_Zoom.setValue(value)
         self.webView_ProjectSite.setZoomFactor(float(value*0.01))
     def SendSearchForFiles(self):
+        '''
+        Sprawdza czy serwer dziala jezeli tak: 
+        Inicjuje wyszukiwanie plikow. 
+        Jezeli wyszukiwanie sie powidolo tworzona jest lista xml do przetworzenia
+        Wlacza sie updatowanie WidgetaTablicy trzymajacego wyniku poprzedniego szukania
+        Uruchamiane sa metody updatowania consoli
+        '''
         if self.myTelnet !=None:
             self.MsgToConsole("Asking server for ["+self.lineEdit_Search.displayText()+"]")
-            retcode = self.myTelnet.AskServerForFiles(str(self.lineEdit_Search.displayText()))
-            if retcode == 0:
-                self.MsgToConsole("List recived")
-                self.buf_XMLSerwerFilesList = GetXMLListFromServer()
-            elif retcode == 1:
-                self.MsgToConsole("File not found")
+            if self.myTelnet.CheckIfConnectionIsAlive() == 0:
+                retcode = self.myTelnet.AskServerForFiles(str(self.lineEdit_Search.displayText()))
+                if retcode == 0:
+                    self.MsgToConsole("List recived")
+                    self.buf_XMLSerwerFilesList = self.myTelnet.GetXMLListFromServer()
+                    self.MsgToConsole("Updating list widget")
+                    self.InicializedSharedServerList()
+                elif retcode == 1:
+                    self.MsgToConsole("File not found")
+                else:
+                    self.MsgToConsole("Unknown Error line ~459")
             else:
-                self.MsgToConsole("Connection Lost")
+                self.MsgToConsole("Connection to server has been lost")
         else:
             self.MsgToConsole("You are not connected to any server")
+                
             
 
 def myClient():
