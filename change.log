@@ -1,6 +1,20 @@
 [Version 0.0.821]
+Broken Database connection detection and handling
+More administration commands
+Fix Searching for multiple files
+Add search by any input character
+Better debugging
+Some optimizations
+
+[Client update 0.0.6]
+Gui update
+Handling for broken connection at any moment
+Bandwidth monitoring is now showing correct values
+Clean ups
+
+[Version 0.0.821]
 Change from dynamic banned list to Database banned list
-More administrative commands
+More administration commands
 Database support for searching, inserting, deleting, dropping, and creating.
 Clean after forked process.
 XML documents: Load from buffer or file, Creating, modifying, inserting, walking and printing.
