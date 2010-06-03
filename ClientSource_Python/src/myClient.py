@@ -355,8 +355,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         #del self.ToolBox
         if self.ConnectedAs > -1:
             print self.ClassName+"Disconnecting from server before Exit"
-            self.myTelnet.TelnetDisconnect()
-            del self.myTelnet
+            if self.myTelnet != None:
+                self.myTelnet.TelnetDisconnect()
+                del self.myTelnet
         print self.ClassName+"Bye Bye"
     ##Options
     def SetConfigsOnPanel(self):

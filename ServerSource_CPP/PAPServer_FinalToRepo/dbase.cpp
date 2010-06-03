@@ -9,17 +9,17 @@
 ///Headers
 #include "dbase.hpp"
 
-dBase::dBase(char *adr,char *user, char *pass,int opid):
+dBase::dBase(int opid):
             p_strClassName(new string("[dBase]["+liczba_na_string(opid)+"]->")),
             pConnection(mysql_init(NULL)),
-            pResult(NULL),
-            p_cAdrress(adr),
-            p_cUser(user),
-            p_cPass(pass),
-            p_cBassName("SharedBase"),
+            pResult(NULL),Row(NULL),
+            p_cAdrress(ServerConfigs::p_cMySqlServerAddress.c_str()),
+            p_cUser(ServerConfigs::p_cMySqlUser.c_str()),
+            p_cPass(ServerConfigs::p_cMySqlPass.c_str()),
+            p_cBassName(ServerConfigs::p_cMySqldBase.c_str()),
             p_cTableName("SharedFiles"),
             p_cTableBanned("BannedList"),
-            intOwnerPID(opid),bQuaryFaild(false){
+            bQuaryFaild(false),intOwnerPID(opid){
     ///Sprawdza czy udalo sie zainicjalizowac elementy biblioteki mysql jezeli nie to konczy forka
     if(!pConnection){
         cerr<<*p_strClassName<<"pConnection: Error"<<endl;
@@ -60,7 +60,7 @@ bool dBase::insertBanned(char *ip,char* lname){
             (ID,UserIP,UserLocalName,Tries,Banned)\
             VALUES(NULL,'%s','%s',%d,%d)"\
             ,p_cTableBanned,ip,lname, 1,0);
-    return dbQuery(Query,"Missbehaving user has added to banedlist");
+    return dbQuery(Query,"Missbehaving user has been add to banedlist");
 }
 bool dBase::del(){
     ///Kasuje wskazana wpisy po pid uzytkownika
@@ -87,17 +87,19 @@ bool dBase::dBaseRun(){
     }
     return true;
 }
-void dBase::Rebuild_SharedFilesTable(){
+bool dBase::Rebuild_SharedFilesTable(){
     ///Tworzy tablice Shared
     if(drop("SharedFiles")){
-        createShared();
+        return createShared();
     }
+    return false;
 }
-void dBase::Rebuild_BannedTable(){
+bool dBase::Rebuild_BannedTable(){
     ///Tworzy tablice Banned
     if(drop("BannedList")){
-        createBanned();
+        return createBanned();
     }
+    return false;
 }
 bool dBase::CheckForTable(char *cTable){
     ///Sprawdza czy tabela istnieje, jezeli nie to ja tworzy
@@ -140,23 +142,24 @@ bool dBase::Search2(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,cha
     char Query[128];
     cout<<"Searching for "<<cSearch1<<" in "<<cToSearch1<<endl;
     if (Coma){
-        sprintf(Query, "select * from %s where %s like '%s' and %s != '%s'\
+        sprintf(Query, "select * from %s where %s = '%s' and %s = '%s'\
                 ",p_cTableBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);
     }else{
-        sprintf(Query, "select * from %s where %s like %s and %s != %s\
+        sprintf(Query, "select * from %s where %s = %s and %s = %s\
                 ",p_cTableBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);
     }
     return dbQuery(Query,"Check results2");
 }
-\
-bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,const char *cSearch,bool Coma,char *cToSearch){
+
+bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *strSearch,bool Coma,char *cToSearch){
     /**
     *Szukana wskazanego pliku wysyalajac zapytanie do bazy
     *Jezeli wyszukanie bylo bez bledow tworzy dokument xml
     *Do dokumentu trafiaja wyniki wyszukiwania jezeli byly jakie kolwiek
     *strctrl jest lista utworzona ze stringa w celu "zmagazynowania unikalnych wartosci plikow" jakie uzytkownik wyszukiwal (ochrona przed wymuszeniami)
     */
-    if(Search(cSearch,Coma,cToSearch)){
+    if(*strSearch=="" or *strSearch==" "){ return false; }
+    if(Search(strSearch->c_str(),Coma,cToSearch)){
         pResult = mysql_store_result(pConnection);
         while(Row = mysql_fetch_row(pResult)){
             if(p_xmlStructPointer->insertXMLSearch(Row[1],Row[2],Row[3],Row[4],Row[5],Row[6],Row[7])){
@@ -219,11 +222,11 @@ bool dBase::dbQuery(char *buf,string MsgOnSuccess){
     ///slozu do komunikacju z baza zwraca czy sie udalo czy nie oraz wyswietla komunikaty
     if(mysql_query(pConnection,buf) != 0){ //execute the query
         cerr<<buf<<endl;
-        cerr<<*p_strClassName<<"Error Executing the query: "<<mysql_error(pConnection)<<endl;
-        bQuaryFaild =true;
+        cerr<<GetLocalTime()<<*p_strClassName<<"Error Executing the query: "<<mysql_error(pConnection)<<endl;
+        bQuaryFaild = true;
         return false;
     }
-    cout<<*p_strClassName<<MsgOnSuccess<<endl;
+    cout<<GetLocalTime()<<*p_strClassName<<MsgOnSuccess<<endl;
     return true;
 }
 bool dBase::drop(char *cTable){

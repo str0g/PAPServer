@@ -35,9 +35,10 @@ class ServerConfigs: TimeCout{
     protected:
         string p_strClassName;//!<Trzyma nazwę klasy
     public:
-        static char *p_cMySqlServerAddress;//!<Adres serwera mysql
-        static char *p_cMySqlUser;//!<Uzytkownik serwera mysql
-        static char *p_cMySqlPass;//!<Haslo uzytkownika mysql
+        static string p_cMySqlServerAddress;//!<Adres serwera mysql
+        static string p_cMySqlUser;//!<Uzytkownik serwera mysql
+        static string p_cMySqlPass;//!<Haslo uzytkownika mysql
+        static string p_cMySqldBase;//!<Nazwa bazy mysql
         static string strFormatter;//!<Formatownaie logow
         static string strServerIP;//!<Ustawienia IP naszego serwera
         static string strLoggingFileDir;//!<Scieżka do pliku logowania
@@ -54,14 +55,11 @@ class ServerConfigs: TimeCout{
         static string *strMyPath;//!<Sćieżka, z której odpalamy serwer(pobierana z getpwd)
         static string strMyPath2;//!<Pobierana z argv[0];
         static string g_strSlash;//!<Trzyma Slasha, kiedys mozna zrobic porotwalnosc serwera
-        ServerConfigs(string,string *);
+        ServerConfigs(char*,string *);
         ~ServerConfigs();
         void SetVaruables();
         void ShowConfigs();
         static void Clean();
-        static char GetMySqlServerAddress();
-        static char GetMySqlUser();
-        static char GetMySqlPass();
 };
 ///Ta klasa wyświetla wersje serwera.
 class myServerVersion{

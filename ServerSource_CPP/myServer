@@ -1,0 +1,41 @@
+#! /bin/bash
+
+#######################################
+#Author Łukasz Buśko                  #
+#Contact buskol.waw.pl@gmail.com      #
+#Licenes GNU/GPL General Pulic License#
+#######################################
+
+### BEGIN INIT INFO
+# Provides:        myServer
+# Required-Start:  $myServer
+# Required-Stop:   $myServer
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Start myServer
+### END INIT INFO
+
+DAEMON=$(pwd)/bin/myServer
+JOB=MyServer
+OPTIONS=$(pwd)/configs/config.xml
+
+PID=$(status $JOB 2>/dev/null | awk '/[0-9]$/ { print $NF }')
+echo $PID
+
+case $1 in
+        start)
+                start-stop-daemon --start --quiet --oknodo --exec $DAEMON -- -c $OPTIONS
+                ;;
+        stop)
+                start-stop-daemon --stop --quiet --oknodo --exec $DAEMON
+                ;;
+        restart|force-reload)
+                $0 stop && sleep 31 && $0 start
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                exit 1
+                ;;
+esac
+
+exit 0

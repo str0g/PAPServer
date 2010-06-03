@@ -40,7 +40,7 @@ using std::cin;
 using std::endl;
 
 ///Główna klasa serwera
-class myServerAPP:public TimeCout,public dBase{
+class myServerAPP:public dBase{
     private:
         bool chk4file(string);
     protected:

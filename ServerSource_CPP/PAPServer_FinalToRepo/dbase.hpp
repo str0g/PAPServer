@@ -16,6 +16,7 @@
 #include <mysql++.h>
 #include "SupportClass.hpp"
 #include "XMLParser.hpp"
+#include "ServerConfigs.hpp"
 
 ///Specials
 using std::string;
@@ -24,21 +25,21 @@ using std::cerr;
 using std::cin;
 using std::endl;
 
-class dBase{
+class dBase:public TimeCout{
     public:
-        dBase(char*,char*,char*,int );
+        dBase(int );
         virtual ~dBase();
         void Close();
         bool insertFile(const char *,const char *,const char* ,const char *,const char* ,const char*);
         bool insertBanned(char *,char *);
         bool del();
         bool dBaseRun();
-        void Rebuild_SharedFilesTable();
-        void Rebuild_BannedTable();
+        bool Rebuild_SharedFilesTable();
+        bool Rebuild_BannedTable();
         bool CheckForTable(char *cTable);
         bool Search(const char *,bool =true,char * ="FileName");
         bool Search2(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
-        bool SearchFiles(XMLParser *,string *,const char *,bool =true,char * ="FileName");
+        bool SearchFiles(XMLParser *,string *,string *,bool =true,char * ="FileName");
         bool AskIfBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
         bool UpdateBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
     protected:
@@ -49,10 +50,10 @@ class dBase{
         MYSQL *pConnection;//!< Wskaznik inicjalizayjny biblioteki mysql
         MYSQL_RES *pResult; //!< Wskaznik do rezultatow ewentualnego wyszykiwania
         MYSQL_ROW Row; //!< Wskaznik dla wierszow
-        char *p_cAdrress; //!< adress bazy
-        char *p_cUser; //!< user bazy
-        char *p_cPass; //!< haslo usera
-        char *p_cBassName; //!< Nazwa bazy
+        const char *p_cAdrress; //!< adress bazy
+        const char *p_cUser; //!< user bazy
+        const char *p_cPass; //!< haslo usera
+        const char *p_cBassName; //!< Nazwa bazy
         char *p_cTableName; //!<Nazwa tabeli z udostepnionymi plikami
         char *p_cTableBanned; //!< Nazawa tabeli ze zbanowanymi lub ostrzezonymi uzytkownikami
         int intOwnerPID; //!< Pid procesu

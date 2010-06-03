@@ -40,7 +40,7 @@ using std::cin;
 using std::endl;
 
 ///Ta klasa obsluguje klienta
-class myClientHandler:public TimeCout, public dBase{
+class myClientHandler:public dBase{
     private:
         ///Info
         string *p_strClassName;//!<Nazwa klasy
@@ -56,7 +56,8 @@ class myClientHandler:public TimeCout, public dBase{
         int intChunkSizeUP;//!<Predkosc z jaka klient deklaruje wysyl na sekunde
         int intChunkSizeDL;//!<Predkosc z jaka klient deklaruje odbior na sekunde
         int intChunkSize;//!<Predkosc z jaka klient bedzie dostawac dane od innego klienta wysyl na sekunde
-        string strLineEnd;
+        string strLineEnd;//!<
+        bool bLoop;//!<Wylaczenie petli obslugi klienta
         ///Statistics
         int intIndex4Zombie;//!<Unikalny index
         double dCreationTime;//!<Czas utworzenia procesu od właczenia programu

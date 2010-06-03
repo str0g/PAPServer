@@ -1,3 +1,10 @@
+[Version 0.0.9]
+Fix broken searching in banned list
+Multi files search is working very accurent and fast
+Improved debugging
+Configs for mysql database has been add
+Decrised memory leaking in serverconfgis
+
 [Version 0.0.844]
 Broken Database connection detection and handling
 More administration commands

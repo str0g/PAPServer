@@ -22,10 +22,10 @@ myClientHandler::myClientHandler(boost::asio::ip::tcp::socket &Socket,
                                  ClientIP(IP),ClientUserLocal(user),ClientUser("unknow"),ClientPassword(pass),
                                  intPID(pid),id_Session(0),intGID(0),
                                  intChunkSizeUP(BUFFER_1024),intChunkSizeDL(BUFFER_1024),intChunkSize(BUFFER_1024),
-                                 strLineEnd("\r\n\r\n"),
+                                 strLineEnd("\r\n\r\n"),bLoop(true),
                                  intIndex4Zombie(index), dCreationTime(GetTime()),tt_CreationTime(GetTimeAfter1970AsTime()),
                                  ui64DataSend(0),ui64DataRecieved(0),ui64SendMsgCouter(0),ui64RecivedMsgCouter(0),p_strSearchCtrl(NULL),
-                                 p_strSharedXmlList(NULL),p_strSearchRezualt(NULL),dBase("localhost","root","qwerty71",pid){
+                                 p_strSharedXmlList(NULL),p_strSearchRezualt(NULL),dBase(pid){
     p_strClassName = new string("[myClassHandler]->[Zombie::"+liczba_na_string(intIndex4Zombie)+"]->");
     cerr<<GetLocalTime()<<*p_strClassName<<" Connecting::"<<ClientUser<<"@"<<ClientIP<<"("<<ClientUserLocal<<")"<<", PID:"<<intPID<<endl;
     p_strSharedXmlList = new XMLParser;
@@ -41,7 +41,7 @@ myClientHandler::~myClientHandler(){
     delete p_strSharedXmlList;
     delete p_strSearchRezualt;
     delete p_strSearchCtrl;
-    cerr<<*p_strClassName<<"Summary:\n"<<ExcutionTime(GetTime(),dCreationTime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<", Data in/out::"<<ui64DataRecieved<<"/"<<ui64DataSend<<"bajts, Msg in/out::"<<ui64RecivedMsgCouter<<"/"<<ui64SendMsgCouter<<"\n----------"<<endl;
+    cerr<<GetLocalTime()<<*p_strClassName<<"Summary:\n"<<ExcutionTime(GetTime(),dCreationTime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<", Data in/out::"<<ui64DataRecieved<<"/"<<ui64DataSend<<"bajts, Msg in/out::"<<ui64RecivedMsgCouter<<"/"<<ui64SendMsgCouter<<"\n----------"<<endl;
     delete p_strClassName;
 }
 template <typename T>
@@ -90,25 +90,24 @@ void myClientHandler::myClientRun(){
     string *p_strSocketBuffer = NULL;
     string strSocketBuffer;
     string strError;
-    bool bloop = true;
 
     double XTime = GetTime();
         if (dBaseRun()){
             Authorization();
             if (intIndex4Zombie > 0 and intGID >= 0){
-                Send(SendInfoAboutServer());
-                while (bloop and !bQuaryFaild){
+                bLoop = Send(SendInfoAboutServer());
+                while (bLoop and !bQuaryFaild){
                     cout<<*p_strClassName+"Ready for new data"<<endl;
                     p_strSocketBuffer = &GetDataFromSocket();
                     cout<<*p_strClassName+"Something recived"<<endl;
                     if (p_strSocketBuffer){
                         if (*p_strSocketBuffer == "DisconnectMe" or Cout(GetTime(),XTime) >= *ServerConfigs::p_intClientTimeOut){
-                            bloop = false;
+                            bLoop = false;
                             if(*ServerConfigs::p_intClientTimeOut - Cout(GetTime(),XTime)<= 0){strError = "::TimeOut";}
                         }else if (p_strSocketBuffer->length()>1) {
                             XTime = GetTime();
-                            AskIfBanned(ClientIP,ClientUserLocal) == true ? bloop = false : bloop;
-                            if(bloop){
+                            AskIfBanned(ClientIP,ClientUserLocal) == true ? bLoop = false : bLoop;
+                            if(bLoop){
                                 usleep(100);
                                 RecivedDataParser(p_strSocketBuffer);
                             }
@@ -118,9 +117,9 @@ void myClientHandler::myClientRun(){
                         cout<<GetLocalTime()<<*p_strClassName<<"Connection problem::"<<*ServerConfigs::p_intClientTimeOut - Cout(GetTime(),XTime)<<" to time out"<<endl;
                         usleep(100);
                     }//p_strSocketBuffer
-                    //if (bloop == true ) { bloop = Send(); }
-                    if (Cout(GetTime(),XTime)>= *ServerConfigs::p_intClientTimeOut){ bloop = false; }
-                }//while bloop
+                    //if (bLoop == true ) { bLoop = Send(); }
+                    if (Cout(GetTime(),XTime)>= *ServerConfigs::p_intClientTimeOut){ bLoop = false; }
+                }//while bLoop
             }else{
                 if (intGID == -1){ strError ="::Logging failed";}
             }//if intIndex4Zombie
@@ -168,9 +167,6 @@ string &myClientHandler::GetDataFromSocket(){
 void myClientHandler::RecivedDataParser(string *p_strData){
     ///Pareser decyduje o wiekszosci akcji podjetych przez serwer na podstawie polecen od klienta
     string strSearchFor = "SearchFor: ";
-    int intCounter = 0 ;
-    int intIndexHelperBegin = 0;
-    int intIndexHelperEnd = 0;
 
     if(p_strData->length()<100){
         cout<<"Recived(below100):"<<*p_strData<<"("<<p_strData->length()<<")"<<endl;
@@ -183,9 +179,17 @@ void myClientHandler::RecivedDataParser(string *p_strData){
             createFile(*ServerConfigs::strMyPath+ServerConfigs::g_strSlash+"ShutdownServer.pid");
         }else if (*p_strData == "ShowBannedList"){
         }else if (*p_strData == "ResetBanned"){
-            Rebuild_BannedTable();
+            if (Rebuild_BannedTable()){
+                Send("OK");
+            }else{
+                Send("Faild");
+            }
         }else if (*p_strData == "ResetShared"){
-            Rebuild_SharedFilesTable();
+            if(Rebuild_SharedFilesTable()){
+                Send("OK");
+            }else{
+                Send("Faild");
+            }
         }else if (*p_strData == "ShutdownForced"){
             RestartShutdownServer("stop");
         }else if(*p_strData == "Restart"){
@@ -219,45 +223,35 @@ void myClientHandler::RecivedDataParser(string *p_strData){
 
 void myClientHandler::Serach4Files(string *p_strData,string *strSearchFor){
     ///Wyszukiwanie plikow oraz wysylanie rezultatow wyszukiwania do klienta
-    int intIndexHelperBegin = 0;
-    int intIndexHelperEnd = 0;
-    p_strData->erase(
-                     0,//p_strData->find(strSearchFor),
-                     strSearchFor->length()
-                     );
-    if (p_strData->length() > 1){
+    int intB = 0;
+    int intEnd = 0;
+    int intLenght = p_strData->length();
+    string strSpacja = " ";
+    int intSpacja = strSpacja.length();
 
         if(!p_strSearchRezualt->createXMLDoc("SharedFiles")){
-            if((int)p_strData->find(",")!= -1){
-                intIndexHelperBegin = 0;
+            intB = p_strData->find(strSearchFor->c_str(),intB)+strSearchFor->length();
+            if (intB != -1){
                 do{
-                    intIndexHelperEnd = p_strData->find(",",intIndexHelperBegin);
-                        if(intIndexHelperEnd != -1){
-                            if(!SearchFiles(p_strSearchRezualt,
+                    intEnd = p_strData->find(strSpacja,intB);
+                    intEnd == -1 ? intEnd = intLenght : intEnd;
+                    if(!SearchFiles(p_strSearchRezualt,
                                         p_strSearchCtrl,
-                                        p_strData->substr(intIndexHelperBegin,intIndexHelperEnd - intIndexHelperBegin).c_str()
+                                        &p_strData->substr(intB,intEnd-intB)
                                         )
-                            ){
-                            Send("666");
-                            }else{
-                                Send(p_strSearchRezualt->GetXMLAsString());
-                            }//search fail
-                        }//not found
-                        intIndexHelperBegin = intIndexHelperEnd;
-                }while(intIndexHelperEnd != -1);
-            }else{
-                if(!SearchFiles(p_strSearchRezualt,p_strSearchCtrl,
-                            p_strData->c_str())){
-                    Send("666");
-                }else{
-                    Send(p_strSearchRezualt->GetXMLAsString());
-                }
-            }
+                    ){
+                        cerr<<GetLocalTime()<<*p_strClassName<<"SearchForFiles:"<<endl;
+                        intEnd = intLenght;
+                    }
+                    intB = intEnd+intSpacja;
+                }while(intEnd!=intLenght);
+            Send(p_strSearchRezualt->GetXMLAsString());
+            usleep(50);
             CleanSearchRezualt();
+            }else{
+                Send("404");
+            }
         }//createXML
-    }else{
-        UpdateBanned(ClientIP,ClientUserLocal);
-    }//length check
 }
 
 void myClientHandler::SetNewFileList(string *p_data){
@@ -290,8 +284,10 @@ bool myClientHandler::Send(string strData){
     }
     catch (const std::exception &e)
     {
-        fprintf(stderr,"%s[Send]-> %s",p_strClassName->c_str(),e.what());
-        return false;
+        fprintf(stderr,"%s[Send]-> %s\n",p_strClassName->c_str(),e.what());
+        exit(0);
+        //bLoop = false;
+        //return false;
 
     }
     ++ui64SendMsgCouter;
@@ -302,7 +298,7 @@ string myClientHandler::SendInfoAboutServer(){
 ///Zwraca infromacje o serwerze
     string strCommandlist = "XML=1.0,\nServer_Version=";
     strCommandlist.append(AutoVersion::FULLVERSION_STRING);
-    strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,SearchFor: <arg0,arg1,arg2>,RenewSharedList");
+    strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,SearchFor: <arg0 arg1 arg2>,RenewSharedList,Alive");
     if( intGID == 0 or intGID == 1){
         strCommandlist.append("ResetBanned,ResetShared,Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
     }

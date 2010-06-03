@@ -33,10 +33,7 @@ int myServerAPP::intValueOnExit = 1;
 myServerAPP::myServerAPP(): p_strClassNameE("[myServer]->"),
                             bServerLoop(true),dCreationTime(GetTime()),
                             tt_CreationTime(GetTimeAfter1970AsTime()),
-                            dBase(ServerConfigs::p_cMySqlServerAddress,
-                            ServerConfigs::p_cMySqlUser,
-                            ServerConfigs::p_cMySqlPass,
-                            getppid()){
+                            dBase(getppid()){
     //p_strClassNameE = new string("[myServer]->");
     cerr<<GetLocalTime()<<p_strClassNameE<<"PID:"<<getppid()<<endl;
     intValueOnExit = 0;
@@ -125,7 +122,7 @@ void myServerAPP::RunServer(){
                         if (pid == 0){
                         myClientHandler *o = new myClientHandler(socket,
                                   p_cIPHelp,p_cLoclaHelp,"tu bedzie pass",
-                                  intIndexZombie,getppid());
+                                  intIndexZombie,getpid());
                         o->myClientRun();
                         delete o;
                         //waitpid ( pid, NULL,WNOHANG);

@@ -17,9 +17,10 @@ using std::endl;
 ///Globals Varuabels
 
 string ServerConfigs::g_strSlash = "/";
-char *ServerConfigs::p_cMySqlServerAddress="localhost";
-char *ServerConfigs::p_cMySqlUser="root";
-char *ServerConfigs::p_cMySqlPass="qwerty71";
+string ServerConfigs::p_cMySqlServerAddress;//="localhost";
+string ServerConfigs::p_cMySqlUser;//="root";
+string ServerConfigs::p_cMySqlPass;//="qwerty71";
+string ServerConfigs::p_cMySqldBase;//="SharedBase";
 string ServerConfigs::strLoggingFileDir;
 string ServerConfigs::strServerIP;
 string ServerConfigs::strFormatter;
@@ -40,7 +41,6 @@ int *ServerConfigs::p_intChunkSize = NULL;
 void ServerConfigs::SetVaruables(){
     double Xtime = GetTime();
     string p_strMethodName = (p_strClassName + "[SetVarubales]->");
-    //char cBuf[128];
 
     XMLParser *X = new XMLParser;
     X->LoadXMLFile(p_strConfigPath);
@@ -57,45 +57,27 @@ void ServerConfigs::SetVaruables(){
     intStdIn = X->GetNumericValue<int>("StdIn","0");
     intDemonize = X->GetNumericValue<int>("Demonize","1");
     p_intMultiThreading = &X->p_GetNumericValue<int>("MultiThreading","1");
-    /*
+
     X->SetWorkNode("sqlconn");
     ///MySQL
-    p_cMySqlServerAddress = X->GetStringValue("sqlAddress","localhost").c_str();
-    p_cMySqlUser = X->GetStringValue("User","localhost").c_str();
-    p_cMySqlPass = X->GetStringValue("","localhost").c_str();*/
+    p_cMySqlServerAddress = X->GetStringValue("Address","localhost");
+    p_cMySqlUser = X->GetStringValue("User","root");
+    p_cMySqlPass = X->GetStringValue("Password","qwerty71");
+    p_cMySqldBase = X->GetStringValue("dBaseName","SharedBase");
+
     ///connection
     X->SetWorkNode("connection");
     strServerIP = X->GetStringValue("Address","127.0.0.1");
     intServerPort = X->GetNumericValue<int>("Port","6666");
     p_intClientTimeOut = &X->p_GetNumericValue<int>("ClientTimeOut","60");
     p_intChunkSize = &X->p_GetNumericValue<int>("ChunkSize","1024");
-    *p_intChunkSize *= 1024;/*
-if(X->SetWorkNode("SharedFiles")){
-                    if(X->GoDeeper()){
-                        cout<<"Wazne:-------"<<endl;
-                        cout<<X->GetStringValue("FilePath","")<<endl;
-                        cout<<X->GetStringValue("FileName","")<<endl;
-                        cout<<X->GetStringValue("FileSize","")<<endl;
-                    }X->NextElement();
-                    if(X->NextElement()){
-                        cout<<"Wazne:-------"<<endl;
-                        cout<<X->GetStringValue("FilePath","")<<endl;
-                        cout<<X->GetStringValue("FileName","")<<endl;
-                        cout<<X->GetStringValue("FileSize","")<<endl;
-                    }
-                    if(X->PrevElement()){
-                        cout<<"Wazne:-------"<<endl;
-                        cout<<X->GetStringValue("FilePath","")<<endl;
-                        cout<<X->GetStringValue("FileName","")<<endl;
-                        cout<<X->GetStringValue("FileSize","")<<endl;
-                    }
-                }*/
+    *p_intChunkSize *= 1024;
+
     ///Setting up static values
     Set_strTimeFormatter(strFormatter);
 
     delete X;
     cout<<p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<endl;
-    //delete p_strMethodName;
 }
 
 
@@ -124,6 +106,7 @@ void ServerConfigs::ShowConfigs(){
     cout<<"SQL address: "<<p_cMySqlServerAddress<<endl;
     cout<<"SQL user: "<<p_cMySqlUser<<endl;
     cout<<"SQL password: "<<p_cMySqlPass<<endl;
+    cout<<"SQL password: "<<p_cMySqldBase<<endl;
 
     cout<<"[Server Connection]"<<endl;
     cout<<"Server Adress: "<<strServerIP<<endl;
@@ -134,14 +117,13 @@ void ServerConfigs::ShowConfigs(){
     cout<<p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<endl;
 }
 
-ServerConfigs::ServerConfigs(string strMsg1,string *p_strMsg2):p_strClassName("[ServerConfigs]->"){
+ServerConfigs::ServerConfigs(char *cMsg1,string *p_strMsg2):p_strClassName("[ServerConfigs]->"){
     //p_strClassName = new string ("[ServerConfigs]->");
     p_strConfigPath = p_strMsg2;
     char *path=NULL;
     path=getcwd(path,BUFFER);
-    //strMyPath = new string(path);
-    strMyPath2 = strMsg1;
-    string strPath = path;
+    strMyPath2 = liczba_na_string(cMsg1);
+    string strPath = liczba_na_string(path);
     free(path);
 
     if (!p_strConfigPath){ p_strConfigPath = new string (strPath+g_strSlash+"configs"+g_strSlash+"config.xml"); }
@@ -165,12 +147,3 @@ void ServerConfigs::Clean(){
     p_intMultiThreading = NULL;
 }
 
-char ServerConfigs::GetMySqlServerAddress(){
-    return *p_cMySqlServerAddress;
-}
-char ServerConfigs::GetMySqlUser(){
-    return *p_cMySqlUser;
-}
-char ServerConfigs::GetMySqlPass(){
-    return *p_cMySqlPass;
-}
