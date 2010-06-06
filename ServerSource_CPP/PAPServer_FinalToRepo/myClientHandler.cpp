@@ -17,16 +17,16 @@ using std::endl;
 
 myClientHandler::myClientHandler(boost::asio::ip::tcp::socket &Socket,
                                  char *IP,char *user, string pass,
-                                 int index,int pid):
+                                 int index,int pid,int ulimit):
                                  p_strClassName(NULL), ClientSocket(Socket),
                                  ClientIP(IP),ClientUserLocal(user),ClientUser("unknow"),ClientPassword(pass),
-                                 intPID(pid),id_Session(0),intGID(0),
+                                 intPID(pid),id_Session(0),intGID(0),intUserLimit(ulimit),
                                  intChunkSizeUP(BUFFER_1024),intChunkSizeDL(BUFFER_1024),intChunkSize(BUFFER_1024),
                                  strLineEnd("\r\n\r\n"),bLoop(true),
                                  intIndex4Zombie(index), dCreationTime(GetTime()),tt_CreationTime(GetTimeAfter1970AsTime()),
                                  ui64DataSend(0),ui64DataRecieved(0),ui64SendMsgCouter(0),ui64RecivedMsgCouter(0),p_strSearchCtrl(NULL),
                                  p_strSharedXmlList(NULL),p_strSearchRezualt(NULL),dBase(pid){
-    p_strClassName = new string("[myClassHandler]->[Zombie::"+liczba_na_string(intIndex4Zombie)+"]->");
+    p_strClassName = new string("[myClassHandler]->[Zombie::"+myConv::ToString(intIndex4Zombie)+"]->");
     cerr<<GetLocalTime()<<*p_strClassName<<" Connecting::"<<ClientUser<<"@"<<ClientIP<<"("<<ClientUserLocal<<")"<<", PID:"<<intPID<<endl;
     p_strSharedXmlList = new XMLParser;
     p_strSearchRezualt = new XMLParser;
@@ -65,14 +65,14 @@ void myClientHandler::Authorization(){
         }else if (*p_strSocketBuffer == "user" ){
             intGID = 2;
             ClientUser = "user";
-        }else if (*p_strSocketBuffer == "debug"){
-            intGID = 1;
-            ClientUser = "debug";
+            if(intUserLimit > *ServerConfigs::p_intMaxClients){
+                Send("Clients Limit has been reached");
+                bLoop = false;
+            }
         }else if (*p_strSocketBuffer == "root"){
             intGID = 0;
             syslog(3, "PAP Server someone is logged as root");
             MsgToOut("Logged as root");
-            //cerr<<GetLocalTime()<<*p_strClassName<<" Logged as root::"<<ClientUser<<"@"<<ClientIP<<"("<<ClientUserLocal<<")"<<endl;
             ClientUser = "root";
         }else{
             intGID = -1; cout<<"else"<<endl;
@@ -176,7 +176,7 @@ void myClientHandler::RecivedDataParser(string *p_strData){
     //Commandes for common user
     if (intGID == 0 or intGID == 1){
         if(*p_strData == "Shutdown"){
-            createFile(*ServerConfigs::strMyPath+ServerConfigs::g_strSlash+"ShutdownServer.pid");
+            createFile(*ServerConfigs::p_strMyPath+ServerConfigs::g_strSlash+"ShutdownServer.pid");
         }else if (*p_strData == "ShowBannedList"){
         }else if (*p_strData == "ResetBanned"){
             if (Rebuild_BannedTable()){
@@ -353,7 +353,7 @@ bool myClientHandler::GetSharedListFromClient(bool bError = false){
         if (p_strData){
             XMLBuf->LoadXMLFromBuf(const_cast<char*> (p_strData->c_str()));
             if (XMLBuf->GetStringValue("data","")!= ""){
-                if(XMLBuf->GetNumericValue<int>("chunk",liczba_na_string(intIndex))> intIndex){
+                if(XMLBuf->GetNumericValue<int>("chunk",myConv::ToString(intIndex))> intIndex){
                     p_strBuf->append(XMLBuf->GetStringValue("data",""));
                     if ( (int)XMLBuf->GetStringValue("data","").length() + intIndex == intSizeOfList ){
                         intIndex = intSizeOfList;
@@ -361,7 +361,7 @@ bool myClientHandler::GetSharedListFromClient(bool bError = false){
                         intIndex += intChunkSizeUP;
                     }
                 }else{
-                    if(XMLBuf->GetNumericValue<int>("chunk",liczba_na_string(intIndex))-intIndex < intIndex){
+                    if(XMLBuf->GetNumericValue<int>("chunk",myConv::ToString(intIndex))-intIndex < intIndex){
                         //WYSLIJ SEND_PREVOUSE_CHUNK
                     }else{
                         //WYSLIJ SEND_NEXT_CHUNK
@@ -369,7 +369,7 @@ bool myClientHandler::GetSharedListFromClient(bool bError = false){
                 }
             }else{//WYSLIJ RESEND
             }
-            if (intIndex != XMLBuf->GetNumericValue<int>("chunk",liczba_na_string(intSizeOfList))){
+            if (intIndex != XMLBuf->GetNumericValue<int>("chunk",myConv::ToString(intSizeOfList))){
                 GetSharedListFromClient(true);
                 break;
             }
@@ -475,7 +475,7 @@ bool myClientHandler::createFile(string FileName){
 void myClientHandler::RestartShutdownServer(string strOption){
 ///Wymuszenie wylaczenia lub restartu servera, ktory jest "zarzadzany przez usluge systemowej demonizacji"
     Send("Server will be "+strOption+" in a moment");
-    strOption.insert(0,"cd "+*ServerConfigs::strMyPath+"; ./myServer ");
+    strOption.insert(0,"cd "+*ServerConfigs::p_strMyPath+"; ./myServer ");
     cout<<strOption<<endl;
     system(strOption.c_str());
 }

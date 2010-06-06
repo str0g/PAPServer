@@ -26,6 +26,7 @@
 
 ///Moje
 #include "ServerConfigs.hpp"
+#include "ServerFilesLoader.hpp"
 #include "SupportClass.hpp"
 #include "myClientHandler.hpp"
 #include "myDefines.hpp"
@@ -38,6 +39,8 @@ using std::cout;
 using std::cerr;
 using std::cin;
 using std::endl;
+
+//int g_intNumerOfCurrentProcess = 0;
 
 ///Główna klasa serwera
 class myServerAPP:public dBase{

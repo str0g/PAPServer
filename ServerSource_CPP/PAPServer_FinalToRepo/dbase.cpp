@@ -8,9 +8,8 @@
  **************************************************************/
 ///Headers
 #include "dbase.hpp"
-
 dBase::dBase(int opid):
-            p_strClassName(new string("[dBase]["+liczba_na_string(opid)+"]->")),
+            p_strClassName(new string("[dBase]["+myConv::ToString(opid)+"]->")),
             pConnection(mysql_init(NULL)),
             pResult(NULL),Row(NULL),
             p_cAdrress(ServerConfigs::p_cMySqlServerAddress.c_str()),
@@ -185,7 +184,7 @@ bool dBase::AskIfBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1
     if(Search2(cSearch1,cSearch2,Coma,cToSearch1,cToSearch2)){
         pResult = mysql_store_result(pConnection);
         while(Row = mysql_fetch_row(pResult)){
-            string_naliczba<int>(Row[4]) == 1 ? bBanned = true : bBanned;
+            myConv::FromString<int>(Row[4]) == 1 ? bBanned = true : bBanned;
         }
         mysql_free_result(pResult);
     }
@@ -200,13 +199,12 @@ bool dBase::UpdateBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch
     char Query[256];
     int intValue=1;
     int intBanned=0;
-    konwertery k;
     if(Search2(cSearch1,cSearch2,Coma,cToSearch1,cToSearch2)){
         pResult = mysql_store_result(pConnection);
         if(mysql_num_rows(pResult)>0){
             while(Row = mysql_fetch_row(pResult)){
-                intValue = (k.string_naliczba<int>(Row[3]))+1;
-                intValue > 3 ? intBanned = 1 : intBanned;
+                intValue = (myConv::FromString<int>(Row[3]))+1;
+                intValue > *ServerConfigs::p_intMaxWarnings ? intBanned = 1 : intBanned;
             }
             sprintf(Query,"update %s set Tries = '%d',Banned ='%d' where %s ='%s' and %s ='%s'"
                     ,p_cTableBanned,intValue,intBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);

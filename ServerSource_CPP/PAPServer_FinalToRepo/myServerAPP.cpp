@@ -17,6 +17,8 @@ using std::cin;
 using std::endl;
 ///Globals Varuabels
 
+int g_intNumerOfCurrentProcess = 0;
+
 void sig_child(int sig)
 {
     ///Usuwa skonczone procesy potomne
@@ -27,15 +29,16 @@ void sig_child(int sig)
     TimeCout *Time = new TimeCout;
     cerr<<Time->GetLocalTime()<<"[sig_child]->Zombie Pid: "<<pid<<" Status: "<<status<<endl;
     delete Time;
+    --g_intNumerOfCurrentProcess;
 }
 
 int myServerAPP::intValueOnExit = 1;
 myServerAPP::myServerAPP(): p_strClassNameE("[myServer]->"),
                             bServerLoop(true),dCreationTime(GetTime()),
                             tt_CreationTime(GetTimeAfter1970AsTime()),
-                            dBase(getppid()){
+                            dBase(getpid()){
     //p_strClassNameE = new string("[myServer]->");
-    cerr<<GetLocalTime()<<p_strClassNameE<<"PID:"<<getppid()<<endl;
+    cerr<<GetLocalTime()<<p_strClassNameE<<"PID:"<<getpid()<<endl;
     intValueOnExit = 0;
 }
 myServerAPP::~myServerAPP(){
@@ -64,14 +67,27 @@ void myServerAPP::RunServer(){
     */
     double Xtime = GetTime();
     string p_strMethodName = (p_strClassNameE+"[RunServer]->");
-    string strShutdown = (*ServerConfigs::strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"ShutdownServer.pid");
-    string strRestart = (*ServerConfigs::strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"RestartServer.pid");
-    ///Test
+    string strShutdown = (*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"ShutdownServer.pid");
+    string strRestart = (*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"RestartServer.pid");
+
     if ( *ServerConfigs::p_intMultiThreading == 2){
         signal(SIGCHLD, sig_child);
     }
     int intIndexZombie = 0 ;
     pid_t pid;
+    ///Test
+/*
+    ServerFilesLoader *SFL = new ServerFilesLoader;
+    SFL->Run();
+    delete SFL;
+    */
+
+    ServerFilesLoader SFL(getpid());
+    SFL.Run();
+/*
+    boost::thread thrd(SFL);//mial byc dummy thread ale cos jest nie tak :(
+    thrd.join();*/
+
     char p_cIPHelp[16];
     char p_cLoclaHelp[1024];
 
@@ -90,6 +106,7 @@ void myServerAPP::RunServer(){
                 acceptor.accept(socket);
                 boost::asio::ip::tcp::endpoint endpoint = socket.local_endpoint();
                 ++intIndexZombie;
+                ++g_intNumerOfCurrentProcess;
                 if(chk4file(strShutdown)){
                     bServerLoop = false;
                     if (remove(strShutdown.c_str())==-1){
@@ -111,7 +128,7 @@ void myServerAPP::RunServer(){
                     *Nie dziala Odlaczanie klientow*/
                         myClientHandler *o = new myClientHandler(socket,
                                   p_cIPHelp,p_cLoclaHelp,"tu bedzie pass",
-                                  intIndexZombie,getppid());
+                                  intIndexZombie,getppid(),g_intNumerOfCurrentProcess);
                         o->myClientRun();
                         delete o;
                     }else{
@@ -122,7 +139,7 @@ void myServerAPP::RunServer(){
                         if (pid == 0){
                         myClientHandler *o = new myClientHandler(socket,
                                   p_cIPHelp,p_cLoclaHelp,"tu bedzie pass",
-                                  intIndexZombie,getpid());
+                                  intIndexZombie,getpid(),g_intNumerOfCurrentProcess);
                         o->myClientRun();
                         delete o;
                         //waitpid ( pid, NULL,WNOHANG);

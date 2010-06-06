@@ -33,6 +33,23 @@ void XMLParser::vCleanXMLTree(){
     strUsedAs.clear();
 }
 
+bool XMLParser::delCurrentElement(){
+    if (p_WorkNode){
+        mxmlDelete(p_WorkNode);
+        p_WorkNode = NULL;
+        return true;
+    }
+    return false;
+}
+
+bool XMLParser::delSearchedElement(string *p_str){
+    if(SetWorkNode(*p_str)){
+        mxmlDelete(p_WorkNode);
+        p_WorkNode = NULL;
+        return true;
+    }
+    return false;
+}
 
 int XMLParser::LoadXMLFile(string *p_strConfigPath){
     /**
@@ -50,12 +67,14 @@ int XMLParser::LoadXMLFile(string *p_strConfigPath){
     fp = fopen(p_strConfigPath->c_str(), "rb");
     if(fp){
         p_PointerToXMLTree = mxmlLoadFile(NULL, fp, MXML_OPAQUE_CALLBACK);
+        p_WorkNode = p_PointerToXMLTree;
+        p_childNode = p_PointerToXMLTree;
         fclose(fp);
         strBufFrom = "Loaded from File";
         return 0;
     }
     else{
-        cout<<p_strClassName<<" Failed to open: "<<*p_strConfigPath<<endl;
+        cout<<*p_strClassName<<" Failed to open: "<<*p_strConfigPath<<endl;
         return 1;
     }
 }
@@ -75,6 +94,8 @@ int XMLParser::LoadXMLFromBuf(const char *p_cBuf){//T *p_cBuf){
     }
     if(p_cBuf){
         p_PointerToXMLTree = mxmlLoadString(NULL,p_cBuf,MXML_OPAQUE_CALLBACK);
+        p_WorkNode = p_PointerToXMLTree;
+        p_childNode = p_PointerToXMLTree;
         strBufFrom = "Loaded from buffer";
         return 0;
     }else{
@@ -192,7 +213,12 @@ bool XMLParser::createXMLDoc(string EleName,string standard){
 
 string XMLParser::GetCurrentElement(){
     ///Zwraca wartosc elementu,mozna nim pobrac nazwe tego elementu lub przechowywana wartosc
-    return p_WorkNode->value.opaque;
+    if (p_WorkNode){
+        return p_WorkNode->value.opaque;
+    }else{
+        cerr<<"Work node pointer is NULL"<<endl;
+        return "";
+    }
 }
 
 string XMLParser::GetStringValue(string strWordToSearch,string strValueOnError){
@@ -281,7 +307,7 @@ char &XMLParser::GetXMLAsChar(){
 string XMLParser::GetXMLAsString(){
     ///Strumieniem operatora dokonuje konwersji z char* na stringa
     char *p_cBuf = &GetXMLAsChar();
-    string ret = liczba_na_string(p_cBuf);
+    string ret = myConv::ToString(p_cBuf);
     free(p_cBuf);
     return ret;
 }

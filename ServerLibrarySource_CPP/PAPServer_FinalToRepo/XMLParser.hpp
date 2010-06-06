@@ -16,6 +16,7 @@
 
 ///Moje
 #include "SupportClass.hpp"
+#include "myConv.hpp"
 
 ///Specials
 using std::string;
@@ -25,7 +26,7 @@ using std::cin;
 using std::endl;
 
 /// Ta klasa przetwarza plik XML w celu pobrania z niego wyszukiwanej wartości. Zwaraca dane jako string lub dowolną okresloną.
-class XMLParser: public konwertery{
+class XMLParser{
     private:
         string *p_strClassName; //!<Nazwa klasy
         mxml_node_t *p_PointerToXMLTree; //!< Wskaznik, w który bedzie wskazywał na strukture XML
@@ -44,6 +45,8 @@ class XMLParser: public konwertery{
         //destroy
         virtual ~XMLParser();
         void vCleanXMLTree();
+        bool delCurrentElement();
+        bool delSearchedElement(string*);
         //walk
         bool GoDeeper();
         bool GoUpper();
@@ -58,12 +61,12 @@ class XMLParser: public konwertery{
         template <typename T>
         T GetNumericValue(string strWordToSearch,string strValueOnError){
    ///Zwraca rezlutat wyszukania stringa po konwersji do określonego typu.
-   return string_naliczba<T> (GetStringValue(strWordToSearch,strValueOnError));
+   return myConv::FromString<T> (GetStringValue(strWordToSearch,strValueOnError));
    }
         template <typename T>
         T &p_GetNumericValue(string strWordToSearch,string strValueOnError){
     ///Zwraca wskaznik do rezlutatu wyszukania stringa po konwersji do określonego typu.
-    T *p_strReturn = new T (string_naliczba<T> (GetStringValue(strWordToSearch,strValueOnError)));
+    T *p_strReturn = new T (myConv::FromString<T> (GetStringValue(strWordToSearch,strValueOnError)));
     return *p_strReturn;
         }
         string GetStringValue(string,string);

@@ -74,7 +74,7 @@ double TimeCout::Cout(double dLiczbaA, double dLiczbaB){
 
 string TimeCout::ExcutionTime(double A,double B){
     ///Zwraca stringa składający się z opis + rożnice czasu
-    return "Execution: "+liczba_na_string(Cout(A,B))+"s";
+    return "Execution: "+myConv::ToString(Cout(A,B))+"s";
 }
 
 string TimeCout::GetLocalTime(){
@@ -141,9 +141,4 @@ void debugMsg::MsgWithDelay(string *strMsg, int intValue =1){
     ///Wiadmość, z opóźnieniem
     cout<<*strMsg<<endl;
     sleep(intValue);
-}
-
-konwertery::konwertery(){
-}
-konwertery::~konwertery(){
 }

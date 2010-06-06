@@ -17,6 +17,7 @@
 #include "SupportClass.hpp"
 #include "XMLParser.hpp"
 #include "ServerConfigs.hpp"
+#include "myConv.hpp"
 
 ///Specials
 using std::string;
@@ -28,6 +29,7 @@ using std::endl;
 class dBase:public TimeCout{
     public:
         dBase(int );
+        dBase();
         virtual ~dBase();
         void Close();
         bool insertFile(const char *,const char *,const char* ,const char *,const char* ,const char*);

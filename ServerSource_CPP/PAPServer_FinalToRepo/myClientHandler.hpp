@@ -32,6 +32,7 @@
 #include "myDefines.hpp"
 #include "listBanned.hpp"
 #include "dbase.hpp"
+#include "myConv.hpp"
 ///Specials
 using std::string;
 using std::cout;
@@ -53,6 +54,7 @@ class myClientHandler:public dBase{
         int intPID;//!<Pid procesu
         int id_Session;//!<Czy sesja aktywna
         int intGID;//!<Poziom dostepu uzytkownika
+        int intUserLimit;//!<Trzyma wartosc, ktorym userm jestem w ustalonym limicie polaczen
         int intChunkSizeUP;//!<Predkosc z jaka klient deklaruje wysyl na sekunde
         int intChunkSizeDL;//!<Predkosc z jaka klient deklaruje odbior na sekunde
         int intChunkSize;//!<Predkosc z jaka klient bedzie dostawac dane od innego klienta wysyl na sekunde
@@ -98,7 +100,7 @@ class myClientHandler:public dBase{
         //Methods
         myClientHandler(boost::asio::ip::tcp::socket &,
                         char*,char*,string,
-                        int,int);
+                        int,int,int);
         virtual ~myClientHandler();
         void myClientRun();
         void myclientShutdownServer();

@@ -25,12 +25,14 @@ string ServerConfigs::strLoggingFileDir;
 string ServerConfigs::strServerIP;
 string ServerConfigs::strFormatter;
 string *ServerConfigs::p_strConfigPath = NULL;
-string *ServerConfigs::strMyPath = NULL;
+string *ServerConfigs::p_strMyPath = NULL;
 string ServerConfigs::strMyPath2;
 int ServerConfigs::intStdErr = 0;
 int ServerConfigs::intStdOut = 0;
 int ServerConfigs::intDemonize = 0;
 int *ServerConfigs::p_intMultiThreading = NULL;
+int *ServerConfigs::p_intMaxClients = NULL;
+int *ServerConfigs::p_intMaxWarnings = NULL;
 int ServerConfigs::intLoggingToFile = 0;
 int ServerConfigs::intStdIn = 0;
 int ServerConfigs::intServerPort = 0;
@@ -42,8 +44,12 @@ void ServerConfigs::SetVaruables(){
     double Xtime = GetTime();
     string p_strMethodName = (p_strClassName + "[SetVarubales]->");
 
+
     XMLParser *X = new XMLParser;
     X->LoadXMLFile(p_strConfigPath);
+
+    while(X->delSearchedElement(&string("description")));
+
     X->SetWorkNode("configs");
     ///Logger
     X->SetWorkNode("logger");
@@ -72,6 +78,8 @@ void ServerConfigs::SetVaruables(){
     p_intClientTimeOut = &X->p_GetNumericValue<int>("ClientTimeOut","60");
     p_intChunkSize = &X->p_GetNumericValue<int>("ChunkSize","1024");
     *p_intChunkSize *= 1024;
+    p_intMaxClients = &X->p_GetNumericValue<int>("MaxClients","100");
+    p_intMaxWarnings = &X->p_GetNumericValue<int>("BanAfterWarnings","3");
 
     ///Setting up static values
     Set_strTimeFormatter(strFormatter);
@@ -93,7 +101,7 @@ void ServerConfigs::ShowConfigs(){
     cout<<"Lenght of formatter outputs: "<<GetLocalTime().length()<<endl;
 
     cout<<"[Server]"<<endl;
-    cout<<"MyPath: "<<*strMyPath<<endl;
+    cout<<"MyPath: "<<*p_strMyPath<<endl;
     cout<<"MyPath2: "<<strMyPath2<<endl;
     cout<<"ConfigPath: "<<*p_strConfigPath<<endl;
     cout<<"StdIn: "<<intStdIn<<endl;
@@ -117,18 +125,19 @@ void ServerConfigs::ShowConfigs(){
     cout<<p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<endl;
 }
 
-ServerConfigs::ServerConfigs(char *cMsg1,string *p_strMsg2):p_strClassName("[ServerConfigs]->"){
+ServerConfigs::ServerConfigs(string strMsg1,string *p_strMsg2):p_strClassName("[ServerConfigs]->"){
     //p_strClassName = new string ("[ServerConfigs]->");
     p_strConfigPath = p_strMsg2;
+    //delete p_strMsg2;
     char *path=NULL;
     path=getcwd(path,BUFFER);
-    strMyPath2 = liczba_na_string(cMsg1);
-    string strPath = liczba_na_string(path);
+    strMyPath2 = strMsg1;
+    string strPath = myConv::ToString(path);
     free(path);
 
     if (!p_strConfigPath){ p_strConfigPath = new string (strPath+g_strSlash+"configs"+g_strSlash+"config.xml"); }
     if (p_strConfigPath->length()<2){ p_strConfigPath = new string (strPath+g_strSlash+"configs"+g_strSlash+"config.xml"); }
-    strMyPath = new string(p_strConfigPath->substr(0,p_strConfigPath->rfind(g_strSlash+"configs")));
+    p_strMyPath = new string(p_strConfigPath->substr(0,p_strConfigPath->rfind(g_strSlash+"configs"))+g_strSlash);
 }
 
 ServerConfigs::~ServerConfigs(){
@@ -139,11 +148,15 @@ ServerConfigs::~ServerConfigs(){
 void ServerConfigs::Clean(){
     delete p_strConfigPath;
     p_strConfigPath = NULL;
-    delete strMyPath;
-    strMyPath = NULL;
+    delete p_strMyPath;
+    p_strMyPath = NULL;
     delete p_intClientTimeOut;
-    p_intClientTimeOut =NULL;
+    p_intClientTimeOut = NULL;
     delete p_intMultiThreading;
     p_intMultiThreading = NULL;
+    delete p_intMaxClients;
+    p_intMaxClients = NULL;
+    delete p_intMaxWarnings;
+    p_intMaxWarnings = NULL;
 }
 

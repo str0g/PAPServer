@@ -1,5 +1,7 @@
 [Version 0.1.0]
-Capability to insert files from Pool folder into database(at startup).
++Order table
++Thread to add files at server startup to database
++capability to add send files to database
 Add Hash md5,rsa512
 Converters to/from string are inline since now.
 Add maximal Clients Limit

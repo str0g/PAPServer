@@ -22,6 +22,7 @@
 #include "XMLParser.hpp"
 #include "version.h"
 #include "myDefines.hpp"
+#include "myConv.hpp"
 
 ///Specials
 using std::string;
@@ -49,13 +50,15 @@ class ServerConfigs: TimeCout{
         static int intStdIn;//!<Informacja o użyciu cin
         static int intDemonize;//!<Informacja o demonizacji
         static int *p_intMultiThreading;//!<Informacja o tym czy serwer bedze interacyjny lub wielowatkowy.
+        static int *p_intMaxClients;//!<Maksymalna ilosc klientow
+        static int *p_intMaxWarnings;//!<Maksymalan ilosc ostrzez po jakich serwer zbanuje klienta.
         static int intLoggingToFile;//!<Informacja o logowaniu
         static int intServerPort;//!<Port na którym serwer będzie nasłuchiwać.
         static string *p_strConfigPath;//!<Scieżka do pliku logów
-        static string *strMyPath;//!<Sćieżka, z której odpalamy serwer(pobierana z getpwd)
+        static string *p_strMyPath;//!<Sćieżka, z której odpalamy serwer(pobierana z getpwd)
         static string strMyPath2;//!<Pobierana z argv[0];
         static string g_strSlash;//!<Trzyma Slasha, kiedys mozna zrobic porotwalnosc serwera
-        ServerConfigs(char*,string *);
+        ServerConfigs(string,string *);
         ~ServerConfigs();
         void SetVaruables();
         void ShowConfigs();
