@@ -9,33 +9,23 @@
 	<server>
 		<StdIn>0</StdIn><description>0 - Redirect to /dev/null</description>
 		<StdErr>1</StdErr><description>0 - Redirect to dev/null, 1 - redirect to LoggingFileDir(default), 2 - redirect to tty</description>
-		<StdOut>1</StdOut><description>0 - Redirect to dev/null(default), 1 - redirect to LoggingFileDir(debug), 2 - redirect to tty</description>
+		<StdOut>2</StdOut><description>0 - Redirect to dev/null(default), 1 - redirect to LoggingFileDir(debug), 2 - redirect to tty</description>
 		<Demonize>0</Demonize><description>0 - Disable 1 - Enable(default)</description>
-		<MultiThreading>2</MultiThreading><description>0 - Iterative, 1 - MultiThreading(defualt)</description>
+		<MultiThreading>2</MultiThreading><description>0 - Iterative, 1 - Multi Threading, 2 - Multi Process(default)</description>
 	</server>
 	<sqlconn>
-		<Address>localhost</Address>
-		<User>root</User>
-		<Password>qwerty71</Password>
-		<dBaseName>SharedBase</dBaseName>
+		<Address>localhost</Address><description>MySql server adres</description>
+		<User>root</User><description>MySql user</description>
+		<Password>qwerty71</Password><description>MySql password</description>
+		<dBaseName>SharedBase</dBaseName><description>MySql database name</description>
 	</sqlconn>
 	<connection>
 		<Address>127.0.0.1</Address><description>Not implemented</description>
 		<Port>6666</Port><description>On this port Server will be listening for clients</description>
-		<ClientTimeOut>60</ClientTimeOut><description>After this inactivity in seconds, server is going to disconnect client</description>
-		<ChunkSize>1024</ChunkSize><description>KiloBites * Numer You input</description>
+		<ClientTimeOut>60</ClientTimeOut><description>After this inactivity in seconds, server is going to disconnect client(N/A)</description>
+		<ChunkSize>1024</ChunkSize><description>Kilobytes * Number You input(N/A)</description>
+        <MaxClients>100</MaxClients><description>Maximal number of clients connect at one time</description>
+        <BanAfterWarnings>3</BanAfterWarnings><description>Maximal warnings before client is going to be banned</description>
 	</connection>
-	<SharedFiles>
-		<File0>
-			<FilePath>siezka/do/pliku</FilePath>
-			<FileName>pliku</FileName>
-			<FileSize>11</FileSize>
-		</File0>
-		<File1>
-			<FilePath>siezka/do/2pliku</FilePath>
-			<FileName>2pliku</FileName>
-			<FileSize>22</FileSize>
-		</File1>
-	</SharedFiles>
 </configs>
 
