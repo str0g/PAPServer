@@ -32,22 +32,24 @@ class dBase:public TimeCout{
         dBase();
         virtual ~dBase();
         void Close();
+        void mClose();
         bool insertFile(const char *,const char *,const char* ,const char *,const char* ,const char*);
         bool insertBanned(char *,char *);
         bool del();
         bool dBaseRun();
         bool Rebuild_SharedFilesTable();
         bool Rebuild_BannedTable();
+        bool Rebuild_Orderd();
         bool CheckForTable(char *cTable);
         bool Search(const char *,bool =true,char * ="FileName");
         bool Search2(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
+        bool Search3(const char*,const char*);
         bool SearchFiles(XMLParser *,string *,string *,bool =true,char * ="FileName");
         bool AskIfBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
         bool UpdateBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
-    protected:
-        bool bQuaryFaild;//!<Jezeli wystapi tragiczny w skutkach blad polaczenia to warto o tym fakcie wiedziec
+        int newOrder(const char*,const char*);
     private:
-        string *p_strClassName;//!<Nazwa klasy unikalna dla kazdnego procesu
+        string *p_strClassNameD;//!<Nazwa klasy unikalna dla kazdnego procesu
         //Data
         MYSQL *pConnection;//!< Wskaznik inicjalizayjny biblioteki mysql
         MYSQL_RES *pResult; //!< Wskaznik do rezultatow ewentualnego wyszykiwania
@@ -58,6 +60,7 @@ class dBase:public TimeCout{
         const char *p_cBassName; //!< Nazwa bazy
         char *p_cTableName; //!<Nazwa tabeli z udostepnionymi plikami
         char *p_cTableBanned; //!< Nazawa tabeli ze zbanowanymi lub ostrzezonymi uzytkownikami
+        char *p_cTableOrderd;//!<Nazwa tabeli zamowien
         int intOwnerPID; //!< Pid procesu
         //metods
         int dBaseTemplate(){}
@@ -65,6 +68,7 @@ class dBase:public TimeCout{
         bool drop(char *cTable);
         bool createShared();
         bool createBanned();
+        bool createOrderd();
 };
 
 

@@ -17,11 +17,15 @@
 #include <dirent.h>
 #include <errno.h>
 #include <vector>
+#include <fstream>
 #include "dbase.hpp"
 #include "myHash.hpp"
 #include "XMLParser.hpp"
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/shared_ptr.hpp>
 
 ///Specials
 using std::string;
@@ -40,23 +44,29 @@ class ServerFilesLoader: public dBase{
         string *p_strFileBuf;//!<Buffor do pliku otwieranego w celu hashowania (hashowanie mozna przeprowadzic na raty ale bez makara)
         int intDirScanDepth;//!<Glebokosc skanowania rekurencyjnego (1024)
         int intDirScanCounter;//!<Licznik glebokosci skanowania
-        XMLParser *p_xmlFile;
+        XMLParser *p_xmlFile;//!<wskaznik do struktury xml
+        //boost::shared_ptr<boost::thread> m_thread;//!<wskaznik do watku
 
-        void cleanFileBuf();
-        void cleanXML();
+        void clearFileBuf();
+        void clearXML();
         bool LoadFileToBuf(const string*);
         //bool SetWorkDir();
         bool RunCheck();
         void ListDir(const boostfs::path &);
         void InsertTodBase();
+        //save
+        void SaveList();
     public:
         ServerFilesLoader(int);
         ~ServerFilesLoader();
+        void Die();
         void Run(){
             if(RunCheck()){
                 ListDir( strWorkDir );
+                SaveList();
                 cerr<<GetLocalTime()<<strClassName<<"All works has been done"<<endl;
             }
+            Die();
         }
         void operator()(){
             Run();

@@ -23,15 +23,22 @@ ServerFilesLoader::ServerFilesLoader(int pid):strClassName("[ServerFilesLoader]-
                                         intDirScanDepth(1024),
                                         intDirScanCounter(0),
                                         p_strFileBuf(NULL),
-                                        p_xmlFile(new XMLParser),
+                                        p_xmlFile(new XMLParser),//m_thread(boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&ServerFilesLoader::Run, this)))),
                                         dBase(pid){
+
 }
 ServerFilesLoader::~ServerFilesLoader(){
-    cleanFileBuf();
-    cleanXML();
+    Die();
 }
 
-void ServerFilesLoader::cleanFileBuf(){
+void ServerFilesLoader::Die(){
+    clearFileBuf();
+    clearXML();
+    //mClose();
+    //m_thread->join();
+}
+
+void ServerFilesLoader::clearFileBuf(){
 /**
 * Czysci buffor pliku, jezeli potrzeba
 */
@@ -82,7 +89,7 @@ bool ServerFilesLoader::LoadFileToBuf(const string *fname){
     return false;
 }
 
-void ServerFilesLoader::cleanXML(){
+void ServerFilesLoader::clearXML(){
 /**
 *Zwalnia wskaznik do struktory xml
 */
@@ -101,12 +108,24 @@ bool ServerFilesLoader::RunCheck(){
     return dBaseRun();
 }
 
+void ServerFilesLoader::SaveList(){
+    std::ofstream out(strPathToXMLFile.c_str());
+    string *p_strBuf = new string(p_xmlFile->GetXMLAsString());
+    out << *p_strBuf;
+    out.close();
+    cerr<<GetLocalTime()<<strClassName<<"SharedList.xml Size ["<<p_strBuf->size()<<"]"<<endl;
+    cerr<<GetLocalTime()<<strClassName<<"SharedList.xml Hash ["<<Hash::SHA512(*p_strBuf)<<"]"<<endl;
+    delete p_strBuf;
+}
+
 void ServerFilesLoader::ListDir(const boostfs::path & directory){
 /**
 * Laduje rekurencyjnie plik z folderu Pool do bazy danych
 * Dodac validacje z xml oraz dodwania jezeli trzeba...
+* Jezeli plik ma zly status, czyli jest uszkodzony w sposob uniemozliwiajacy odczytanie jego atrybutow jest usuwany listy xml jezeli byl dodany.
 */
     string strMethodName = strClassName+"[ListDir]->";
+    bool bAdd=false;
 
     if( boostfs::exists( directory ) ){
         boostfs::directory_iterator end ;
@@ -120,22 +139,76 @@ void ServerFilesLoader::ListDir(const boostfs::path & directory){
             }//if dir
             else{
                 //cerr << iter->path().file_string() << " (file)\n" ;
+                p_xmlFile->ResetWorkPointer();
                 if (is_regular_file(iter->status())){
-                    if(LoadFileToBuf(&iter->path().file_string())){
+                    if(p_xmlFile->Seatch4Value(&(iter->path().file_string()))){
+                        p_xmlFile->GoUpper();
+                        for(int i=0; i<5; ++i){
+                            p_xmlFile->NextElement();
+                        }
+                        p_xmlFile->GoDeeper();
+                        if(myConv::FromString<int>(p_xmlFile->GetCurrentElement()) != last_write_time(iter->path())){
+                            cerr<<GetLocalTime()<<strMethodName<<"Warning File ["<<iter->path().file_string()<<"] has change since last time"<<endl;
+                            p_xmlFile->setCurrentElementValue(myConv::ToString(last_write_time(iter->path())).c_str());
+                            p_xmlFile->GoUpper();
+
+                            p_xmlFile->PrevElement();
+                            p_xmlFile->GoDeeper();
+                            if(LoadFileToBuf(&iter->path().file_string())){
+                                p_xmlFile->setCurrentElementValue(Hash::SHA512(*p_strFileBuf).c_str());
+                            }
+                            clearFileBuf();
+                            p_xmlFile->GoUpper();
+                            p_xmlFile->PrevElement();
+                            p_xmlFile->PrevElement();
+                            p_xmlFile->GoDeeper();
+                            p_xmlFile->setCurrentElementValue(myConv::ToString(file_size(iter->path())).c_str());
+                            //other actions
+                        }
+                    }else{
+                        if(LoadFileToBuf(&iter->path().file_string())){
+                            p_xmlFile->SetWorkNode("SharedFiles");
+                            p_xmlFile->insertXMLSearch((iter->path().file_string()).c_str(),
+                                                    (iter->path().filename()).c_str(),
+                                                    (myConv::ToString(file_size(iter->path()))).c_str(),
+                                                    string("sha512").c_str(),
+                                                    (Hash::SHA512(*p_strFileBuf)).c_str(),
+                                                    (myConv::ToString(last_write_time(iter->path()))).c_str(),
+                                                    string("0").c_str()
+                                                    );
+                        }
+                        clearFileBuf();
+                    }
+                    p_xmlFile->ResetWorkPointer();
+                    if(p_xmlFile->Seatch4Value(&(iter->path().file_string()))){
+                        p_xmlFile->GoUpper();
+                        for(int i=0; i<4; ++i){
+                            p_xmlFile->NextElement();
+                        }
+                        p_xmlFile->GoDeeper();
                         if(!insertFile((iter->path().file_string()).c_str(),
                                 (iter->path().filename()).c_str(),
                                 myConv::ToString(file_size(iter->path())).c_str(),
                                 string("sha512").c_str(),
-                                Hash::SHA512(*p_strFileBuf).c_str(),
+                                p_xmlFile->GetCurrentElement().c_str(),
                                 myConv::ToString(last_write_time(iter->path())).c_str()
                                 )){
                                     cerr<<GetLocalTime()<<strMethodName<<"Fail to insert file into database ["<<iter->path().file_string()<<"]"<<endl;
-                                }
-                    }//load file
-                    cleanFileBuf();
+                            }
+                        }//load file
+                        else{ cerr<<GetLocalTime()<<strMethodName<<"Nothing to be shared?"<<endl;}
+                        clearFileBuf();
+                    //}//is regular
+                    //}
                 }//status
                 else{
                     cerr<<GetLocalTime()<<strMethodName<<"File has bad status ["<<iter->path().file_string()<<"]"<<endl;
+                    //dodac usuwanie z XML
+                    if(p_xmlFile->Seatch4Value(&(iter->path().file_string()))){
+                        p_xmlFile->GoUpper();
+                        p_xmlFile->GoUpper();
+                        p_xmlFile->delCurrentElement();
+                    }
                 }//status
             }//if dir_ file
         }//loop

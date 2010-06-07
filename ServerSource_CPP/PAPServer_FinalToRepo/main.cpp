@@ -49,19 +49,18 @@ g_strSlash ="\\";
 
 
 int main(int argc,char **argv){
-    string strArgv;//!<Wskaźnik, do którego zostanie skopiowana wartość argv[index].
+    string *strArgv = NULL;//!<Wskaźnik, do którego zostanie skopiowana wartość argv[index].
     string *p_strConfigPath = NULL; //!<Wskaźnik, trzymający scieżkę do pliku z konfiguracją serwera.
     int intValueOnExit = 1; //!< Wartość zwrócona na wyłączenie programu.
     openlog("PAP Server",0,0);
     if (argc > 1){
         cout<<"[Lista argumentow]::"<<argc<<endl;
         for(int i=1; argv[i]!=NULL; ++i){
-            cout<<argv[i]<<endl;
-            strArgv = myConv::ToString(argv[i]);
-            if (strArgv == "-c" or strArgv == "--config"){
+            strArgv = new string(myConv::ToString(argv[i]));
+            if (*strArgv == "-c" or *strArgv == "--config"){
                 p_strConfigPath = new string(myConv::ToString(argv[i+1]));
                 ++i;
-            }else if (strArgv == "-h" or strArgv == "--help"){
+            }else if (*strArgv == "-h" or *strArgv == "--help"){
                 cout<<"myServer version 0.0.0 Use [Option] [Argument]"<<endl;
                 cout<<"-c or --config to use diffrent config file"<<endl;
                 cout<<"-h or --help print this message and quit"<<endl;
@@ -69,33 +68,41 @@ int main(int argc,char **argv){
                 cout<<"restart to restart working server"<<endl;
                 cout<<"start to start server if it crashed"<<endl;
                 cout<<"stop to stop working server if its running"<<endl;
-//                delete strArgv;
+                delete strArgv;
+                delete p_strConfigPath;
                 exit(0);
-            }else if (strArgv == "-v" or strArgv == "--version"){
+            }else if (*strArgv == "-v" or *strArgv == "--version"){
                 myServerVersion::ShowVersion();
                 myLibraryVersion::ShowVersion();
-                return 0;
-            }else if (strArgv == "start"){
+                delete strArgv;
+                delete p_strConfigPath;
+                exit(0);
+            }else if (*strArgv == "start"){
                 cout<<"PAP Server is going on-line"<<endl;
-            }else if (strArgv == "stop"){
+            }else if (*strArgv == "stop"){
                 cout<<"PAP Server is going to be shuted down in a moment"<<endl;
                 syslog(3, "PAP Server is going to be shutdown in a moment");
+                delete strArgv;
+                delete p_strConfigPath;
                 exit(0);
-            }else if (strArgv == "restart"){
+            }else if (*strArgv == "restart"){
                 cout<<"PAP Server is going to be restarted"<<endl;
                 syslog(3, "PAP Server is going to be restarted");
-            }else if (strArgv.length() == 0){
+            }else if (strArgv->length() == 0){
             }else{
                 fprintf(stdout,"Unknow option [%s] please use -h to see help.\n",argv[i]);
+                delete strArgv;
+                delete p_strConfigPath;
                 exit(0);
             }
-//            delete strArgv;
+            delete strArgv;
         }
         cout<<"[-------------------]"<<endl;
     }
-
-    ServerConfigs pConfigs (myConv::ToString(argv[0]),p_strConfigPath);
-
+    strArgv = new string(myConv::ToString(argv[0]));
+    ServerConfigs pConfigs (strArgv,p_strConfigPath);
+    //elete strArgv;
+    //delete p_strConfigPath;
         std::ofstream StreamToDevNUll;
         std::ofstream StreamToLogFile;
         std::streambuf *CoutCopy = cout.rdbuf();//!< kopia domyślnego ustawienia wyjścia dla cout

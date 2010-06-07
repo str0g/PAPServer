@@ -44,7 +44,7 @@ using std::endl;
 class myClientHandler:public dBase{
     private:
         ///Info
-        string *p_strClassName;//!<Nazwa klasy
+        string *p_strClassNameX;//!<Nazwa klasy
         ///Connection
         boost::asio::ip::tcp::socket &ClientSocket;//!<Socket, na którym klient jest połączony
         char *ClientIP;//!<IP klienta
@@ -89,6 +89,7 @@ class myClientHandler:public dBase{
         void MsgToOut(T);
         //dbase
         void Serach4Files(string*,string*);
+        void OrderFiles(string*);
         /// KillServer
         bool createFile(string);
         void RestartShutdownServer(string);

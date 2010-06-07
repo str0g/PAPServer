@@ -51,7 +51,7 @@ bool XMLParser::delSearchedElement(string *p_str){
     return false;
 }
 
-int XMLParser::LoadXMLFile(string *p_strConfigPath){
+bool XMLParser::LoadXMLFile(string *p_strConfigPath){
     /**
     *Laduje plik XML do pamiecie, jako struckturę XML.
     *Zwraca czy się udało
@@ -59,28 +59,38 @@ int XMLParser::LoadXMLFile(string *p_strConfigPath){
     *1 - nie udało się otworzyć pliku
     *2 - buffor struktury jest w użyciu i nie został zwolniony.
     */
+    int length=0;
+    bool bRet=false;
     if(p_PointerToXMLTree){
         cout<<*p_strClassName<<"Buffer "+strUsedAs+" in use"+"("+strBufFrom+")"<<endl;
-        return 2;
+        return bRet;
     }
     FILE *fp;
     fp = fopen(p_strConfigPath->c_str(), "rb");
     if(fp){
-        p_PointerToXMLTree = mxmlLoadFile(NULL, fp, MXML_OPAQUE_CALLBACK);
-        p_WorkNode = p_PointerToXMLTree;
-        p_childNode = p_PointerToXMLTree;
+
+        fseek(fp, 0, SEEK_END);
+        length = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+        if(length > 20){
+            p_PointerToXMLTree = mxmlLoadFile(NULL, fp, MXML_OPAQUE_CALLBACK);
+            p_WorkNode = p_PointerToXMLTree;
+            p_childNode = p_PointerToXMLTree;
+            strBufFrom = "Loaded from File";
+            bRet = true;
+        }else{
+            strBufFrom = "Loaded from File fail(file to short)";
+        }
         fclose(fp);
-        strBufFrom = "Loaded from File";
-        return 0;
-    }
-    else{
-        cout<<*p_strClassName<<" Failed to open: "<<*p_strConfigPath<<endl;
-        return 1;
+        return bRet;
+    }else{
+        cerr<<*p_strClassName<<" Failed to open: "<<*p_strConfigPath<<endl;
+        return bRet;
     }
 }
 
 //template <typename T>
-int XMLParser::LoadXMLFromBuf(const char *p_cBuf){//T *p_cBuf){
+bool XMLParser::LoadXMLFromBuf(const char *p_cBuf){//T *p_cBuf){
     /**
     *Metoda akceptuje tylko char* i const char*
     *Metoda laduje dane z bufora do struktory xml
@@ -90,17 +100,17 @@ int XMLParser::LoadXMLFromBuf(const char *p_cBuf){//T *p_cBuf){
     */
     if(p_PointerToXMLTree){
         cout<<*p_strClassName<<"Buffer "+strUsedAs+" in use"+"("+strBufFrom+")"<<endl;
-        return 2;
+        return false;
     }
     if(p_cBuf){
         p_PointerToXMLTree = mxmlLoadString(NULL,p_cBuf,MXML_OPAQUE_CALLBACK);
         p_WorkNode = p_PointerToXMLTree;
         p_childNode = p_PointerToXMLTree;
         strBufFrom = "Loaded from buffer";
-        return 0;
+        return true;
     }else{
         cout<<p_strClassName<<" NULL"<<endl;//*p_strConfigPath<<endl;
-        return 1;
+        return false;
     }
 }
 
@@ -156,12 +166,41 @@ bool XMLParser::NextElement(){
 
 bool XMLParser::PrevElement(){
     ///Jezeli istnieje poprzedni element wskaznik operacyjny struktury zostanie na niego ustawiony i wartosc true zostanie zworcona
-    if(p_WorkNode->parent){
-        p_WorkNode = p_WorkNode->parent;
+    if(p_WorkNode->prev){
+        p_WorkNode = p_WorkNode->prev;
         return true;
     }else{
         return false;
     }
+}
+
+void XMLParser::ResetWorkPointer(){
+    p_WorkNode = p_PointerToXMLTree;
+}
+
+bool XMLParser::Seatch4Value(const string *str_value){
+    /**
+    *Rekurencyjny algorytm potrafiacy przepokac sie przez elementy kazdego dokumentu xml.
+    */
+    mxml_node_t *Save_State = p_WorkNode; //!< Przechowuje wartosc wskaznika operacyjnego struktury, poniewaz przeszukiwanie odbywa sie na glownym wskazniku struktory
+    bool bStatus=false;
+    do{
+        if(GetCurrentElement()==*str_value){
+            return true;
+        }
+
+        if(GoDeeper()){
+            bStatus = Seatch4Value(str_value);
+            if(!bStatus){
+                GoUpper();
+            }
+        }
+    }while(NextElement());
+
+    if (!bStatus){
+        p_WorkNode = Save_State;
+    }
+    return bStatus;
 }
 
 void XMLParser::Print(string tmp){
@@ -297,6 +336,12 @@ bool XMLParser::insertXMLSearch(const char* fp,const char* fn,const char* fs,con
             bRet = false;
         }
     return bRet;
+}
+
+void XMLParser::setCurrentElementValue(const char* cs_value){
+    if(mxmlSetOpaque(p_WorkNode,cs_value)==-1){
+        cerr<<p_strClassName<<"Faild to set["<<cs_value<<"]"<<endl;
+    }
 }
 
 char &XMLParser::GetXMLAsChar(){

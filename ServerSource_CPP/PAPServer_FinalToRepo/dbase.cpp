@@ -9,7 +9,7 @@
 ///Headers
 #include "dbase.hpp"
 dBase::dBase(int opid):
-            p_strClassName(new string("[dBase]["+myConv::ToString(opid)+"]->")),
+            p_strClassNameD(new string("[dBase]["+myConv::ToString(opid)+"]->")),
             pConnection(mysql_init(NULL)),
             pResult(NULL),Row(NULL),
             p_cAdrress(ServerConfigs::p_cMySqlServerAddress.c_str()),
@@ -18,29 +18,38 @@ dBase::dBase(int opid):
             p_cBassName(ServerConfigs::p_cMySqldBase.c_str()),
             p_cTableName("SharedFiles"),
             p_cTableBanned("BannedList"),
-            bQuaryFaild(false),intOwnerPID(opid){
+            p_cTableOrderd("OrderList"),
+            intOwnerPID(opid){
     ///Sprawdza czy udalo sie zainicjalizowac elementy biblioteki mysql jezeli nie to konczy forka
     if(!pConnection){
-        cerr<<*p_strClassName<<"pConnection: Error"<<endl;
-        delete p_strClassName;
+        cerr<<*p_strClassNameD<<"pConnection: Error"<<endl;
+        delete p_strClassNameD;
         mysql_library_end();
         exit(EXIT_FAILURE);//zawsze 0 czy przy bledzie 1?
     }
-    //p_strClassName = ;
+    //p_strClassNameD = ;
 }
 
 dBase::~dBase(){
     ///Zwalnia pamieci w tym o czym czesto ludzie nie wiedza zwalnia zaladowane elementy biblioteki mysql
+    mClose();
+}
+
+void dBase::mClose(){
     if(pConnection){
-        del();
+        if(intOwnerPID!=0){
+            del();
+        }
         Close();
     }
-    delete p_strClassName;
+    delete p_strClassNameD;
+    p_strClassNameD = NULL;
     mysql_library_end();
+
 }
 void dBase::Close(){
     ///Zamyka polaczenie z baza
-    cerr<<*p_strClassName<<"dbase connection closed"<<endl;
+    cerr<<*p_strClassNameD<<"dbase connection closed"<<endl;
     mysql_close(pConnection);
     }
 bool dBase::insertFile(const char *fp,const char *fn,const char* fs,const char *fht,const char* fh,const char* flmd){
@@ -63,7 +72,7 @@ bool dBase::insertBanned(char *ip,char* lname){
 }
 bool dBase::del(){
     ///Kasuje wskazana wpisy po pid uzytkownika
-    char Query[128];
+    char Query[192];
     sprintf(Query, "DELETE FROM %s WHERE FileOwner = %d\
             ",p_cTableName,intOwnerPID);
     return dbQuery(Query,"Data has been deleted from database");
@@ -84,22 +93,33 @@ bool dBase::dBaseRun(){
     if (!CheckForTable(p_cTableName)){
         return false;
     }
+    if(!CheckForTable(p_cTableOrderd)){
+        return false;
+    }
     return true;
 }
 bool dBase::Rebuild_SharedFilesTable(){
     ///Tworzy tablice Shared
-    if(drop("SharedFiles")){
+    if(drop(p_cTableName)){
         return createShared();
     }
     return false;
 }
 bool dBase::Rebuild_BannedTable(){
     ///Tworzy tablice Banned
-    if(drop("BannedList")){
+    if(drop(p_cTableBanned)){
         return createBanned();
     }
     return false;
 }
+bool dBase::Rebuild_Orderd(){
+    ///Tworzy tablice Order
+    if(drop(p_cTableOrderd)){
+        return createOrderd();
+    }
+    return false;
+}
+
 bool dBase::CheckForTable(char *cTable){
     ///Sprawdza czy tabela istnieje, jezeli nie to ja tworzy
     char Query[128];
@@ -112,21 +132,22 @@ bool dBase::CheckForTable(char *cTable){
             bRet = createBanned();
         }else if(cTable == p_cTableName){
             bRet = createShared();
+        }else if(cTable == p_cTableOrderd){
+            bRet = createOrderd();
         }else{
-            cerr<<"Wyszukiwanie nie obslugiwanej tablicy"<<endl;
+            cerr<<GetLocalTime()<<p_strClassNameD<<"This table is no supported: "<<cTable<<endl;
             bRet = false;
         }
-    }else{
+    }//else{
         pResult = mysql_store_result(pConnection);
         mysql_free_result(pResult);
-    }
+    //}
     return bRet;
 }
 bool dBase::Search(const char *cSearch,bool Coma,char *cToSearch){
     ///wyszykuje pliki uzytkownikow o innym pidzie niz moj wlasny
-    char Query[128];
+    char Query[256];
     char *cSpecial = "%";
-    cout<<"Searching for "<<cSearch<<" in "<<cToSearch<<endl;
     if (Coma){
         sprintf(Query, "select * from %s where %s like '%s%s%s' and FileOwner != '%d'\
                 ",p_cTableName,cToSearch,cSpecial,cSearch,cSpecial,intOwnerPID);
@@ -139,7 +160,6 @@ bool dBase::Search(const char *cSearch,bool Coma,char *cToSearch){
 bool dBase::Search2(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,char *cToSearch2){
     ///wyszukje banaowanych
     char Query[128];
-    cout<<"Searching for "<<cSearch1<<" in "<<cToSearch1<<endl;
     if (Coma){
         sprintf(Query, "select * from %s where %s = '%s' and %s = '%s'\
                 ",p_cTableBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);
@@ -148,6 +168,14 @@ bool dBase::Search2(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,cha
                 ",p_cTableBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);
     }
     return dbQuery(Query,"Check results2");
+}
+
+bool dBase::Search3(const char *path,const char *pid){
+    ///wyszukje orderd
+    char Query[4096];
+    sprintf(Query, "select * from %s where %s = '%s' and %s = '%s'\
+                ",p_cTableOrderd,path,pid);
+    return dbQuery(Query,"Check results3");
 }
 
 bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *strSearch,bool Coma,char *cToSearch){
@@ -161,7 +189,7 @@ bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *st
     if(Search(strSearch->c_str(),Coma,cToSearch)){
         pResult = mysql_store_result(pConnection);
         while(Row = mysql_fetch_row(pResult)){
-            if(p_xmlStructPointer->insertXMLSearch(Row[1],Row[2],Row[3],Row[4],Row[5],Row[6],Row[7])){
+            if(p_xmlStructPointer->insertXMLSearch(Row[1],Row[2],Row[3],Row[4],Row[5],Row[6],Row[7])){//Mozliwa optymalizacja
                 strctrl->append(Row[1]);
                 strctrl->append(" ");
                 strctrl->append(Row[7]);
@@ -175,6 +203,24 @@ bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *st
     }
     return false;
 }
+
+int dBase::newOrder(const char* path, const char* pid){
+    char Query[4096];
+    int intRet=0;
+    if(Search3(path,pid)){
+        pResult = mysql_store_result(pConnection);
+        if(mysql_num_rows(pResult)==0){
+            sprintf(Query,"update %s set FilePath = '%s',FileOwner ='%s'"
+                    ,p_cTableOrderd,path,pid);
+            if(!dbQuery(Query,"Table Orderd has been updated")){ intRet = 2;}
+        }else{
+            intRet = 1;
+        }//if rows num
+    }
+    mysql_free_result(pResult);
+    return intRet;
+}
+
 bool dBase::AskIfBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,char *cToSearch2){
     /**
     *Pytam sie bazy czy uzytkownik o takiej nazwie lokalnej i ip zostal dodany do bazy jezeli tak sprawdzam czy juz dostal bana.
@@ -220,11 +266,10 @@ bool dBase::dbQuery(char *buf,string MsgOnSuccess){
     ///slozu do komunikacju z baza zwraca czy sie udalo czy nie oraz wyswietla komunikaty
     if(mysql_query(pConnection,buf) != 0){ //execute the query
         cerr<<buf<<endl;
-        cerr<<GetLocalTime()<<*p_strClassName<<"Error Executing the query: "<<mysql_error(pConnection)<<endl;
-        bQuaryFaild = true;
+        cerr<<GetLocalTime()<<*p_strClassNameD<<"Error Executing the query: "<<mysql_error(pConnection)<<endl;
         return false;
     }
-    cout<<GetLocalTime()<<*p_strClassName<<MsgOnSuccess<<endl;
+    cout<<GetLocalTime()<<*p_strClassNameD<<MsgOnSuccess<<endl;
     return true;
 }
 bool dBase::drop(char *cTable){
@@ -275,5 +320,21 @@ bool dBase::createBanned(){
                     unique(ID)\
                     )",p_cTableBanned);
     return dbQuery(Query,"Table Banned has been created");
+}
+
+bool dBase::createOrderd(){
+    ///Tworzy tabele Orderd
+    char Query[512];
+    sprintf(Query,"create table %s\ (\
+                    \
+                    ID int unsigned not null auto_increment primary key,\
+                    \
+                    FilePath varchar(2048) not null,\
+                    FileOwner int unsigned not null,\
+                    \
+                    index(ID),\
+                    unique(ID)\
+                    )",p_cTableOrderd);
+    return dbQuery(Query,"Table Orderd has been created");
 }
 

@@ -33,16 +33,21 @@ void sig_child(int sig)
 }
 
 int myServerAPP::intValueOnExit = 1;
-myServerAPP::myServerAPP(): p_strClassNameE("[myServer]->"),
+myServerAPP::myServerAPP(): p_strClassNameE(new string("[myServer]->")),
                             bServerLoop(true),dCreationTime(GetTime()),
                             tt_CreationTime(GetTimeAfter1970AsTime()),
                             dBase(getpid()){
     //p_strClassNameE = new string("[myServer]->");
-    cerr<<GetLocalTime()<<p_strClassNameE<<"PID:"<<getpid()<<endl;
+    cerr<<GetLocalTime()<<*p_strClassNameE<<"PID:"<<getpid()<<endl;
     intValueOnExit = 0;
 }
 myServerAPP::~myServerAPP(){
-    //delete p_strClassNameE;
+    ClearVal();
+}
+
+void myServerAPP::ClearVal(){
+    delete p_strClassNameE;
+    p_strClassNameE = NULL;
 }
 
 bool myServerAPP::chk4file(string strFileName){
@@ -66,9 +71,9 @@ void myServerAPP::RunServer(){
     *Decyzja czy serwer jest interacyjny wielowatkowy/procesowy.
     */
     double Xtime = GetTime();
-    string p_strMethodName = (p_strClassNameE+"[RunServer]->");
-    string strShutdown = (*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"ShutdownServer.pid");
-    string strRestart = (*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"RestartServer.pid");
+    string *p_strMethodName = new string(*p_strClassNameE+"[RunServer]->");
+    string *strShutdown = new string(*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"ShutdownServer.pid");
+    string *strRestart = new string(*ServerConfigs::p_strMyPath+ServerConfigs::ServerConfigs::g_strSlash+"RestartServer.pid");
 
     if ( *ServerConfigs::p_intMultiThreading == 2){
         signal(SIGCHLD, sig_child);
@@ -76,17 +81,13 @@ void myServerAPP::RunServer(){
     int intIndexZombie = 0 ;
     pid_t pid;
     ///Test
-/*
-    ServerFilesLoader *SFL = new ServerFilesLoader;
+
+    ServerFilesLoader *SFL = new ServerFilesLoader(0);//getpid());
     SFL->Run();
     delete SFL;
-    */
 
-    ServerFilesLoader SFL(getpid());
-    SFL.Run();
-/*
-    boost::thread thrd(SFL);//mial byc dummy thread ale cos jest nie tak :(
-    thrd.join();*/
+
+    //ServerFilesLoader SFL(0);//getpid());
 
     char p_cIPHelp[16];
     char p_cLoclaHelp[1024];
@@ -107,9 +108,9 @@ void myServerAPP::RunServer(){
                 boost::asio::ip::tcp::endpoint endpoint = socket.local_endpoint();
                 ++intIndexZombie;
                 ++g_intNumerOfCurrentProcess;
-                if(chk4file(strShutdown)){
+                if(chk4file(*strShutdown)){
                     bServerLoop = false;
-                    if (remove(strShutdown.c_str())==-1){
+                    if (remove(strShutdown->c_str())==-1){
                         cerr<<"Server ShutdownServer.pid hasn't been deleted!"<<endl;
                     }
                 }
@@ -144,21 +145,28 @@ void myServerAPP::RunServer(){
                         delete o;
                         //waitpid ( pid, NULL,WNOHANG);
                         ServerConfigs::Clean();
+                        ClearVal();
+                        delete strShutdown;
+                        delete strRestart;
+                        delete p_strMethodName;
                         exit(0);
                         }//if pid
                     }//if *ServerConfigs
                 }else{
-                    cerr<<p_strMethodName<<endpoint.address().to_string()<<" "<<boost::asio::ip::host_name()<<"::has been banned but tried to connect again"<<endl;
+                    cerr<<GetLocalTime()<<*p_strMethodName<<endpoint.address().to_string()<<" "<<boost::asio::ip::host_name()<<"::has been banned but tried to connect again"<<endl;
                     syslog(3, "PAP Server banned user is tried to connect");
                     socket.close();
                 }// if ban
             }//while bServerLoop
             Rebuild_SharedFilesTable();
+            Rebuild_Orderd();
 
         }catch (std::exception& e){
-            cerr<<p_strMethodName<<e.what()<<endl;
+            cerr<<GetLocalTime()<<*p_strMethodName<<e.what()<<endl;
         }
     }
-    cout<<p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<endl;
-    //delete p_strMethodName;
+    cout<<GetLocalTime()<<*p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<endl;
+    delete strShutdown;
+    delete strRestart;
+    delete p_strMethodName;
 }

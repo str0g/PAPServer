@@ -47,7 +47,7 @@ class myServerAPP:public dBase{
     private:
         bool chk4file(string);
     protected:
-        string p_strClassNameE;//!<Nazwa klasy
+        string *p_strClassNameE;//!<Nazwa klasy
         bool bServerLoop;//!<Petla servera zalezy od tej zmiennej
         double dCreationTime;
         time_t tt_CreationTime;
@@ -55,6 +55,7 @@ class myServerAPP:public dBase{
         static int intValueOnExit;//!<Wartość błędu
         myServerAPP();
         void RunServer();
+        void ClearVal();
         ~myServerAPP();
 };
 

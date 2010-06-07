@@ -33,8 +33,6 @@ using std::endl;
 
 ///Ta klasa trzyma ustawienia serwera oraz lokalizacje językową.
 class ServerConfigs: TimeCout{
-    protected:
-        string p_strClassName;//!<Trzyma nazwę klasy
     public:
         static string p_cMySqlServerAddress;//!<Adres serwera mysql
         static string p_cMySqlUser;//!<Uzytkownik serwera mysql
@@ -56,9 +54,9 @@ class ServerConfigs: TimeCout{
         static int intServerPort;//!<Port na którym serwer będzie nasłuchiwać.
         static string *p_strConfigPath;//!<Scieżka do pliku logów
         static string *p_strMyPath;//!<Sćieżka, z której odpalamy serwer(pobierana z getpwd)
-        static string strMyPath2;//!<Pobierana z argv[0];
+        static string *p_strMyPath2;//!<Pobierana z argv[0];
         static string g_strSlash;//!<Trzyma Slasha, kiedys mozna zrobic porotwalnosc serwera
-        ServerConfigs(string,string *);
+        ServerConfigs(string*,string *);
         ~ServerConfigs();
         void SetVaruables();
         void ShowConfigs();

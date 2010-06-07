@@ -26,7 +26,7 @@ string ServerConfigs::strServerIP;
 string ServerConfigs::strFormatter;
 string *ServerConfigs::p_strConfigPath = NULL;
 string *ServerConfigs::p_strMyPath = NULL;
-string ServerConfigs::strMyPath2;
+string *ServerConfigs::p_strMyPath2 = NULL;
 int ServerConfigs::intStdErr = 0;
 int ServerConfigs::intStdOut = 0;
 int ServerConfigs::intDemonize = 0;
@@ -42,7 +42,7 @@ int *ServerConfigs::p_intChunkSize = NULL;
 
 void ServerConfigs::SetVaruables(){
     double Xtime = GetTime();
-    string p_strMethodName = (p_strClassName + "[SetVarubales]->");
+    string p_strMethodName = ("[ServerConfigs]->[SetVarubales]->");
 
 
     XMLParser *X = new XMLParser;
@@ -91,7 +91,7 @@ void ServerConfigs::SetVaruables(){
 
 void ServerConfigs::ShowConfigs(){
     double Xtime = GetTime();
-    string p_strMethodName = (p_strClassName + "[ShowConfigs]->");
+    string p_strMethodName = ("[ServerConfigs]->[ShowConfigs]->");
 
     cout<<"[Logger]"<<endl;
     cout<<"LoggingToFile: "<<intLoggingToFile<<endl;
@@ -102,7 +102,7 @@ void ServerConfigs::ShowConfigs(){
 
     cout<<"[Server]"<<endl;
     cout<<"MyPath: "<<*p_strMyPath<<endl;
-    cout<<"MyPath2: "<<strMyPath2<<endl;
+    cout<<"MyPath2: "<<*p_strMyPath2<<endl;
     cout<<"ConfigPath: "<<*p_strConfigPath<<endl;
     cout<<"StdIn: "<<intStdIn<<endl;
     cout<<"stdOut: "<<intStdOut<<endl;
@@ -125,13 +125,15 @@ void ServerConfigs::ShowConfigs(){
     cout<<p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<endl;
 }
 
-ServerConfigs::ServerConfigs(string strMsg1,string *p_strMsg2):p_strClassName("[ServerConfigs]->"){
+ServerConfigs::ServerConfigs(string *strMsg1,string *p_strMsg2){
     //p_strClassName = new string ("[ServerConfigs]->");
+    //if (p_strMsg2){
     p_strConfigPath = p_strMsg2;
+    //}
     //delete p_strMsg2;
     char *path=NULL;
     path=getcwd(path,BUFFER);
-    strMyPath2 = strMsg1;
+    p_strMyPath2 = strMsg1;
     string strPath = myConv::ToString(path);
     free(path);
 
@@ -150,6 +152,8 @@ void ServerConfigs::Clean(){
     p_strConfigPath = NULL;
     delete p_strMyPath;
     p_strMyPath = NULL;
+    delete p_strMyPath2;
+    p_strMyPath2 = NULL;
     delete p_intClientTimeOut;
     p_intClientTimeOut = NULL;
     delete p_intMultiThreading;

@@ -38,9 +38,8 @@ class XMLParser{
     public:
         //create
         XMLParser();
-        int LoadXMLFile(string *);
-        int LoadXMLFromBuf(const char *);
-        bool SetWorkNode(string);
+        bool LoadXMLFile(string *);
+        bool LoadXMLFromBuf(const char *);
         bool createXMLDoc(string,string ="1.0");
         //destroy
         virtual ~XMLParser();
@@ -52,10 +51,14 @@ class XMLParser{
         bool GoUpper();
         bool NextElement();
         bool PrevElement();
+        bool SetWorkNode(string);
+        bool Seatch4Value(const string *);
+        void ResetWorkPointer();
         //dbg
         void Print(string ="");
         //insert values
         bool insertXMLSearch(const char*,const char*,const char*,const char*,const char*,const char*,const char*,char* ="File");
+        void setCurrentElementValue(const char*);
         //get values
         string GetCurrentElement();
         template <typename T>
