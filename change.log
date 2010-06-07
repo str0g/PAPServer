@@ -9,7 +9,7 @@ Add some error codes.
 Fixed some communication problems.
 Connection time out is no longer base on execution time.
 Files in Pool are compared to thous listed in sharedfile.xml if there are differences sharedfile.xml is being updated and update is reported.
-XML document: add setting new values for elements,search xml tree for current element value,Setting work pointer to begin of document,walk_previous is no walking previous instead parent :-)
+XML document: add setting new values for elements,search xml tree for current element value,Setting work pointer to begin of document,walk_previous is now walking previous instead parent :-)
 
 [Version 0.0.10]
 Capability to insert files from Pool folder into database(at startup).
