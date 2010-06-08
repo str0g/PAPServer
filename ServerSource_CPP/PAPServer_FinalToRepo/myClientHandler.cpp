@@ -180,7 +180,7 @@ void myClientHandler::RecivedDataParser(string *p_strData){
     if(*p_strData == "GetServerInfo"){
             Send(SendInfoAboutServer());
     }else if(*p_strData == "GetServerTime"){
-            Send(GetTimeAfter1970());
+            Send("Time "+GetTimeAfter1970());
     }else if(*p_strData == "Alive"){
             Send("YES");
     }else if((int)p_strData->find(strSearchFor) != -1 and p_strData->length() > (strSearchFor.length()+1) ){ //Pytanie sie o plik z dBase
@@ -261,8 +261,9 @@ void myClientHandler::Serach4Files(string *p_strData,string *strSearchFor){
             }else{
                 Send("944");
             }//intB
-        }//createXML
-        Send("602");
+        }else{//createXML
+            Send("602");
+        }
 }
 
 void myClientHandler::OrderFiles(string *p_strData){
@@ -322,6 +323,7 @@ string myClientHandler::SendInfoAboutServer(){
     if( intGID == 0 or intGID == 1){
         strCommandlist.append("ResetBanned,ResetShared,Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
     }
+    strCommandlist.append("\nLoggedAs "+ClientUser+"~$");
     return strCommandlist;
 }
 

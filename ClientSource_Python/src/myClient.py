@@ -21,6 +21,7 @@ try:
     #Moje
     import myConfigs
     import myTelnet
+    import myComm
     from xmlSupport import XMLFileGenerator
     myConfigs = myConfigs.myConfigs()
     myConfigs.LoadCFG()
@@ -55,7 +56,15 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.intSharedListCounter = 0
         self.ConsoleMsgCounter = 0
         self.QSignalObj1 = QtCore.QObject(None)
+        self.QSignalObjServerList = QtCore.QObject(None)
+        self.QSignalObjMsgToConsole = QtCore.QObject(None)
+        self.QSignalObjProgressBarAdd = QtCore.QObject(None)
         self.buf_XMLSerwerFilesList = None
+        self.mySocket = None
+        self.LockSending = 1
+        self.kb = 1024
+        self.mb =1024*1024
+        self.gb= self.mb * 1024
 
     def SetUpObjects(self):
         '''
@@ -63,12 +72,26 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         '''
         self.SetConfigsOnPanel()
         self.SetSignals()
-        self.MsgToConsole("Welcome")
+        QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Welcome")
         self.XMLLIstFromFIle()
         if len(self.buf_XMLSharedFilesList)>0:
-            self.MsgToConsole("Loading "+str(len(self.buf_XMLSharedFilesList))+" sharedfiles...")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Loading "+str(len(self.buf_XMLSharedFilesList))+" sharedfiles...")
+        self.tab_Options.hide()
         self.InicializeSharedList()
     ###XML LISTY
+    def RSize(self, size):
+        '''
+        Przelicza rozmiar i zwraca w odpowiednio czytelnych dla ludzi jednostkach
+        '''
+        if size < self.kb:
+            return str(size)+"b"
+        elif size < self.mb:
+            return str (size / self.kb)+"kb"
+        elif size < self.gb:
+            return str(size / self.mb)+"mb"
+        else:
+            return str(size / self.gb)+"gb"
+        
     def XMLLIstFromFIle(self):
         '''
         Sprawdza czy jest ustawiona wlasciwa sciezka dostepu do pliku
@@ -110,7 +133,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.PurgeXMLList(self.buf_XMLSharedFilesList)
         self.WriteXMLToFile(myConfigs.SharedFiles, self.buf_XMLSharedFilesList)
         self.intSharedListCounter = 0
-        self.MsgToConsole("Shared list has been cleared")
+        QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Shared list has been cleared")
     def PurgeServerWidgetandXMLList(self):
         '''
         Czysci liste xml, tablice
@@ -118,7 +141,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.PurgeAnyList(self.buf_XMLSerwerFilesList, self.tableWidget_SharedByServer)
         self.PurgeXMLList(self.buf_XMLSerwerFilesList)
         self.intServerListCounter = 0
-        self.MsgToConsole("Server list has been cleared")
+        QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Server list has been cleared")
     def PurgeAnyList(self, objList, objTableWidget):
         '''
         Kasuje liste elementow widgeta tablicy
@@ -130,11 +153,12 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             for index in range(1, intRowCount):
                 print "Dlbuffora,ilosc wierszy,index", intLenOfBuffer, intRowCount, index
                 objTableWidget.removeRow(objTableWidget.rowCount()-1)
-            #self.MsgToConsole("...Done")
+            #QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...Done")
             objTableWidget.clearContents
                 
     def InicializeSharedList(self, intOffset =0):
         if self.buf_XMLSharedFilesList != None:
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Updating Shared list Widget")
             intLenOfBuffer = len(self.buf_XMLSharedFilesList)
             intRowCount = self.tableWidget_SharedFileByMySelf.rowCount()
             self.PurgeAnyList(self.buf_XMLSharedFilesList, self.tableWidget_SharedFileByMySelf)
@@ -152,7 +176,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             while indexRow < intLenOfBuffer:
                 self.tableWidget_SharedFileByMySelf.setItem(indexRow, 0, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][0].text))
                 self.tableWidget_SharedFileByMySelf.setItem(indexRow, 1, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][1].text))
-                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][2].text))
+                self.tableWidget_SharedFileByMySelf.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.RSize(int(self.buf_XMLSharedFilesList[indexRow][2].text))))
                 self.tableWidget_SharedFileByMySelf.setItem(indexRow, 3, QtGui.QTableWidgetItem(time.ctime(float(self.buf_XMLSharedFilesList[indexRow][5].text))))
                 self.tableWidget_SharedFileByMySelf.setItem(indexRow, 4, QtGui.QTableWidgetItem(self.buf_XMLSharedFilesList[indexRow][3].text+":"+self.buf_XMLSharedFilesList[indexRow][4].text))
                 self.tableWidget_SharedFileByMySelf.setItem(indexRow, 5, QtGui.QTableWidgetItem("0"))
@@ -162,11 +186,13 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
                 intValueForBar += ValueForBarOffset
                 self.progressBar_Shared.setValue(intValueForBar)
             self.progressBar_Shared.setValue(100)
-            self.MsgToConsole("...Done")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...Done")
+            self.LockSending = 0
         else:
-            self.MsgToConsole("Error: SharedList is Empty")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Error: SharedList is Empty")
     def InicializedSharedServerList(self, intOffset =0):
         if self.buf_XMLSerwerFilesList != None:
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Updating Shared list Widget")
             intLenOfBuffer = len(self.buf_XMLSerwerFilesList)
             intRowCount = self.tableWidget_SharedByServer.rowCount()
             self.PurgeAnyList(self.buf_XMLSerwerFilesList, self.tableWidget_SharedByServer)
@@ -183,7 +209,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             while indexRow < intLenOfBuffer:
                 self.tableWidget_SharedByServer.setItem(indexRow, 0, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][0].text))
                 self.tableWidget_SharedByServer.setItem(indexRow, 1, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][1].text))
-                self.tableWidget_SharedByServer.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][2].text))
+                self.tableWidget_SharedByServer.setItem(indexRow, 2, QtGui.QTableWidgetItem(self.RSize(int(self.buf_XMLSerwerFilesList[indexRow][2].text))))
                 self.tableWidget_SharedByServer.setItem(indexRow, 3, QtGui.QTableWidgetItem(time.ctime(float(self.buf_XMLSerwerFilesList[indexRow][5].text))))
                 self.tableWidget_SharedByServer.setItem(indexRow, 4, QtGui.QTableWidgetItem(self.buf_XMLSerwerFilesList[indexRow][3].text+":"+self.buf_XMLSerwerFilesList[indexRow][4].text))
         
@@ -192,9 +218,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
                 intValueForBar += ValueForBarOffset
                 self.progressBar_MainServerShared.setValue(intValueForBar)
             self.progressBar_MainServerShared.setValue(100)
-            self.MsgToConsole("...Done")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...Done")
         else:
-            self.MsgToConsole("Error: XMLServerList is Empty")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Error: XMLServerList is Empty")
         
     def AddFilesToSharedList(self):
         '''
@@ -210,7 +236,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         
         print FileDialog
         if intLenOfFileDialog > 0:
-            self.MsgToConsole("Processing files...")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Processing files...")
             intTempRet,  intTempCout = self.AddNodeToXMLFilesList(self.buf_XMLSharedFilesList,
                                                                   self.intSharedListCounter, 
                                                                   FileDialog, 
@@ -222,19 +248,19 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             if intTempRet == 0:
                 self.WriteXMLToFile(myConfigs.SharedFiles,self.buf_XMLSharedFilesList)
                 if intTempCout == 0:
-                    self.MsgToConsole("List Updated successfuly")
+                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"List Updated successfuly")
                 else:
-                    self.MsgToConsole("List Updated successfuly but "+str(intTempCout)+" elements were already there")
+                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"List Updated successfuly but "+str(intTempCout)+" elements were already there")
             elif intTempRet == 1:
-                    self.MsgToConsole("List haven't been updated because all of "+str(intTempCout)+" elements were already there")
+                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"List haven't been updated because all of "+str(intTempCout)+" elements were already there")
             else:
-                print "List Update Faild unknown error"
+                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"), "List Update Faild unknown error")
         else:
-            self.MsgToConsole("File added failed")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"File added failed")
         #DEBUG
         if intLenOfFileDialog -  intTempCout > 0:
             self.InicializeSharedList(intLenOfBufferBeforeAdd)
-            self.MsgToConsole("List has been Refreshed")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"List has been Refreshed")
         #self.PrintXML(self.buf_XMLSharedFilesList)
         #
     ###Połaczenie
@@ -245,39 +271,49 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         MethodName = self.ClassName+"[ConnectToServer]->"
         strRet =""
         if self.ConnectedAs > -1:
-            if self.ConnectedAs == -2:
-                self.MsgToConsole("Server refused")
-            else:
-                self.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Połącz", None, QtGui.QApplication.UnicodeUTF8))
-                self.myTelnet.TelnetDisconnect()
-                self.MsgToConsole("Disconnected from "+myConfigs.Host+"::"+str(myConfigs.Port))
-            del self.myTelnet
+            #if self.ConnectedAs == -2:
+            #    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Server refused")
+            #else:
+            self.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Połącz", None, QtGui.QApplication.UnicodeUTF8))
+            #self.myTelnet.TelnetDisconnect()
+            self.mySocket.myDisconnect()
+            self.mySocket.join()
+            del self.mySocket
+            self.mySocket = None
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Disconnected from "+myConfigs.Host+"::"+str(myConfigs.Port))
+            #del self.myTelnet
+            #self.mySocket.join()
+            #del mySocket
             self.ConnectedAs = -1
-            QtCore.QObject.emit(self.QSignalObj1,QtCore.SIGNAL("AdminPanelSignal"))
+            #QtCore.QObject.emit(self.QSignalObj1,QtCore.SIGNAL("AdminPanelSignal"))
         else:
-            self.myTelnet = myTelnet.myTelnetParser(myConfigs,self.listWidget_console)
-            self.MsgToConsole("Connecting to "+myConfigs.Host+"::"+str(myConfigs.Port))
-            self.ConnectedAs = self.myTelnet.AmIRoot()
-            if self.ConnectedAs > -1:
-                self.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Rozłącz", None, QtGui.QApplication.UnicodeUTF8))
-                self.LocalServerTime = self.myTelnet.AskForServerTime()
-                self.MsgToConsole("Connected and authorized successful, local server time is: "+str(self.LocalServerTime))
-                QtCore.QObject.emit(self.QSignalObj1,QtCore.SIGNAL("AdminPanelSignal"))
-                self.MsgToConsole("Sending list...")
-                print self.ClassName+"Error in refreshing Console"
-                if self.myTelnet.SendList(self.buf_XMLSharedFilesList, self.progressBar_MainServerShared) == 0:
-                    self.MsgToConsole("...done")
-                else:
-                    self.MsgToConsole("...FAILD")
-            else:
-                self.myTelnet.TelnetDisconnect()
-                del self.myTelnet
-                if self.ConnectedAs == -1:
-                    self.MsgToConsole("Authorization failed, client is going to disconnect it self from server "+myConfigs.Host+"::"+str(myConfigs.Port))
-                elif self.ConnectedAs == -2:
-                    self.MsgToConsole("Server is not reachable "+myConfigs.Host+"::"+str(myConfigs.Port))
-                else:
-                    self.MsgToConsole("Unsupported and unkown error"+myConfigs.Host+"::"+str(myConfigs.Port))
+            #self.myTelnet = myTelnet.myTelnetParser(myConfigs,self.listWidget_console)
+            self.mySocket = myComm.mySocketComm(myConfigs, self)
+            self.mySocket.start()
+            #self.mySocket.run()
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Connecting to "+myConfigs.Host+"::"+str(myConfigs.Port))
+            self.ConnectedAs = 10
+            #self.ConnectedAs = self.myTelnet.AmIRoot()
+            #if self.ConnectedAs > -1:
+#                self.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", "Rozłącz", None, QtGui.QApplication.UnicodeUTF8))
+#                self.LocalServerTime = self.myTelnet.AskForServerTime()
+#                QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Connected and authorized successful, local server time is: "+str(self.LocalServerTime))
+#                QtCore.QObject.emit(self.QSignalObj1,QtCore.SIGNAL("AdminPanelSignal"))
+#                QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Sending list...")
+#                print self.ClassName+"Error in refreshing Console"
+#                if self.myTelnet.SendList(self.buf_XMLSharedFilesList, self.progressBar_MainServerShared) == 0:
+#                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...done")
+#                else:
+#                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...FAILD")
+#            else:
+#                self.myTelnet.TelnetDisconnect()
+#                del self.myTelnet
+#                if self.ConnectedAs == -1:
+#                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Authorization failed, client is going to disconnect it self from server "+myConfigs.Host+"::"+str(myConfigs.Port))
+#                elif self.ConnectedAs == -2:
+#                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Server is not reachable "+myConfigs.Host+"::"+str(myConfigs.Port))
+#                else:
+#                    QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Unsupported and unkown error"+myConfigs.Host+"::"+str(myConfigs.Port))
     #odswierzyc layout
     def MsgToConsole(self,Msg1):
         '''
@@ -293,6 +329,10 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         Podlaczam sygnal
         '''
         print self.ClassName+"Setting up Signals..."
+        #moje
+        QtCore.QObject.connect(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"), self.MsgToConsole)
+        QtCore.QObject.connect(self.QSignalObjServerList,  QtCore.SIGNAL("RefreshTableWidget"),self.InicializedSharedServerList)
+        QtCore.QObject.connect(self.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"), self.ProgressBarFileAdd)
         #MAINFRAME->Main
         QtCore.QObject.connect(self.QSignalObj1, QtCore.SIGNAL("AdminPanelSignal"), self.ButtonAdminPanelSignal)
         QtCore.QObject.connect(self.pushButton_ConnDiscon, QtCore.SIGNAL("clicked()"), self.ConnectToServer)
@@ -330,9 +370,9 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
             self.AdminPanel.setupUi(self.ToolBox)
             self.ToolBox.show()
             if appTool.exec_() == 0:
-                self.MsgToConsole("AdminPanel closed Succesfuly")
+                QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"AdminPanel closed Succesfuly")
             else:
-                self.MsgToConsole("AdminPanel closed with errors")
+                QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"AdminPanel closed with errors")
     #for buttons on RightTop
     def MsgBoxUniversal(self, strMessage):
         box = QtGui.QMessageBox(None)
@@ -355,9 +395,10 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         #del self.ToolBox
         if self.ConnectedAs > -1:
             print self.ClassName+"Disconnecting from server before Exit"
-            if self.myTelnet != None:
-                self.myTelnet.TelnetDisconnect()
-                del self.myTelnet
+            if self.mySocket != None:
+                self.mySocket.myDisconnect()
+                self.mySocket.join()
+                del self.mySocket
         print self.ClassName+"Bye Bye"
     ##Options
     def SetConfigsOnPanel(self):
@@ -427,7 +468,7 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         self.DeleteNodeToXMLFilesList(self.buf_XMLSharedFilesList, ListToDelete)
         self.WriteXMLToFile(myConfigs.SharedFiles, self.buf_XMLSharedFilesList)
         self.InicializeSharedList()
-        self.MsgToConsole(str(len(ListToDelete))+" elements has been removed from shared list")
+        QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(len(ListToDelete))+" elements has been removed from shared list")
         #self.PrintXML(self.buf_XMLSharedFilesList)
     def StoreConfigs(self):
         '''
@@ -451,15 +492,17 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         myConfigs.Zoom = self.progressBar_Zoom.value()
         myConfigs.Debug = int(self.checkBox_Debug.isChecked())
         if myConfigs.StoreCFG() == 0:
-            self.MsgToConsole("Configs has been stored")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Configs has been stored")
         else:
-            self.MsgToConsole("Failed to store configs")
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Failed to store configs")
     def Slider_Zoom(self,value):
         '''
         Metoda dba jedynie o ustawieni odpowiednij skali okienka w, ktorym wyswietlam strone projektu
         '''
         self.progressBar_Zoom.setValue(value)
         self.webView_ProjectSite.setZoomFactor(float(value*0.01))
+    def ProgressBarFileAdd(self, value):
+        self.progressBar_Shared.setValue(value)
     def SendSearchForFiles(self):
         '''
         Sprawdza czy serwer dziala jezeli tak: 
@@ -468,25 +511,11 @@ class classMainFrame(importMainFrame, XMLFileGenerator):
         Wlacza sie updatowanie WidgetaTablicy trzymajacego wyniku poprzedniego szukania
         Uruchamiane sa metody updatowania consoli
         '''
-        if self.myTelnet !=None:
-            self.MsgToConsole("Asking server for ["+self.lineEdit_Search.displayText()+"]")
-            if self.myTelnet.CheckIfConnectionIsAlive() == 0:
-                retcode = self.myTelnet.AskServerForFiles(str(self.lineEdit_Search.displayText()))
-                if retcode == 0:
-                    self.MsgToConsole("List recived")
-                    self.buf_XMLSerwerFilesList = self.myTelnet.GetXMLListFromServer()
-                    self.MsgToConsole("Updating list widget")
-                    self.InicializedSharedServerList()
-                elif retcode == 1:
-                    self.MsgToConsole("File not found")
-                else:
-                    self.MsgToConsole("Unknown Error line ~459")
-            else:
-                self.MsgToConsole("Connection to server has been lost")
+        if self.mySocket !=None:
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Asking server for ["+self.lineEdit_Search.displayText()+"]")
+            self.mySocket.AskServerForFiles(str(self.lineEdit_Search.displayText()))
         else:
-            self.MsgToConsole("You are not connected to any server")
-                
-            
+            QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"You are not connected to any server")       
 
 def myClient():
     '''

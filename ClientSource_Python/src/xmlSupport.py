@@ -139,7 +139,7 @@ class XMLFileGenerator():
         '''
         MethodName = XMLFileGenerator.ClassName+"[ValidateXMLDocument]->"
         if intOption == 0:
-            return etree.RelaxNG(etree.parse(TemplateSharedFiles)).validate(etree.parse(PastDoc))
+            return etree.RelaxNG(etree.parse(self.TemplateSharedFiles)).validate(etree.parse(PastDoc))
         elif intOption == 1:
             pass
         elif intOption == 2:
