@@ -2,12 +2,25 @@
 +Module which is doing its job in Pool runs in thread.
 +upload file
 +download file
++Smart large files handler receiver
+
+[Version 0.0.11c]
+Client 0.0.8:
++window/frame to control server if i am root
++Smart large files handler sender
++tab for download files
++control for download files tab
++clean for all telnet legacies
 
 [Version 0.0.11b]
-+Client 0.0.7:
-+Optimization
-+clean up mess in code
-+maybe xml parser change to xml sax from py package
+Client 0.0.7:
+Fixed table widget refresh bug
+Fixed some tries to free already freed memory
+Optimization for speed
+Multi Threading for some operation
+Add support for file system files protection mechanize
+cleaned up about 50% mess in code
+change from crappy lxml to xml.dom
 
 [Version 0.0.11a]
 Minor communication syntax changes
