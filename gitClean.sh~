@@ -8,7 +8,7 @@ if [ $? -eq 0 ]; then
     git add *
     git commint -m "fix"
     git push origin master
-    git rm -r $val
+    git rm -r ClientSource_Python/ui/src/
     git push origin master
 fi
 
