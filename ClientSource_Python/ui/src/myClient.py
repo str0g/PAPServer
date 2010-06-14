@@ -48,7 +48,7 @@ class classMainFrame(QtGui.QMainWindow):
         self.mySocket = None
         self.myAdminPanel = None
         self.MainWindowUI = importMainWindow()
-        self.LockSending = 0
+        self.LockSending = 1
         self.kb = 1024
         self.mb =1024*1024
         self.gb= self.mb * 1024
@@ -191,7 +191,6 @@ class classMainFrame(QtGui.QMainWindow):
         self.xmlListSharedFiles.PurgeNodes()
         self.xmlListSharedFiles.addElement("SharedFiles", None, 1, None)
         self.xmlListSharedFiles.WriteXMLDocToFile()
-        self.InicializeSharedList()
         QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Shared list has been cleared")
     def PurgeServerWidgetandXMLList(self):
         '''
@@ -308,7 +307,7 @@ class classMainFrame(QtGui.QMainWindow):
             QtCore.QObject.emit(self.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Processing files...")
             intOffset = self.xmlListSharedFiles.GetNumberOfChildren()
             intTempCount, intTempRet = self.xmlListSharedFiles.ValidateIfFilesAreAlreadyThere(FileDialog)
-            self.xmlListSharedFiles.FileListInsertion(FileDialog, str(self.MainWindowUI.comboBox_checkSums.currentText()))
+            self.xmlListSharedFiles.FileListInsertion(FileDialog)
             self.xmlListSharedFiles.WriteXMLDocToFile()
             self.intSharedListCounter += intTempCount
             if intTempRet >= intTempCount:

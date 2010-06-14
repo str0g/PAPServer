@@ -32,8 +32,6 @@ class mySocketComm(Thread):
         self.mySocket=None
         self.RecivedData = 0
         self.UploadedData = 0
-        self.DownloadPacketCounter = 0
-        self.UploadPacketCounter = 0
         self.TimeOut = obj_myConfigs_T.TimeOut
         self.SizeOfPacket = 1024*1024
         self.KB=1024
@@ -95,7 +93,7 @@ class mySocketComm(Thread):
     def DataParser(self): 
         #akcje wysylki
         if self.Parent.LockSending == 0 and self.strLogin!="":
-            self.SendFile(self.Parent.xmlListSharedFiles)
+            self.SendList(self.Parent.xmlListSharedFiles)
         #obsluga tego co przyslal server
         if self.strRecivedData.find("<")== 0 and (self.strRecivedData.find("</")!= -1 or self.strRecivedData.find("/>")!= -1):
             if (self.strRecivedData.find("<SharedFiles>")!=-1):
@@ -152,7 +150,6 @@ class mySocketComm(Thread):
                 self.RecivedData += counter
                 print "DATA RECIVED:",self.strRecivedData,"<]>",self.RecivedData,"bajts""<]"
                 self.strRecivedData = self.strRecivedData[:self.strRecivedData.rfind("\n"+self.strLogin)]
-                self.DownloadPacketCounter += 1
                 if counter == 0:
                     self.DataLoop = 1
         except EOFError, error:
@@ -192,15 +189,10 @@ class mySocketComm(Thread):
             QtCore.QObject.emit(self.Parent.QSignalObj1,QtCore.SIGNAL("AdminPanelSignal"))
             self.send("GetServerTime")
     def send(self, data):
-        """Wysyla dane doliczajace je do licznika wyslanych
-        oraz dodaje znak konca lini akceptowany prez serwer
-        """
         if self.mySocket != None:
             print "Wyslane:\n["+data+"]"
             self.UploadedData += self.mySocket.send(data+self.strSpecialChar)
-            self.UploadPacketCounter += 1
-        else:
-            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"You are not conneted to any server")
+        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"You are not conneted to any server")
     def Bandwidth(self, fVal1, fVal2, intdata):
         '''
         Zwraca przepustowosc w B, KB, MB w zaleznosci od osiagnietej przepustowosci
@@ -219,7 +211,7 @@ class mySocketComm(Thread):
         if self.mySocket != None:
             print self.ClassName+"Connection has been closed"
             self.send("DisconnectMe")
-            Summary = "Disconnected from "+self.obj_myConfigs.Host+"::"+str(self.obj_myConfigs.Port)+" Packet in/out["+str(self.UploadPacketCounter)+ "/"+str(self.DownloadPacketCounter)+ "] data["+str(self.RecivedData)+"/"+str(self.UploadedData) +"] bajts"
+            Summary = "Disconnected from "+self.obj_myConfigs.Host+"::"+str(self.obj_myConfigs.Port)+" in["+str(self.RecivedData)+"]out["+str(self.UploadedData) +"] bajts"
             self.Parent.ConnectedAs = -1
             QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),Summary)
             self.mySocket.close()
@@ -229,12 +221,14 @@ class mySocketComm(Thread):
         else:
             print "Cleaning after connection fail"
     def ServerTime(self):
-        """Pobiera czas z serwera, moze ten czas zostanie uzyty kiedys pozniej :-)"""
+        '''
+        Pobiera czas z serwera, moze ten czas zostanie uzyty kiedys pozniej :-)
+        '''
         self.Parent.LocalServerTime = time.ctime(int(self.strRecivedData[self.strRecivedData.find(" ")+len(str(" ")):]))
         QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"), "Connected and authorized successful as "+self.strLogin+", local server time is: "+str(self.Parent.LocalServerTime))
     def AskForServerInfo(self):
-        """Wysyla do sewera zapytanie o informacje o nim"""
-        self.mySocketCommunicate("GetServerInfo")
+        strReturn = self.mySocketCommunicate("GetServerInfo")
+        return "Moze bedzie cos"
     def AskServerForFiles(self, strWords):
         '''
         Wysyla zapytanie do serwera
@@ -250,95 +244,60 @@ class mySocketComm(Thread):
         else:
             QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...not valid xml list")
         self.Parent.xmlListFromServer.PrintXMLDoc()
-    def ServerClearShared(self):
-        '''
-        Wysylam do serwera rzadanie wyczysczenia bazy danych
-        '''
-        self.send("ResetShared")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
-    def ServerClearBanned(self):
-        '''
-        Wysylam do serwera rzadanie wyczyszczenia bazy zbanowanych
-        '''
-        self.send("ResetBanned")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
-    def ServerClearOrderd(self):
-        '''
-        Wysylam do serwera rzadanie wyczyszczenia bazy zamowien na pliki
-        '''
-        self.send("ResetOrderd")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
     def ServerRestart(self):
         '''
         Wysylam do serwera rzadanie restartu
         '''
         self.send("Restart")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
+        return "komunikat restart"
     def ServerShutdown(self):
         '''
         Wysylam do serwera rzadanie wylaczenia lagodnego
         '''
         self.send("Shutdown")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
+        return "komunikat shutdown"
     def ServerShutdownForced(self):
         '''
         Wysylam do serwera rzadanie wylaczenia wymuszonego
         '''
+        print self.ClassName+"ShutdownForce"
         self.send("ShutdownForced")
-        QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
-    def SendFile(self, objXML):
-        """Wysyla dowolny obiekt xml z zalozeniemi ze serwer bedzie odsylala informacje o tym czy nie stracil ktores ramki o wielkosci ustalonej na 1MB
-        Liczenie przepustowosci nie pokaze prawdziwego wyniku poniwaz uzyty jest index co oznacza ze straty danych nie zostana uwzglednione
-        Tutaj tez odbywa sie sygnalowa kontola paska postepu wysylania
-        """
-        bLoop = 1
+        return "komunikat shutdown forced"
+    def SendList(self, objXML):
         if objXML != None:
-            if objXML.GetNumberOfChildren() > 0:
-                strToSend =  objXML.GetXMLAsText("UTF-8")#[:len(str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"))]
+            if objXML.GetNumberOfChildren()>1:
+                strToSend =  objXML.GetXMLAsText()
                 intLengthOfXML = len(strToSend)
                 print intLengthOfXML, "wazne"
                 QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"), 0)
-                if intLengthOfXML > self.SizeOfPacket:
-                    intIndex = self.SizeOfPacket
-                else:
-                    intIndex = intLengthOfXML
-                intTMP = 0 
-                print "tmp:", intTMP
-                print "index", intIndex
+                intIndex = 0
                 intBandWidth = time.time()
-                while bLoop != 0:
-                    print "tmp:", intTMP
-                    print "index", intIndex
+                while intIndex < intLengthOfXML:
                     if intIndex < self.SizeOfPacket:
-                        if intTMP != intIndex:
-                            self.send(strToSend[intTMP:intIndex])
-                            print "wycinek[", strToSend[intTMP:intIndex],"]"
-                        #dgb
-                        if intIndex <intTMP:
-                            print self.ClassName+"Server Lost data at", intIndex, "/", intTMP
-                            print self.ClassName+"Resending"
-                        #
-                        intTMP = intIndex
+                        strReturn = self.send(strToSend[intIndex:])
                         intIndex += self.SizeOfPacket
-                    if intIndex >intLengthOfXML and bLoop != 2:
-                        intIndex = intLengthOfXML
-                        print "zaraz koniec"
-                        bLoop = 2
-                    elif bLoop == 2:
-                        print "koniec"
-                        bLoop = 0
-
-                    print self.ClassName+"File Send status"
-                    print self.ClassName+"Chunk of size", self.SizeOfPacket, "has been send"
-                    print self.ClassName+"Data send:", intIndex, "Data left:", intLengthOfXML - intIndex
-                    print self.ClassName+"Bandwidth:", self.Bandwidth(intBandWidth, time.time(), intIndex)
-                    QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"),(float(intIndex)/float(intLengthOfXML))*100) 
-                    print "Some errors [Na razie serwer nic nie odsyla]"
-                    self.Parent.LockSending = 1
+                    else:
+                        strReturn = self.send(strToSend[intIndex - self.SizeOfPacket:intIndex])
+                    print "[", strReturn, "]"
+                    print "*"*20
+                    if strReturn == " ":
+                        print self.ClassName+"Data has been lost, resending"
+                    elif strReturn == "":#xml ze statusem ok i timeoutem jezeli potrzeba
+                        print self.ClassName+"Chunk of size", self.SizeOfPacket, "has been send"
+                        intIndex += self.SizeOfPacket
+                        print self.ClassName+"Data send:", intIndex, "Data left:", intLengthOfXML - intIndex
+                        print self.ClassName+"Bandwidth:", self.Bandwidth(intBandWidth, time.time(), intIndex)
+                        QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"),(float(intIndex)/float(intLengthOfXML))*100) 
+                    else:#potem popraw
+                        print self.ClassName+"Chunk of size", self.SizeOfPacket, "has been send"
+                        intIndex += self.SizeOfPacket
+                        print self.ClassName+"Data send:", intIndex, "Data left:", intLengthOfXML - intIndex
+                        print self.ClassName+"Bandwidth:", self.Bandwidth(intBandWidth, time.time(), intIndex)
+                        QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"),(float(intIndex)/float(intLengthOfXML))*100) 
+                        print "Some errors"
+                        self.Parent.LockSending = 1
                 if intIndex >= intLengthOfXML:
                     QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"),100)
-                else:#To nie powinno sie zdazyc doputy dopuki cos nie spowoduje przerwania petli
-                    QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("Unkown error in file send"))
             else:
                 QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("You are not sharing any files!"))
         else:

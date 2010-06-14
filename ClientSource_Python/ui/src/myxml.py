@@ -371,12 +371,11 @@ class myXmlDoc():
         else:
             print self.ClassName, "First create document then try write it to file :-)"
             
-    def FileListInsertion(self,filelist, hash ="sha512"):
+    def FileListInsertion(self,filelist):
         """Metoda tworzy watki potrzebne do dodania informacji o plikach do struktury xml"""
         intPossition = 0
         intLen = len(filelist)
         bLoop= bool(True)
-        self.HashType= hash
         
         if intLen > 1:
             intTMP = intLen/self.intDivderInsertion

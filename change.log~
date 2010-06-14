@@ -6,6 +6,7 @@
 
 [Version 0.0.11d]
 Client 0.0.9:
++Smart large files handler sender
 +control for download files tab
 
 [Version 0.0.11c]

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
+<!-- eric4 project file for project myClient -->
+<!-- Saved: 2010-06-12, 12:04:33 -->
+<!-- Copyright (C) 2010 Łukasz Buśko, buskol.waw.pl@mail.com -->
+<Project version="4.6">
+  <Language>en</Language>
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <ProjectType>Qt4</ProjectType>
+  <Description>Python Client for my PAP Server Project</Description>
+  <Version>0.0.3</Version>
+  <Author>Łukasz Buśko</Author>
+  <Email>buskol.waw.pl@mail.com</Email>
+  <Sources>
+    <Source>src/AdminPanel.py</Source>
+    <Source>src/__init__.py</Source>
+    <Source>src/MsgsLib.py</Source>
+    <Source>src/MainFrame.py</Source>
+    <Source>src/myConfigs.py</Source>
+    <Source>src/myClient.py</Source>
+    <Source>src/myTelnet.py</Source>
+    <Source>src/myComm.py</Source>
+    <Source>src/myxml.py</Source>
+  </Sources>
+  <Forms>
+    <Form>ui/MainFrameRev2.ui</Form>
+    <Form>ui/MainFrame.ui</Form>
+    <Form>ui/AdminPanel.ui</Form>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Resources>
+  </Resources>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+    <Other>doc</Other>
+  </Others>
+  <MainScript>src/__init__.py</MainScript>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.ui" type="FORMS" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ui.h" type="FORMS" />
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.py" type="SOURCES" />
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES" />
+  </FiletypeAssociations>
+  <Documentation>
+    <DocumentationParams>
+      <dict>
+        <key>
+          <string>ERIC4DOC</string>
+        </key>
+        <value>
+          <dict>
+            <key>
+              <string>ignoreFilePatterns</string>
+            </key>
+            <value>
+              <list>
+                <unicode></unicode>
+              </list>
+            </value>
+            <key>
+              <string>outputDirectory</string>
+            </key>
+            <value>
+              <unicode>doc</unicode>
+            </value>
+            <key>
+              <string>sourceExtensions</string>
+            </key>
+            <value>
+              <list>
+                <unicode></unicode>
+              </list>
+            </value>
+          </dict>
+        </value>
+      </dict>
+    </DocumentationParams>
+  </Documentation>
+</Project>
