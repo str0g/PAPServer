@@ -7,6 +7,10 @@
 [Version 0.0.11d]
 Client 0.0.9:
 +control for download files tab
+Fixed closing std: out,err,in
+Fixed bad named time Element
+Updated GUI appearance, functionality and clean up
+Update XML functionality
 
 [Version 0.0.11c]
 Client 0.0.8:

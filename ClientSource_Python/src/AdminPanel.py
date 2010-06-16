@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/AdminPanelRev2.ui'
 #
-# Created: Mon Jun 14 15:25:41 2010
+# Created: Wed Jun 16 20:13:32 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!

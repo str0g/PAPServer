@@ -6,12 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>887</width>
-    <height>596</height>
+    <width>880</width>
+    <height>594</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>myClient</string>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonFollowStyle</enum>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -24,7 +33,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <property name="movable">
      <bool>true</bool>
@@ -54,13 +63,16 @@
       <property name="features">
        <set>QDockWidget::AllDockWidgetFeatures</set>
       </property>
+      <property name="allowedAreas">
+       <set>Qt::AllDockWidgetAreas</set>
+      </property>
       <property name="windowTitle">
        <string>Lista Plików udostępnianych przez Serwer</string>
       </property>
       <widget class="QWidget" name="dockWidgetContents_2">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTableWidget" name="tableWidget_SharedByServer">
+         <widget class="QTableWidget" name="tableWidget_Search">
           <property name="editTriggers">
            <set>QAbstractItemView::SelectedClicked</set>
           </property>
@@ -79,14 +91,23 @@
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
           </property>
+          <property name="textElideMode">
+           <enum>Qt::ElideLeft</enum>
+          </property>
           <property name="sortingEnabled">
            <bool>true</bool>
           </property>
           <property name="columnCount">
-           <number>6</number>
+           <number>5</number>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>120</number>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>120</number>
@@ -119,11 +140,6 @@
           <column>
            <property name="text">
             <string>Suma kontrolna</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string/>
            </property>
           </column>
          </widget>
@@ -264,7 +280,7 @@
       <widget class="QWidget" name="dockWidgetContents_7">
        <layout class="QGridLayout" name="gridLayout_9">
         <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget_SharedFileByMySelf">
+         <widget class="QTableWidget" name="tableWidget_Shared">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -289,6 +305,9 @@
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
           </property>
+          <property name="textElideMode">
+           <enum>Qt::ElideMiddle</enum>
+          </property>
           <property name="sortingEnabled">
            <bool>true</bool>
           </property>
@@ -296,13 +315,25 @@
            <number>7</number>
           </property>
           <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>false</bool>
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>120</number>
           </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderCascadingSectionResizes">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>false</bool>
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderCascadingSectionResizes">
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>120</number>
@@ -453,8 +484,14 @@ md5 już złamany jednak szybszy</string>
         <x>10</x>
         <y>0</y>
         <width>861</width>
-        <height>168</height>
+        <height>271</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>861</width>
+        <height>0</height>
+       </size>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::SelectedClicked</set>
@@ -474,14 +511,23 @@ md5 już złamany jednak szybszy</string>
       <property name="selectionBehavior">
        <enum>QAbstractItemView::SelectRows</enum>
       </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideLeft</enum>
+      </property>
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
       <property name="columnCount">
-       <number>9</number>
+       <number>8</number>
       </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>120</number>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
       </attribute>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>120</number>
@@ -493,17 +539,17 @@ md5 już złamany jednak szybszy</string>
       </row>
       <column>
        <property name="text">
+        <string>Status</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>Transfer</string>
        </property>
       </column>
       <column>
        <property name="text">
         <string>Pozostało</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Status</string>
        </property>
       </column>
       <column>
@@ -531,43 +577,6 @@ md5 już złamany jednak szybszy</string>
         <string>Suma kontrolna</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string/>
-       </property>
-      </column>
-     </widget>
-     <widget class="QPushButton" name="pushButton_DELALL_Download">
-      <property name="geometry">
-       <rect>
-        <x>405</x>
-        <y>220</y>
-        <width>201</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Wyczyść listę</string>
-      </property>
-      <property name="text">
-       <string>Wyczyść listę</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_Del_Download">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>220</y>
-        <width>159</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Usuń pliki z listy udostępnionych</string>
-      </property>
-      <property name="text">
-       <string>Usun</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_options">
@@ -962,66 +971,64 @@ md5 już złamany jednak szybszy</string>
      </widget>
     </widget>
    </widget>
-   <widget class="QDockWidget" name="dockWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>330</y>
-      <width>873</width>
-      <height>221</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="floating">
-     <bool>false</bool>
-    </property>
-    <property name="windowTitle">
-     <string>Konsola</string>
-    </property>
-    <widget class="QWidget" name="dockWidgetContents_4">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QListWidget" name="listWidget_console">
-        <property name="toolTip">
-         <string>Konsola</string>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>false</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
-        <property name="movement">
-         <enum>QListView::Snap</enum>
-        </property>
-        <property name="isWrapping" stdset="0">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>887</width>
+     <width>880</width>
      <height>23</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Konsola</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="listWidget_console">
+       <property name="toolTip">
+        <string>Konsola</string>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>false</bool>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <property name="movement">
+        <enum>QListView::Snap</enum>
+       </property>
+       <property name="isWrapping" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

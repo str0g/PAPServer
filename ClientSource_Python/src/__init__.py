@@ -16,12 +16,6 @@ except ImportError, error:
     time.sleep(2)
     sys.exit(1)
 
-def Main():
-    '''
-    Main starter, zwraca to co zwraca Qt4 na wyjsciu
-    '''
-    return myClient()
-
 #MAIN
 if __name__ == "__main__":
-    sys.exit(Main())
+    myClient()

@@ -3,7 +3,7 @@
 
 __author__ =  'Lukasz Busko'                
 __email__ = 'buskol.waw.pl@gmail.com'
-__version__= '0.1.9'
+__version__= '0.2.0'
 __licenes__= 'Licenes GPL'  
 
 try:
@@ -57,18 +57,24 @@ class mySocketComm(Thread):
             QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(error))
             self.DataLoop = 1
         except socket.herror, error:
-            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Socket error: "+str(error))
+            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(error))
             self.DataLoop = 1
         except socket.gaierror, error:
-            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Socket error: "+str(error))
+            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(error))
             self.DataLoop = 1
         except socket.timeout, error:
-            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Socket error: "+str(error))
+            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(error))
             self.DataLoop = 1
         except AttributeError,  error:
             print "Standard error during cleaning process", error
             self.DataLoop = 1
-            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Socket error: "+str(error))
+            QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),str(error))
+        finally:
+            if self.DataLoop == 1:
+                self.Parent.MainWindowUI.pushButton_ConnDiscon.setText(QtGui.QApplication.translate("TabWidget_MainFrame", 
+                                                                                                                                "Połącz", 
+                                                                                                                                None, 
+                                                                                                                                QtGui.QApplication.UnicodeUTF8))
     def ConnLoop(self):
         self.DataLoop = 0
         self.strRecivedData=""
@@ -95,7 +101,7 @@ class mySocketComm(Thread):
     def DataParser(self): 
         #akcje wysylki
         if self.Parent.LockSending == 0 and self.strLogin!="":
-            self.SendFile(self.Parent.xmlListSharedFiles)
+            self.SendFile(self.Parent.xmlSharedList)
         #obsluga tego co przyslal server
         if self.strRecivedData.find("<")== 0 and (self.strRecivedData.find("</")!= -1 or self.strRecivedData.find("/>")!= -1):
             if (self.strRecivedData.find("<SharedFiles>")!=-1):
@@ -103,6 +109,9 @@ class mySocketComm(Thread):
                 self.ServerResponseForFileAsk()
             elif (self.strRecivedData.find("<SharedFiles />") != -1):
                 QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"File not found")
+            elif(self.strRecivedData.find("<FileRequest>")!= -1):
+                QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Recived file request")
+                self.FileRequest()
         elif self.strRecivedData == "100":
             QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Server is going to Restart it self when you reconnect")
         elif self.strRecivedData == "101":
@@ -241,15 +250,15 @@ class mySocketComm(Thread):
         '''
         self.send("SearchFor: "+strWords)
     def ServerResponseForFileAsk(self):
-        if self.Parent.xmlListFromServer.CreateDocFromFile(self.strRecivedData) == 0:
-            if  self.Parent.xmlListFromServer.GetNumberOfChildren()  > 0:
+        self.Parent.xmlSearchList.ResetDoc()
+        if self.Parent.xmlSearchList.CreateDocFromFile(self.strRecivedData) == 0:
+            if  self.Parent.xmlSearchList.GetNumberOfChildren()  > 0:
                 QtCore.QObject.emit(self.Parent.QSignalObjServerList, QtCore.SIGNAL("RefreshTableWidget"))
-                self.Parent.xmlListFromServer.PrintXMLDoc()
             else:
                 QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...file not found")
         else:
             QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"...not valid xml list")
-        self.Parent.xmlListFromServer.PrintXMLDoc()
+        #self.Parent.xmlSearchList.PrintXMLDoc()
     def ServerClearShared(self):
         '''
         Wysylam do serwera rzadanie wyczysczenia bazy danych
@@ -286,6 +295,13 @@ class mySocketComm(Thread):
         '''
         self.send("ShutdownForced")
         QtCore.QObject.emit(self.Parent.QSignalObjMsgToConsole, QtCore.SIGNAL("MsgToConsole(QString)"),"Waiting for server responce")
+    def FileRequest(self):
+        self.xmlOutBuffer.CreateDocFromFile(self.strRecivedData)
+        print  "FileRequest", self.xmlOutBuffer.GetElementChild()
+        if self.Parent.xmlSharedList.SearchByElementValue( [self.xmlOutBuffer.GetElementChild()] ) == [] :
+            self.send("404")
+        else:
+            pass #moze jakas flaga?
     def SendFile(self, objXML):
         """Wysyla dowolny obiekt xml z zalozeniemi ze serwer bedzie odsylala informacje o tym czy nie stracil ktores ramki o wielkosci ustalonej na 1MB
         Liczenie przepustowosci nie pokaze prawdziwego wyniku poniwaz uzyty jest index co oznacza ze straty danych nie zostana uwzglednione
@@ -294,7 +310,7 @@ class mySocketComm(Thread):
         bLoop = 1
         if objXML != None:
             if objXML.GetNumberOfChildren() > 0:
-                strToSend =  objXML.GetXMLAsText("UTF-8")#[:len(str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"))]
+                strToSend =  objXML.GetXMLAsText("UTF-8")
                 intLengthOfXML = len(strToSend)
                 print intLengthOfXML, "wazne"
                 QtCore.QObject.emit(self.Parent.QSignalObjProgressBarAdd,  QtCore.SIGNAL("RefreshProgressBarAdd"), 0)

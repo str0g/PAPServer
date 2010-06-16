@@ -3,7 +3,7 @@
 
 __author__ =  'Lukasz Busko'                
 __email__ = 'buskol.waw.pl@gmail.com'
-__version__= '0.0.6'
+__version__= '0.0.7'
 __licenes__= 'Licenes GPL'
 
 try:
@@ -37,12 +37,13 @@ class myConfigs(MsgsLib.MsgDeffinition):
     '''
     def __init__(self):
         self.ClassName = "[myConfigs]->"
-        self.ClientVersion = "0.0.8"
+        self.ClientVersion = "0.0.9"
         self.myPyVersion = "2.6.5"
         self.myQt4Version = ""
         self.minServerVersion = ""
         self.ConsoleTimeFormat = "[%Y.%m.%d %H:%M:%S]"
         self.FILE_CFG = 'configs/config.conf'
+        self.DownLoad = "configs/downloads.xml"
     def LoadCFG(self):
         '''
         Metoda laduje dane z pliku

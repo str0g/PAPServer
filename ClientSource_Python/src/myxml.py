@@ -5,7 +5,7 @@ Ustawianiem praw dostepu, oraz flagi zapisu do pliku
 """
 __author__ =  'Lukasz Busko'                
 __email__ = 'buskol.waw.pl@gmail.com'
-__version__= '0.2.2'
+__version__= '0.2.7'
 __licenes__= 'Licenes GPL'
 
 try:
@@ -112,15 +112,20 @@ class myXmlDoc():
     def SetSignals(self):
         self.QSignalObjFileLoader = QtCore.QObject(None)
         
-    def CreateDocFromFile(self, file =None):
+    def CreateDocFromFile(self, file =None, overWrite =0):
         """Metoda tworzy drzewo xml z bufora lub pliku ponad to prymitywnie obsluguje te bledy
         czyli zwraca, ze sie nie udalo i przy czesci flag co poszlo nie tak
         """
         intRetCode = 1
+        if overWrite == 1:
+            print self.ClassName+"Overating default xmlpath"
+            self.xmlDiskFile = file
         if file == None:
+            print self.ClassName+"Using default xmlpath"
             file = self.xmlDiskFile
         if self.XMLDoc == None:
             if not os.path.isfile(file):
+                print self.ClassName+"Loading from buffor"
                 file = StringIO.StringIO(str(file))
             try :
                 self.XMLDoc = minidom.parse(file)
@@ -160,6 +165,7 @@ class myXmlDoc():
     def CreateDoc(self, root =None, attr =None):
         """Tworzy nowy dokument z element root o podanej nazwie"""
         if self.XMLDoc == None:
+            print self.ClassName+"Creating xml document template"
             self.XMLDoc = minidom.Document()
             self.xmlWorkNode = self.XMLDoc
             if root != None:
@@ -255,17 +261,13 @@ class myXmlDoc():
                     VectorList.reverse()
                     for i in VectorList:
                         FileList.pop(i)
-#                    intV = len(VectorList)-1
-#                    for i in range(len(VectorList)):
-#                        FileList.pop(VectorList[intV - i])
 
         if intElementNumber - intCounter != 0:
             self.WriteToFileFlag = 1
         return intElementNumber - intCounter, intElementNumber
             
     def  addElement(self, Ename="", value=None, intdeeper = 0, attr = None):
-        """Metoda  sluzy do budowania elementow drzewa oraz przypisywania im okreslonej warosci
-        """
+        """Metoda  sluzy do budowania elementow drzewa oraz przypisywania im okreslonej warosci"""
         if self.XMLDoc!= None and Ename!="":
             tmp = self.XMLDoc.createElement(Ename)
             if value != None:
@@ -273,22 +275,100 @@ class myXmlDoc():
             self.xmlWorkNode.appendChild(tmp)
             if intdeeper == 1:
                 self.xmlWorkNode = tmp
+    def appendAbleElement(self, Ename ="", value =None):
+        """Metoda  sluzy do budowania elementu o okreslonej wartosi  i zwracania go"""
+        if self.XMLDoc!= None and Ename!="":
+            tmp = self.XMLDoc.createElement(Ename)
+            if value != None:
+                tmp.appendChild(self.XMLDoc.createTextNode(value))
+        return tmp
                 
     def addFileNode(self, fp, fn, fz, fht, fh, flmd):
-        """Metoda tworzy elementy wedlug wzorca
-        """
+        """Metoda tworzy elementy wedlug wzorca"""
         tmpFile = self.XMLDoc.createElement("File")
         tmpFile.appendChild(self.XMLDoc.createElement("FilePath")).appendChild(self.XMLDoc.createTextNode(fp))
         tmpFile.appendChild(self.XMLDoc.createElement("FileName")).appendChild(self.XMLDoc.createTextNode(fn))
         tmpFile.appendChild(self.XMLDoc.createElement("FileSize")).appendChild(self.XMLDoc.createTextNode(fz))
         tmpFile.appendChild(self.XMLDoc.createElement("FileHashType")).appendChild(self.XMLDoc.createTextNode(fht))
         tmpFile.appendChild(self.XMLDoc.createElement("FileHash")).appendChild(self.XMLDoc.createTextNode(fh))
-        tmpFile.appendChild(self.XMLDoc.createElement("FileLastModificationData")).appendChild(self.XMLDoc.createTextNode(flmd))
+        tmpFile.appendChild(self.XMLDoc.createElement("FileLastModification")).appendChild(self.XMLDoc.createTextNode(flmd))
         self.xmlWorkNode.appendChild(tmpFile)
     def addNode(self, node):
         """Dopisuje glaz/lisc do struktury xml"""
         self.xmlWorkNode.appendChild(node)
-
+    def addChildrenFromOtherXML(self, extXML, ElementList):
+        MethodName = self.ClassName+"[addChildrenFromOtherXML]->"
+        intLen = len(ElementList)
+        try:
+            for i in range(extXML.GetNumberOfChildren()):
+                if  extXML.xmlWorkNode.childNodes[i].childNodes[0].childNodes[0].nodeValue in ElementList:
+                    node = extXML.GetNodeChildrenAsNode(i)
+                    if node != None:
+                        self.addNode(node)
+                    intLen -= 1
+                elif intLen == 0:
+                    break                
+            self.WriteToFileFlag= 1
+        except IndexError, error:
+            print MethodName, error
+    def addChildrenFromOtherXMLDownload(self, extXML, ElementList):
+        MethodName = self.ClassName+"[addChildrenFromOtherXML]->"
+        intLen = len(ElementList)
+        try:
+            for i in range(extXML.GetNumberOfChildren()):
+                if  extXML.xmlWorkNode.childNodes[i].childNodes[0].childNodes[0].nodeValue in ElementList:
+                    node = extXML.GetNodeChildrenAsNode(i)
+                    if node != None:
+                        self.addNode(node)
+                    self.xmlWorkNode.childNodes[self.GetNumberOfChildren()-1].appendChild(self.appendAbleElement("Bandwidth", "0"))
+                    self.xmlWorkNode.childNodes[self.GetNumberOfChildren()-1].appendChild(self.appendAbleElement("Left", node.childNodes[2].childNodes[0].nodeValue))
+                    self.xmlWorkNode.childNodes[self.GetNumberOfChildren()-1].appendChild(self.appendAbleElement("Status", "Ready"))
+                    intLen -= 1
+                elif intLen == 0:
+                    break                
+            self.WriteToFileFlag= 1
+        except IndexError, error:
+            print MethodName, error
+    def CompareNodes(self):
+        retList = []
+        try:
+            for i in range(self.GetNumberOfChildren()):
+                if self.xmlWorkNode.childNodes[i].childNodes[2].childNodes[0].nodeValue in ElementList:
+                    retList.append(i)
+        except IndexError, error:
+            print self.ClassName+"[CompareIfFileDownloaded]->", error
+        finally:
+            return reList
+    def SearchByElementValue(self, ElementList, ElementPosition, unique =1):
+        retList = []
+        intCounter = len(ElementList)
+        try:
+            for i in range(self.GetNumberOfChildren()):
+                if self.xmlWorkNode.childNodes[i].childNodes[ElementPosition].childNodes[0].nodeValue in ElementList:
+                    retList.append(i)
+                    if unique == 1:
+                        intCounter -= 1
+                if intCounter == 0:
+                    break
+        except IndexError, error:
+            print self.ClassName+"[SearchByElementValue]->", error
+        finally:
+            return retList
+    def SearchByElementValueDiff(self, ElementList, ElementPosition, unique =1):
+        retList = []
+        intCounter = len(ElementList)
+        try:
+            for i in range(self.GetNumberOfChildren()):
+                if not self.xmlWorkNode.childNodes[i].childNodes[ElementPosition].childNodes[0].nodeValue in ElementList:
+                    retList.append(i)
+                    if unique == 1:
+                        intCounter -= 1
+                if intCounter == 0:
+                    break
+        except IndexError, error:
+            print self.ClassName+"[SearchByElementValue]->", error
+        finally:
+            return retList
     def FreeXMLDoc(self):
         """Teoretycznie unlink powinien usunac cala struktora w zeczywistosci nie dziala prawidlow ale mniejsza o to
         del konczy dzielo zniszczenia
@@ -334,6 +414,17 @@ class myXmlDoc():
             self.WriteToFileFlag= 1
         except IndexError, error:
             print MethodName, error
+    def RemoveChildrenByIndex(self, Vector):
+        MethodName = self.ClassName+"[RemoveChildrenByIndex]->"
+        intLen = len(Vector)
+        Vector.sort()
+        Vector.reverse()
+        try:
+            for i in Vector:
+                self.XMLDoc.childNodes[0].removeChild(self.XMLDoc.childNodes[0].childNodes[i])
+                self.WriteToFileFlag = 1
+        except IndexError, error:
+            print MethodName, error
     def PrintXMLDoc(self):
         """Wypisuje na ekran document w standardzie UTF-8"""
         if self.XMLDoc != None:
@@ -363,6 +454,7 @@ class myXmlDoc():
                 self.XMLDoc.writexml(writer,ind, ind, newl ,encoding="UTF-8")
                 fp.close()
                 os.chmod(self.xmlDiskFile, 0444)
+                self.WriteToFileFlag = 0
             except IOError, error:
                 print self.ClassName,  error
                 #signal
@@ -370,7 +462,9 @@ class myXmlDoc():
             print self.ClassName, "File need't to be updated"
         else:
             print self.ClassName, "First create document then try write it to file :-)"
-            
+    def ResetDoc(self):
+        del self.XMLDoc
+        self.XMLDoc = None
     def FileListInsertion(self,filelist, hash ="sha512"):
         """Metoda tworzy watki potrzebne do dodania informacji o plikach do struktury xml"""
         intPossition = 0
@@ -430,7 +524,9 @@ class myXmlDoc():
         except IndexError, error:
             print Method, error
         finally:
-            return retNode       
+            return retNode
+    def GetElementChild(self, i3=0, i2=0, i1 =0 ):
+        return self.XMLDoc.childNodes[i1].childNodes[i2].childNodes[i3].childNodes[0].nodeValue
     def GenerateFileRequest(self, externalXMLstruct, VectorIndex):
         """Przetwarza liste zawierajaca wektory interesujacych nas dzieci w drzwie z ktorego pobierzemy dane"""
         self.CreateDoc("FileRequest")
@@ -438,3 +534,12 @@ class myXmlDoc():
             node = externalXMLstruct.GetNodeChildrenAsNode(index)
             if node != None:
                 self.addNode(node)
+    def GenerateDownloadRequest(self, extXMLstruct, index):
+        self.CreateDoc("FileRequest", "Download")
+        node = extXMLstruct.GetNodeChildrenAsNode(index)
+        if node != None:
+            self.addNode(node)
+            self.PrintXMLDoc()
+        else:
+            print self.ClassName+"Fail to copy node!"
+            #miejsce na sygnal

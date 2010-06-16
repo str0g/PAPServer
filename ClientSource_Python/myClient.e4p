@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project myClient -->
-<!-- Saved: 2010-06-12, 12:04:33 -->
+<!-- Saved: 2010-06-16, 17:33:54 -->
 <!-- Copyright (C) 2010 Łukasz Buśko, buskol.waw.pl@mail.com -->
 <Project version="4.6">
   <Language>en</Language>
@@ -18,14 +18,16 @@
     <Source>src/MainFrame.py</Source>
     <Source>src/myConfigs.py</Source>
     <Source>src/myClient.py</Source>
-    <Source>src/myTelnet.py</Source>
     <Source>src/myComm.py</Source>
     <Source>src/myxml.py</Source>
+    <Source>src/tableDownloadContextMenu.py</Source>
+    <Source>src/myAdminPanel.py</Source>
   </Sources>
   <Forms>
     <Form>ui/MainFrameRev2.ui</Form>
     <Form>ui/MainFrame.ui</Form>
     <Form>ui/AdminPanel.ui</Form>
+    <Form>ui/AdminPanelRev2.ui</Form>
   </Forms>
   <Translations>
   </Translations>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/AdminPanelRev2.ui'
 #
-# Created: Mon Jun 14 10:29:51 2010
+# Created: Tue Jun 15 18:36:40 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -60,6 +60,24 @@ class Ui_Window_AdminPanel(object):
         self.page_3 = QtGui.QWidget()
         self.page_3.setGeometry(QtCore.QRect(0, 0, 411, 188))
         self.page_3.setObjectName("page_3")
+        self.pushButton_ClearShared = QtGui.QPushButton(self.page_3)
+        self.pushButton_ClearShared.setGeometry(QtCore.QRect(10, 0, 211, 27))
+        self.pushButton_ClearShared.setObjectName("pushButton_ClearShared")
+        self.pushButton_ClearBanned = QtGui.QPushButton(self.page_3)
+        self.pushButton_ClearBanned.setGeometry(QtCore.QRect(10, 40, 211, 27))
+        self.pushButton_ClearBanned.setObjectName("pushButton_ClearBanned")
+        self.pushButton_ClearOrderd = QtGui.QPushButton(self.page_3)
+        self.pushButton_ClearOrderd.setGeometry(QtCore.QRect(10, 80, 211, 27))
+        self.pushButton_ClearOrderd.setObjectName("pushButton_ClearOrderd")
+        self.lcdNumber = QtGui.QLCDNumber(self.page_3)
+        self.lcdNumber.setGeometry(QtCore.QRect(230, 0, 181, 23))
+        self.lcdNumber.setObjectName("lcdNumber")
+        self.lcdNumber_2 = QtGui.QLCDNumber(self.page_3)
+        self.lcdNumber_2.setGeometry(QtCore.QRect(230, 40, 181, 23))
+        self.lcdNumber_2.setObjectName("lcdNumber_2")
+        self.lcdNumber_3 = QtGui.QLCDNumber(self.page_3)
+        self.lcdNumber_3.setGeometry(QtCore.QRect(233, 80, 181, 23))
+        self.lcdNumber_3.setObjectName("lcdNumber_3")
         self.toolBox.addItem(self.page_3, "")
         self.page_2 = QtGui.QWidget()
         self.page_2.setGeometry(QtCore.QRect(0, 0, 411, 188))
@@ -90,7 +108,7 @@ class Ui_Window_AdminPanel(object):
         Window_AdminPanel.setStatusBar(self.statusbar)
 
         self.retranslateUi(Window_AdminPanel)
-        self.toolBox.setCurrentIndex(2)
+        self.toolBox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Window_AdminPanel)
 
     def retranslateUi(self, Window_AdminPanel):
@@ -101,6 +119,9 @@ class Ui_Window_AdminPanel(object):
         self.pushButton_BanUser.setText(QtGui.QApplication.translate("Window_AdminPanel", "Ban", None, QtGui.QApplication.UnicodeUTF8))
         self.label_UsersConnected.setText(QtGui.QApplication.translate("Window_AdminPanel", "Połaczeni", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page), QtGui.QApplication.translate("Window_AdminPanel", "Operacje na użytkownikach", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_ClearShared.setText(QtGui.QApplication.translate("Window_AdminPanel", "Wyczyść bazę plików", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_ClearBanned.setText(QtGui.QApplication.translate("Window_AdminPanel", "Wyszyść listę zbanowanych", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_ClearOrderd.setText(QtGui.QApplication.translate("Window_AdminPanel", "Wyczyść listę zamówień", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_3), QtGui.QApplication.translate("Window_AdminPanel", "Operacje na bazie danych", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_ForceShutdownServer.setToolTip(QtGui.QApplication.translate("Window_AdminPanel", "Wyłacz awaryjnie", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_ForceShutdownServer.setText(QtGui.QApplication.translate("Window_AdminPanel", "Wyłacz (awaryjnie)", None, QtGui.QApplication.UnicodeUTF8))

@@ -11,7 +11,6 @@ try:
     import os
     import time
     from PyQt4 import QtGui,QtCore
-    #from AdminPanel import Ui_ToolBox_AdminPanel as importAdminPanel
     from AdminPanel import Ui_Window_AdminPanel as adminToolbox
 except ImportError, error:
     print "[myAdminPanel]->", error
