@@ -1,0 +1,41 @@
+\hypertarget{versionl_8h_source}{
+\section{versionl.h}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef VERSIONL\_H}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define VERSIONL\_H}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{keyword}{namespace }AutoVersionL\{
+00005         
+00006         \textcolor{comment}{//Date Version Types}
+00007         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} DATE[] = \textcolor{stringliteral}{"11"};
+00008         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} MONTH[] = \textcolor{stringliteral}{"07"};
+00009         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} YEAR[] = \textcolor{stringliteral}{"2010"};
+00010         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} UBUNTU\_VERSION\_STYLE[] = \textcolor{stringliteral}{"10.07"};
+00011         
+00012         \textcolor{comment}{//Software Status}
+00013         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} STATUS[] = \textcolor{stringliteral}{""};
+00014         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} STATUS\_SHORT[] = \textcolor{stringliteral}{""};
+00015         
+00016         \textcolor{comment}{//Standard Version Type}
+00017         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} MAJOR = 0;
+00018         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} MINOR = 0;
+00019         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} BUILD = 296;
+00020         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} REVISION = 142497;
+00021         
+00022         \textcolor{comment}{//Miscellaneous Version Types}
+00023         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} BUILDS\_COUNT = 454;
+00024 \textcolor{preprocessor}{        #define RC\_FILEVERSION 0,0,296,142497}
+00025 \textcolor{preprocessor}{}\textcolor{preprocessor}{        #define RC\_FILEVERSION\_STRING "0, 0, 296, 142497\(\backslash\)0"}
+00026 \textcolor{preprocessor}{}        \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} FULLVERSION\_STRING[] = \textcolor{stringliteral}{"0.0.296.142497"};
+00027         
+00028         \textcolor{comment}{//These values are to keep track of your versioning state, don't modify t
+      hem.}
+00029         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{long} BUILD\_HISTORY = 0;
+00030         
+00031 
+00032 \}
+00033 \textcolor{preprocessor}{#endif //VERSIONL\_H}
+\end{alltt}\end{footnotesize}

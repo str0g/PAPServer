@@ -1,0 +1,80 @@
+\hypertarget{ServerConfigs_8hpp_source}{
+\section{ServerConfigs.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef SERVERCONFIGS\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define SERVERCONFIGS\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00012 
+00014 \textcolor{preprocessor}{#include <cstdlib>}
+00015 \textcolor{preprocessor}{#include <iostream>}
+00016 \textcolor{preprocessor}{#include <string>}
+00017 \textcolor{comment}{//#include <cstring>}
+00018 \textcolor{preprocessor}{#include <unistd.h>}
+00019 
+00021 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00022 \textcolor{preprocessor}{#include "XMLParser.hpp"}
+00023 \textcolor{preprocessor}{#include "version.h"}
+00024 \textcolor{preprocessor}{#include "myDefines.hpp"}
+00025 \textcolor{preprocessor}{#include "myConv.hpp"}
+00026 
+00028 \textcolor{keyword}{using} std::string;
+00029 \textcolor{keyword}{using} std::cout;
+00030 \textcolor{keyword}{using} std::cerr;
+00031 \textcolor{keyword}{using} std::cin;
+00032 \textcolor{keyword}{using} std::endl;
+00033 
+\hypertarget{ServerConfigs_8hpp_source_l00035}{}\hyperlink{classServerConfigs}{00035} \textcolor{keyword}{class }\hyperlink{classServerConfigs}{ServerConfigs}: TimeCout\{
+00036     \textcolor{keyword}{public}:
+\hypertarget{ServerConfigs_8hpp_source_l00037}{}\hyperlink{classServerConfigs_a25ce60fcec7cc2b3a2d6e527d086e6c3}{00037}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_a25ce60fcec7cc2b3a2d6e527d086e6c3}{p_cMySqlServerAddress};
+\hypertarget{ServerConfigs_8hpp_source_l00038}{}\hyperlink{classServerConfigs_ac394f376322427f07ce2de08f3dabdf2}{00038}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_ac394f376322427f07ce2de08f3dabdf2}{p_cMySqlUser};
+\hypertarget{ServerConfigs_8hpp_source_l00039}{}\hyperlink{classServerConfigs_ac1a3f46a9e789a3e82e5f00e79d459ee}{00039}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_ac1a3f46a9e789a3e82e5f00e79d459ee}{p_cMySqlPass};
+\hypertarget{ServerConfigs_8hpp_source_l00040}{}\hyperlink{classServerConfigs_a48a736c392a19e149f14a83dffda0e6a}{00040}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_a48a736c392a19e149f14a83dffda0e6a}{p_cMySqldBase};
+\hypertarget{ServerConfigs_8hpp_source_l00041}{}\hyperlink{classServerConfigs_a11c31d078a6bd272d4eca05aba33c0bc}{00041}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_a11c31d078a6bd272d4eca05aba33c0bc}{strFormatter};
+\hypertarget{ServerConfigs_8hpp_source_l00042}{}\hyperlink{classServerConfigs_adeb37d83ae4db09b26aecdcd5e593d00}{00042}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_adeb37d83ae4db09b26aecdcd5e593d00}{strServerIP};
+\hypertarget{ServerConfigs_8hpp_source_l00043}{}\hyperlink{classServerConfigs_a6c9fa39932b507f17cd0cfc8753f32fa}{00043}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_a6c9fa39932b507f17cd0cfc8753f32fa}{strLoggingFileDir};
+\hypertarget{ServerConfigs_8hpp_source_l00044}{}\hyperlink{classServerConfigs_afcf905ce23547206d835f6b2281bbc8f}{00044}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} *\hyperlink{classServerConfigs_afcf905ce23547206d835f6b2281bbc8f}{p_intClientTimeOut};
+\hypertarget{ServerConfigs_8hpp_source_l00045}{}\hyperlink{classServerConfigs_a3ce8a0c3c2fc7f7c85e82b903c2e421f}{00045}         \textcolor{keyword}{static} uint64\_t *\hyperlink{classServerConfigs_a3ce8a0c3c2fc7f7c85e82b903c2e421f}{p_intChunkSize};
+\hypertarget{ServerConfigs_8hpp_source_l00046}{}\hyperlink{classServerConfigs_a7b9ef5a59901632542066b8677de2d53}{00046}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_a7b9ef5a59901632542066b8677de2d53}{intStdErr};
+\hypertarget{ServerConfigs_8hpp_source_l00047}{}\hyperlink{classServerConfigs_a1d80afb91cdd8cd80e58b4259bd28087}{00047}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_a1d80afb91cdd8cd80e58b4259bd28087}{intStdOut};
+\hypertarget{ServerConfigs_8hpp_source_l00048}{}\hyperlink{classServerConfigs_aefa14f4b1ff6da3032d89d9e844c745e}{00048}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_aefa14f4b1ff6da3032d89d9e844c745e}{intStdIn};
+\hypertarget{ServerConfigs_8hpp_source_l00049}{}\hyperlink{classServerConfigs_a4879aafc26d5e1838b7198eaf944ad81}{00049}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_a4879aafc26d5e1838b7198eaf944ad81}{intDemonize};
+\hypertarget{ServerConfigs_8hpp_source_l00050}{}\hyperlink{classServerConfigs_a09e16704f3fc242e56568679c5bb9056}{00050}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} *\hyperlink{classServerConfigs_a09e16704f3fc242e56568679c5bb9056}{p_intMultiThreading};
+\hypertarget{ServerConfigs_8hpp_source_l00051}{}\hyperlink{classServerConfigs_ab99e0262c9839e2bccdb0cd12465f88e}{00051}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} *\hyperlink{classServerConfigs_ab99e0262c9839e2bccdb0cd12465f88e}{p_intMaxClients};
+\hypertarget{ServerConfigs_8hpp_source_l00052}{}\hyperlink{classServerConfigs_a430ce54c5e6da45788eabf7abae43ced}{00052}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} *\hyperlink{classServerConfigs_a430ce54c5e6da45788eabf7abae43ced}{p_intMaxWarnings};
+\hypertarget{ServerConfigs_8hpp_source_l00053}{}\hyperlink{classServerConfigs_a3c93e632afec4434ee4bba607c4258cf}{00053}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_a3c93e632afec4434ee4bba607c4258cf}{intLoggingToFile};
+\hypertarget{ServerConfigs_8hpp_source_l00054}{}\hyperlink{classServerConfigs_a1d5ee582c4eed5b579fb9beb1e973472}{00054}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classServerConfigs_a1d5ee582c4eed5b579fb9beb1e973472}{intServerPort};
+\hypertarget{ServerConfigs_8hpp_source_l00055}{}\hyperlink{classServerConfigs_a60d8f33244a4b2dd862aea73162f827c}{00055}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} *\hyperlink{classServerConfigs_a60d8f33244a4b2dd862aea73162f827c}{p_strConfigPath};
+\hypertarget{ServerConfigs_8hpp_source_l00056}{}\hyperlink{classServerConfigs_abe785e74a7d0891434c1ba47a80322a2}{00056}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} *\hyperlink{classServerConfigs_abe785e74a7d0891434c1ba47a80322a2}{p_strMyPath};
+\hypertarget{ServerConfigs_8hpp_source_l00057}{}\hyperlink{classServerConfigs_a00f95326c29a3eb81c2c1233f1b0a3ab}{00057}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} *\hyperlink{classServerConfigs_a00f95326c29a3eb81c2c1233f1b0a3ab}{p_strMyPath2};
+\hypertarget{ServerConfigs_8hpp_source_l00058}{}\hyperlink{classServerConfigs_ac2063e674b25db88fdea31ced792937e}{00058}         \textcolor{keyword}{static} \textcolor{keywordtype}{string} \hyperlink{classServerConfigs_ac2063e674b25db88fdea31ced792937e}{g_strSlash};
+00059         \hyperlink{classServerConfigs}{ServerConfigs}(\textcolor{keywordtype}{string}*,\textcolor{keywordtype}{string} *);
+00060         ~\hyperlink{classServerConfigs}{ServerConfigs}();
+00061         \textcolor{keywordtype}{void} \hyperlink{classServerConfigs_a79b1527bcb676e9f100ea5c2bc5849a3}{SetVaruables}();
+00062         \textcolor{keywordtype}{void} ShowConfigs();
+00063         \textcolor{keyword}{static} \textcolor{keywordtype}{void} Clean();
+00064 \};
+\hypertarget{ServerConfigs_8hpp_source_l00066}{}\hyperlink{classmyServerVersion}{00066} \textcolor{keyword}{class }\hyperlink{classmyServerVersion}{myServerVersion}\{
+00067     \textcolor{keyword}{public}:
+00068         \textcolor{keyword}{static} \textcolor{keywordtype}{void} ShowVersion()\{
+00069             fprintf(stdout,\textcolor{stringliteral}{"myServer\(\backslash\)nVersion: %s Build: %ld Date: %s.%s.%s\(\backslash\)n"},
+00070                     AutoVersion::FULLVERSION\_STRING,AutoVersion::BUILDS\_COUNT,
+00071                     AutoVersion::YEAR,AutoVersion::MONTH,AutoVersion::DATE);
+00072             cout<<\textcolor{stringliteral}{"External libraries:\(\backslash\)n -libboost 1.38 http://www.boost.org/"}<<e
+      ndl;
+00073             cout<<\textcolor{stringliteral}{"Author: Łukasz Buśko\(\backslash\)nContact: buskol.waw.pl@gmail.com\(\backslash\)nCopyri
+      ght 2010\(\backslash\)nLicense:GNU/GPL"}<<endl;
+00074         \}
+00075 \};
+00076 \textcolor{preprocessor}{#endif // SERVERCONFIGS\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

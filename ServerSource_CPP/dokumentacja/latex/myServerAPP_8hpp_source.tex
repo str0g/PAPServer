@@ -1,0 +1,63 @@
+\hypertarget{myServerAPP_8hpp_source}{
+\section{myServerAPP.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef MYSERVERAPP\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define MYSERVERAPP\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00012 
+00014 \textcolor{preprocessor}{#include <cstdlib>}
+00015 \textcolor{preprocessor}{#include <iostream>}
+00016 \textcolor{preprocessor}{#include <string>}
+00017 \textcolor{preprocessor}{#include <cstring>}
+00018 \textcolor{preprocessor}{#include <boost/asio.hpp>}
+00019 \textcolor{preprocessor}{#include <boost/thread/thread.hpp>}
+00020 \textcolor{preprocessor}{#include <boost/ptr\_container/ptr\_list.hpp>}
+00021 \textcolor{preprocessor}{#include <boost/bind.hpp>}
+00022 \textcolor{preprocessor}{#include <sys/types.h>}
+00023 \textcolor{preprocessor}{#include <sys/wait.h>}
+00024 \textcolor{comment}{//#include <sys/stat.h>}
+00025 \textcolor{preprocessor}{#include <signal.h>}
+00026 
+00028 \textcolor{preprocessor}{#include "ServerConfigs.hpp"}
+00029 \textcolor{preprocessor}{#include "ServerFilesLoader.hpp"}
+00030 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00031 \textcolor{preprocessor}{#include "myClientHandler.hpp"}
+00032 \textcolor{preprocessor}{#include "myDefines.hpp"}
+00033 \textcolor{comment}{//#include "listBanned.hpp"}
+00034 \textcolor{preprocessor}{#include "dbase.hpp"}
+00035 
+00037 \textcolor{keyword}{using} std::string;
+00038 \textcolor{keyword}{using} std::cout;
+00039 \textcolor{keyword}{using} std::cerr;
+00040 \textcolor{keyword}{using} std::cin;
+00041 \textcolor{keyword}{using} std::endl;
+00042 
+00043 \textcolor{comment}{//int g\_intNumerOfCurrentProcess = 0;}
+00044 
+\hypertarget{myServerAPP_8hpp_source_l00046}{}\hyperlink{classmyServerAPP}{00046} \textcolor{keyword}{class }\hyperlink{classmyServerAPP}{myServerAPP}:\textcolor{keyword}{public} \hyperlink{classdBase}{dBase}\{
+00047     \textcolor{keyword}{private}:
+00048         \textcolor{keywordtype}{string} *p\_strClassNameE;
+00049         \textcolor{keywordtype}{bool} bServerLoop;
+00050         \textcolor{keywordtype}{double} dCreationTime;
+00051         time\_t tt\_CreationTime;
+00052     \textcolor{keyword}{public}:
+\hypertarget{myServerAPP_8hpp_source_l00053}{}\hyperlink{classmyServerAPP_ae183443a38d0b8e96762083c42385db3}{00053}         \textcolor{keyword}{static} \textcolor{keywordtype}{int} \hyperlink{classmyServerAPP_ae183443a38d0b8e96762083c42385db3}{intValueOnExit};
+00054         \hyperlink{classmyServerAPP}{myServerAPP}();
+00055         \textcolor{keywordtype}{void} \hyperlink{classmyServerAPP_a1683e57c122e19f851e350fc3095caed}{RunServer}();
+00056         \textcolor{keywordtype}{void} ClearVal();
+00057         ~\hyperlink{classmyServerAPP}{myServerAPP}();
+00058 \};
+00059 
+00060 \textcolor{preprocessor}{#endif // MYSERVERAPP\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

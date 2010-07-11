@@ -1,0 +1,30 @@
+\hypertarget{myConv_8hpp_source}{
+\section{myConv.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef MYCONV\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define MYCONV\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{preprocessor}{#include <string>}
+00005 \textcolor{preprocessor}{#include <sstream>}
+00006 
+00007 \textcolor{keyword}{namespace }myConv\{
+00011     \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>
+00012     \textcolor{keyword}{inline} std::string ToString(\textcolor{keyword}{const} T& liczba)\{
+00013         std::stringstream ss;
+00014         ss << liczba;
+00015         \textcolor{keywordflow}{return} ss.str();
+00016     \}
+00017     \textcolor{comment}{//Z dowolnego stringa robi liczbe}
+00021 \textcolor{comment}{}    \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>
+00022     \textcolor{keyword}{inline} T FromString(std::string s\_liczba)\{
+00023         T liczba;
+00024         std::istringstream myStream(s\_liczba);
+00025         myStream>>liczba;
+00026         \textcolor{keywordflow}{return} liczba;
+00027     \}
+00028 \}
+00029 \textcolor{preprocessor}{#endif // MYCONV\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

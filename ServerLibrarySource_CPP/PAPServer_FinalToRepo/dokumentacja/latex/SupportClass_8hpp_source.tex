@@ -1,0 +1,232 @@
+\hypertarget{SupportClass_8hpp_source}{
+\section{SupportClass.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef SUPPORTCLASS\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define SUPPORTCLASS\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}\textcolor{comment}{/***************************************************************}
+00004 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00005 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00006 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00007 \textcolor{comment}{ * Created:   <Input date>}
+00008 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00009 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00010 \textcolor{comment}{ **************************************************************/}
+00011 
+00013 \textcolor{preprocessor}{#include <cstdlib>}
+00014 \textcolor{preprocessor}{#include <iostream>}
+00015 \textcolor{preprocessor}{#include <fstream>}
+00016 \textcolor{preprocessor}{#include <fcntl.h>}
+00017 \textcolor{preprocessor}{#include <cstdio>}
+00018 \textcolor{preprocessor}{#include <string>}
+00019 \textcolor{preprocessor}{#include <ctime>}
+00020 \textcolor{preprocessor}{#include <sys/stat.h>}
+00021 \textcolor{preprocessor}{#include "boost/filesystem/operations.hpp"}
+00022 \textcolor{preprocessor}{#include "boost/filesystem/path.hpp"}
+00023 \textcolor{preprocessor}{#include "myConv.hpp"}
+00024 
+00026 \textcolor{preprocessor}{#define BUFFER 1024}
+00027 \textcolor{preprocessor}{}\textcolor{keyword}{using} std::string;
+00028 \textcolor{keyword}{using} std::cout;
+00029 \textcolor{keyword}{using} std::cerr;
+00030 \textcolor{keyword}{using} std::cin;
+00031 \textcolor{keyword}{using} std::endl;
+00032 
+00033 \textcolor{keywordtype}{void} Bandwidth(\textcolor{keywordtype}{string} *,\textcolor{keywordtype}{double}*,\textcolor{keywordtype}{double}*,int64\_t *,int64\_t =1024*1024);
+00034 
+\hypertarget{SupportClass_8hpp_source_l00036}{}\hyperlink{classdebugMsg}{00036} \textcolor{keyword}{class }\hyperlink{classdebugMsg}{debugMsg}\{
+00037     \textcolor{keyword}{public}:
+00038         \hyperlink{classdebugMsg}{debugMsg}();
+00039         \textcolor{keyword}{virtual} ~\hyperlink{classdebugMsg}{debugMsg}();
+00040         \textcolor{keywordtype}{void} \hyperlink{classdebugMsg_a64167d8cd68ec044b211e9aeb4c34e76}{MsgOnQuit}(\textcolor{keywordtype}{string} *,\textcolor{keywordtype}{int});
+00041         \textcolor{keywordtype}{void} \hyperlink{classdebugMsg_a4b45960ebecff6ad91cef6a915d5b3b6}{MsgWithDelay}(\textcolor{keywordtype}{string}*,\textcolor{keywordtype}{int});
+00042 \};
+00043 
+\hypertarget{SupportClass_8hpp_source_l00045}{}\hyperlink{classTimeCout}{00045} \textcolor{keyword}{class }\hyperlink{classTimeCout}{TimeCout}\{
+00046     \textcolor{keyword}{private}:
+00047         \textcolor{keyword}{static} \textcolor{keywordtype}{string} strTimeFormatter;
+00048         \textcolor{keyword}{static} \textcolor{keywordtype}{int} intFormatterLenght;
+00049     \textcolor{keyword}{public}:
+00050         \hyperlink{classTimeCout}{TimeCout}();
+00051         \textcolor{keyword}{virtual} ~\hyperlink{classTimeCout}{TimeCout}();
+00052         \textcolor{keywordtype}{double} \hyperlink{classTimeCout_ac8c0cffeea3afdc63d2d9cb86320c89f}{Cout}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double});
+00053         \textcolor{keywordtype}{double} \hyperlink{classTimeCout_ad88edc4a3eccda520f2bdf7d69f852b9}{GetTime}();
+00054         \textcolor{keywordtype}{string} \hyperlink{classTimeCout_a6ed7a20e4510642d6ffdf1cdbffd2b9f}{ExcutionTime}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double});
+00055         \textcolor{keywordtype}{string} \hyperlink{classTimeCout_a343b4ea828779afff35c01bbfc4fa506}{GetLocalTime}();
+00056         \textcolor{keywordtype}{string} GetYMD();
+00057         \textcolor{keywordtype}{string} GetTimeAfter1970();
+00058         \textcolor{keywordtype}{string} AliveTime(time\_t,time\_t);
+00059         time\_t GetTimeAfter1970AsTime();
+00060         \textcolor{keywordtype}{long} \textcolor{keywordtype}{int} CoutTimeAfter1970(time\_t,time\_t);
+00061         \textcolor{keywordtype}{void} Set\_strTimeFormatter(\textcolor{keywordtype}{string});
+00062         \textcolor{keywordtype}{void} Set\_intFormatterLenght(\textcolor{keywordtype}{int});
+00063 \};
+00064 
+00065 \textcolor{keyword}{namespace }myIO\{
+00066     \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} chk4file(\textcolor{keyword}{const} \textcolor{keywordtype}{string} *strFileName)\{
+00068     \textcolor{keyword}{struct }stat stFileInfo;
+00069     \textcolor{keywordtype}{int} intStat;
+00070 
+00071     intStat = stat(strFileName->c\_str(),&stFileInfo);
+00072     \textcolor{keywordflow}{if}(intStat == 0) \{
+00073         \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+00074     \}
+00075     \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00076     \}
+00077     \textcolor{keyword}{inline} uint64\_t GetFileSize(\textcolor{keyword}{const} \textcolor{keywordtype}{string}*strFileName)\{
+00078         \textcolor{keywordflow}{return} boost::filesystem::file\_size(*strFileName);
+00079     \}
+00080     \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} touch(\textcolor{keyword}{const} \textcolor{keywordtype}{string} *strFileName,\textcolor{keywordtype}{int} int\_chmod =0644)\{
+00081         std::ofstream o(strFileName->c\_str());
+00082         \textcolor{keywordflow}{if}(o)\{
+00083             o.close();
+00084             chmod(strFileName->c\_str(),int\_chmod);
+00085             \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+00086 
+00087         \}
+00088         \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00089     \}
+00090     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} rmAll(\textcolor{keyword}{const} boost::filesystem::path & directory,\textcolor{keywordtype}{bool} bForced = \textcolor{keyword}{tr
+      ue},\textcolor{keywordtype}{int} intDirScanDepth =1024)\{
+00091         \textcolor{keywordtype}{int} intDirScanCounter = 0;
+00092         \textcolor{keywordflow}{if}( boost::filesystem::exists( directory ) )\{
+00093             boost::filesystem::directory\_iterator end ;
+00094             \textcolor{keywordflow}{for}( boost::filesystem::directory\_iterator iter(directory) ; iter != 
+      end ; ++iter )\{
+00095                 \textcolor{keywordflow}{if} ( boost::filesystem::is\_directory( *iter ) )\{
+00096                     \textcolor{keywordflow}{if}(intDirScanCounter < intDirScanDepth)\{
+00097                         ++intDirScanCounter;
+00098                         myIO::rmAll(*iter,bForced);
+00099                         boost::filesystem::remove(*iter);
+00100                     \}\textcolor{comment}{//deep scan}
+00101                 \}\textcolor{keywordflow}{else}\{
+00102                     \textcolor{keywordflow}{if} (bForced)\{
+00103                         chmod(iter->path().file\_string().c\_str(),0644);
+00104                     \}
+00105                     boost::filesystem::remove(*iter);
+00106                 \}\textcolor{comment}{//if dir}
+00107             \}\textcolor{comment}{//loop}
+00108         \}\textcolor{comment}{//if exist}
+00109     \}
+00110     \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} appToFile(\textcolor{keyword}{const} \textcolor{keywordtype}{string} *strFileName,\textcolor{keyword}{const} \textcolor{keywordtype}{string} *data,\textcolor{keywordtype}{int} int\_ch
+      mod =0644,\textcolor{keywordtype}{int} int\_chmodE = 0444)\{
+00111         \textcolor{keywordflow}{if} (chmod(strFileName->c\_str(),int\_chmod)==0)\{
+00112             std::ofstream o(strFileName->c\_str(),std::ios::app);
+00113             \textcolor{keywordflow}{if}(o)\{
+00114                 o << *data;
+00115                 o.close();
+00116                 \textcolor{keywordflow}{if} (chmod(strFileName->c\_str(),int\_chmodE)!=0)\{
+00117                     cerr<<\textcolor{stringliteral}{"[appToFile]: "}<<*strFileName<<\textcolor{stringliteral}{" Premission error(after
+       write)"}<<endl;
+00118                 \}
+00119                 \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+00120             \}
+00121             cerr<<\textcolor{stringliteral}{"[appToFile]: "}<<*strFileName<<\textcolor{stringliteral}{" Failed to open"}<<endl;
+00122         \}\textcolor{keywordflow}{else}\{
+00123             cerr<<\textcolor{stringliteral}{"[appToFile]: "}<<*strFileName<<\textcolor{stringliteral}{" Premission error (before Open)
+      "}<<endl;
+00124         \}
+00125         \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00126     \}
+00127     \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} readFile(\textcolor{keyword}{const} \textcolor{keywordtype}{string} *strFileName,\textcolor{keywordtype}{string} *p\_strData)\{
+00128         \textcolor{keywordflow}{if} (!p\_strData)\{
+00129             cerr<<\textcolor{stringliteral}{"[readFile] Expected allocated string"}<<*strFileName<<endl;
+00130             \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00131         \}
+00132         std::ifstream::pos\_type size;
+00133         \textcolor{keywordtype}{char} * memblock = NULL;
+00134         std::ifstream file (strFileName->c\_str(), std::ios::in|std::ios::binary);
+      
+00135         \textcolor{keywordflow}{if} (file.is\_open())\{
+00136             file.seekg (0, std::ios::end);
+00137             size = file.tellg();
+00138             memblock = \textcolor{keyword}{new} \textcolor{keywordtype}{char} [size+1];
+00139             memblock[size] = \textcolor{charliteral}{'\(\backslash\)0'};
+00140             \textcolor{keywordflow}{if} (memblock)\{
+00141                 file.seekg (0, std::ios::beg);
+00142                 file.read (memblock, size);
+00143                 file.close();
+00144                 p\_strData->append(memblock);
+00145                 \textcolor{keyword}{delete}[] memblock;
+00146                 \textcolor{keywordflow}{if} (file.gcount() < 1)\{
+00147                     cout<<\textcolor{stringliteral}{"[readFile] Faild to read any data from:"}<<*strFileName
+      <<endl;
+00148                     \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00149                 \}
+00150                 \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+00151             \}
+00152             cerr<<\textcolor{stringliteral}{"[readFile] Failed to allocate memory "}<<*strFileName<<endl;
+00153             \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00154         \}
+00155         cerr<<\textcolor{stringliteral}{"[readFile] Failed to open:"}<< *strFileName<<endl;
+00156         \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00157     \}
+00158     \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} readFileChunk(\textcolor{keyword}{const} \textcolor{keywordtype}{string} *strFileName,\textcolor{keywordtype}{string} *p\_strBuf,uint64\_t
+       &intPosBegin,uint64\_t intChunkSize)\{
+00159         \textcolor{keywordtype}{char} *cBuf = NULL;
+00160         \textcolor{keywordflow}{if} (!p\_strBuf)\{
+00161             cerr<<\textcolor{stringliteral}{"[readFileChunk] Expected allocated string "}<<*strFileName<<end
+      l;
+00162             \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00163         \}
+00164 
+00165         uint64\_t read = intPosBegin;
+00166         uint64\_t int64End = 0;
+00167         std::ifstream o(strFileName->c\_str(), std::ios::in|std::ios::binary);
+00168             \textcolor{keywordflow}{if}(o.is\_open())\{
+00169                 o.seekg(0,std::ios::end);
+00170                 int64End = (uint64\_t)o.tellg();
+00171                 \textcolor{keywordflow}{if} (int64End < intPosBegin + intChunkSize)\{
+00172                     intChunkSize = (int64End - intPosBegin );
+00173                 \}
+00174                 \textcolor{keywordflow}{if} (intChunkSize < 1)\{
+00175                     cerr<<\textcolor{stringliteral}{"[readFileChunk] Nothing to be read at possition:"}<<int
+      PosBegin<<\textcolor{stringliteral}{"/ "}<<*strFileName<<endl;
+00176                     o.close();
+00177                     \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00178                 \}
+00179                 cBuf = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[intChunkSize+1];
+00180                 cBuf[intChunkSize] = \textcolor{charliteral}{'\(\backslash\)0'};
+00181                 \textcolor{keywordflow}{if}(!cBuf)\{
+00182                     cerr<<\textcolor{stringliteral}{"[readFileChunk] Memmory allocation failed"}<<\textcolor{stringliteral}{"/ "}<<*str
+      FileName<<endl;
+00183                     o.close();
+00184                     \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00185                 \}
+00186                 \textcolor{comment}{/*uint64\_t i;}
+00187 \textcolor{comment}{                for(i=0; cBuf[i]!='\(\backslash\)0'; ++i);}
+00188 \textcolor{comment}{                if (i!=intChunkSize)\{}
+00189 \textcolor{comment}{                    cout<<"Allocated:"<<i<<" exp:"<<intChunkSize<<endl;}
+00190 \textcolor{comment}{                \}*/}
+00191 
+00192                 o.seekg(read,std::ios::beg);
+00193                 o.read(cBuf,intChunkSize);
+00194                 read = o.gcount();
+00195                 \textcolor{keywordflow}{for}(uint64\_t i=0; i!=read; ++i)\{
+00196                 \textcolor{comment}{//p\_strBuf->append(cBuf);}
+00197                     p\_strBuf->push\_back(cBuf[i]);
+00198                 \}
+00199                 o.close();
+00200                 \textcolor{keyword}{delete}[] cBuf;
+00201 
+00202                 \textcolor{keywordflow}{if} (read == 0 and int64End > 0)\{
+00203                     cerr<<\textcolor{stringliteral}{"[readFileChunk] Nothing has been read "}<<*strFileName<
+      <endl;
+00204                     \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00205                 \}
+00206                 \textcolor{keywordflow}{if}(read != intChunkSize)\{
+00207                     cerr<<\textcolor{stringliteral}{"read not equal to intChunkSize! "}<<\textcolor{stringliteral}{"Read:"}<<read<<\textcolor{stringliteral}{" Ex
+      p:"}<<intChunkSize<<\textcolor{stringliteral}{"/ "}<<*strFileName<<endl;
+00208                 \}
+00209                 intPosBegin += read;
+00210                 \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+00211             \}
+00212             cerr<<\textcolor{stringliteral}{"[readFileChunk]: "}<<*strFileName<<\textcolor{stringliteral}{" Failed to open"}<<endl;
+00213             \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+00214     \}
+00215 \}
+00216 
+00217 \textcolor{preprocessor}{#endif // SUPPORTCLASS\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

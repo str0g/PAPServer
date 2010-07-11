@@ -1,0 +1,53 @@
+\hypertarget{listaV2_8hpp_source}{
+\section{listaV2.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef LISTAV2\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define LISTAV2\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00005 \textcolor{preprocessor}{#include <cstdlib>}
+00006 \textcolor{preprocessor}{#include <iostream>}
+00007 \textcolor{preprocessor}{#include <string>}
+00008 \textcolor{preprocessor}{#include <ctime>}
+00009 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00011 \textcolor{keyword}{using namespace }std;
+\hypertarget{listaV2_8hpp_source_l00013}{}\hyperlink{classdrzewo}{00013} \textcolor{keyword}{class }\hyperlink{classdrzewo}{drzewo}:\textcolor{keyword}{public} \hyperlink{classkonwertery}{konwertery}\{
+00014     \textcolor{keyword}{protected}:
+00015         \textcolor{keywordtype}{string} *wskNazwaklasy;
+\hypertarget{listaV2_8hpp_source_l00017}{}\hyperlink{classdrzewo_1_1lisc}{00017}         \textcolor{keyword}{class }\hyperlink{classdrzewo_1_1lisc}{lisc}\{
+00018             \textcolor{keyword}{public}:
+00019                 \textcolor{keywordtype}{string} strNazwaklasy;
+00020                 \textcolor{keywordtype}{string} strRecordDanych;
+00021                 \textcolor{keywordtype}{int} index;
+\hypertarget{listaV2_8hpp_source_l00022}{}\hyperlink{classdrzewo_1_1lisc_a858c0f3f3ff7295b5cb33f19a1c1f3df}{00022}                 \hyperlink{classdrzewo_1_1lisc}{lisc} *\hyperlink{classdrzewo_1_1lisc_a858c0f3f3ff7295b5cb33f19a1c1f3df}{wskNastepny}; 
+\hypertarget{listaV2_8hpp_source_l00023}{}\hyperlink{classdrzewo_1_1lisc_a1b88c992a7e020e4e753f7a5769e99d3}{00023}                 \hyperlink{classdrzewo_1_1lisc}{lisc} *\hyperlink{classdrzewo_1_1lisc_a1b88c992a7e020e4e753f7a5769e99d3}{wskPoprzedni}; 
+00024         \};
+00025         \hyperlink{classdrzewo_1_1lisc}{lisc} *wskNastepny;
+00026         \hyperlink{classdrzewo_1_1lisc}{lisc} *wskPoprzedni;
+\hypertarget{listaV2_8hpp_source_l00027}{}\hyperlink{classdrzewo_abf545a65e743e70d70a1947ac35c73d9}{00027}         \hyperlink{classdrzewo_1_1lisc}{lisc} *\hyperlink{classdrzewo_abf545a65e743e70d70a1947ac35c73d9}{wskPoczatek};
+\hypertarget{listaV2_8hpp_source_l00028}{}\hyperlink{classdrzewo_acba6bb799cb3d30c63eff67ac2bc2225}{00028}         \hyperlink{classdrzewo_1_1lisc}{lisc} *\hyperlink{classdrzewo_acba6bb799cb3d30c63eff67ac2bc2225}{wskSrodek};
+\hypertarget{listaV2_8hpp_source_l00029}{}\hyperlink{classdrzewo_af5da627dbc719e872f654ea31105c41f}{00029}         \hyperlink{classdrzewo_1_1lisc}{lisc} *\hyperlink{classdrzewo_af5da627dbc719e872f654ea31105c41f}{wskKoniec};
+00030         \hyperlink{classdrzewo_1_1lisc}{lisc} *wskPomocniczy;
+\hypertarget{listaV2_8hpp_source_l00031}{}\hyperlink{classdrzewo_a1be4229048eaebb61e07f955596fa27b}{00031}         \textcolor{keywordtype}{int} \hyperlink{classdrzewo_a1be4229048eaebb61e07f955596fa27b}{intLiczbaElementow};
+00032         \textcolor{keywordtype}{int} intUnikalnyIndex;
+\hypertarget{listaV2_8hpp_source_l00033}{}\hyperlink{classdrzewo_aa1e5d533332e767d70b7feab0f506b0b}{00033}         \textcolor{keywordtype}{int} \hyperlink{classdrzewo_aa1e5d533332e767d70b7feab0f506b0b}{intSrodekListy};
+00034     \textcolor{keyword}{public}:
+00035         \hyperlink{classdrzewo_a555c14101f8c11cf9344ecf8f8cf87b0}{drzewo}();
+00036         \textcolor{keywordtype}{void} Sterowanie();
+00037         \textcolor{keywordtype}{int} \hyperlink{classdrzewo_af129795d6fd7898310227906056f6d41}{RysujMenu}();
+00038         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_a42f04ceb16b668eb4c326d70753249c1}{WypiszElementy}();
+00039         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_a69c8619ac7339ce26f1c092c918c42dc}{AutoTest}();
+00040         \textcolor{keywordtype}{void} WyswietlSrodkowyelement();
+00041         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_affe40fef12dfebfca7e1b46a73bdbb8d}{DodajLisc}(\textcolor{keywordtype}{string}, \textcolor{keywordtype}{string});
+00042         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_a05086f97ce01ade43dc3ff7a441d9f55}{UsunLisc}(\textcolor{keywordtype}{string});
+00043         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_a05086f97ce01ade43dc3ff7a441d9f55}{UsunLisc}(\textcolor{keywordtype}{int});
+00044         \textcolor{keywordtype}{void} WyliczSrodekListy();
+00045         \textcolor{keywordtype}{void} ZamienLiscieMiejscami(\hyperlink{classdrzewo_1_1lisc}{lisc} *,\hyperlink{classdrzewo_1_1lisc}{lisc}*);
+00046         \textcolor{keywordtype}{void} \hyperlink{classdrzewo_aae2e7025da136b328c490706677a66b5}{UsunListe}();
+00047         \hyperlink{classdrzewo_a5d91af876b63be1f89bd93c9e8745aa7}{~drzewo}();
+00048 \};
+00049 
+00050 \textcolor{preprocessor}{#endif // LISTAV2\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

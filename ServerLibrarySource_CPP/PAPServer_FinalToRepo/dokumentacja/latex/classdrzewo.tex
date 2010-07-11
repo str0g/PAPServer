@@ -1,0 +1,196 @@
+\hypertarget{classdrzewo}{
+\section{drzewo Class Reference}
+\label{classdrzewo}\index{drzewo@{drzewo}}
+}
+
+
+Drzewo jest klasa, ktora inicjuje i obsluguje liste.  
+
+
+{\ttfamily \#include $<$listaV2.hpp$>$}Inheritance diagram for drzewo::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classdrzewo}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classdrzewo_1_1lisc}{lisc}
+\begin{DoxyCompactList}\small\item\em Lisc jest struktura danych dla drzewa i dla tego nie posida zdeklarowanego konstruktora, ani destruktora. Jego dane są statyczne w celu nie generowania dodatkowej nie potrzebnej fragmentacji pamieci. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classdrzewo_a555c14101f8c11cf9344ecf8f8cf87b0}{drzewo} ()
+\begin{DoxyCompactList}\small\item\em Globals Varuabels. \item\end{DoxyCompactList}\item 
+\hypertarget{classdrzewo_a422dd6cee740c4db7c5b212c0c4e6fa9}{
+void {\bfseries Sterowanie} ()}
+\label{classdrzewo_a422dd6cee740c4db7c5b212c0c4e6fa9}
+
+\item 
+int \hyperlink{classdrzewo_af129795d6fd7898310227906056f6d41}{RysujMenu} ()
+\item 
+void \hyperlink{classdrzewo_a42f04ceb16b668eb4c326d70753249c1}{WypiszElementy} ()
+\item 
+void \hyperlink{classdrzewo_a69c8619ac7339ce26f1c092c918c42dc}{AutoTest} ()
+\item 
+\hypertarget{classdrzewo_a68d3eb978fff8ecd8d9ff1a42deeeaa4}{
+void {\bfseries WyswietlSrodkowyelement} ()}
+\label{classdrzewo_a68d3eb978fff8ecd8d9ff1a42deeeaa4}
+
+\item 
+void \hyperlink{classdrzewo_affe40fef12dfebfca7e1b46a73bdbb8d}{DodajLisc} (string, string)
+\item 
+void \hyperlink{classdrzewo_a05086f97ce01ade43dc3ff7a441d9f55}{UsunLisc} (string)
+\item 
+void \hyperlink{classdrzewo_a01f1a0204f7353311e2015d18347e383}{UsunLisc} (int)
+\item 
+\hypertarget{classdrzewo_aacdc1ac5e09c2a1811e5d51a2a7bccab}{
+void {\bfseries WyliczSrodekListy} ()}
+\label{classdrzewo_aacdc1ac5e09c2a1811e5d51a2a7bccab}
+
+\item 
+\hypertarget{classdrzewo_a4101c51956d4eff7745e0ea9ecc8eef2}{
+void {\bfseries ZamienLiscieMiejscami} (\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$, \hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$)}
+\label{classdrzewo_a4101c51956d4eff7745e0ea9ecc8eef2}
+
+\item 
+void \hyperlink{classdrzewo_aae2e7025da136b328c490706677a66b5}{UsunListe} ()
+\item 
+\hyperlink{classdrzewo_a5d91af876b63be1f89bd93c9e8745aa7}{$\sim$drzewo} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classdrzewo_a7c23ead9c572d7527edd645823f66ded}{
+string $\ast$ {\bfseries wskNazwaklasy}}
+\label{classdrzewo_a7c23ead9c572d7527edd645823f66ded}
+
+\item 
+\hypertarget{classdrzewo_a604d6054c567c2b086e51ac277acde69}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ {\bfseries wskNastepny}}
+\label{classdrzewo_a604d6054c567c2b086e51ac277acde69}
+
+\item 
+\hypertarget{classdrzewo_a7700a05d55b353d0c9f419b1428c75ad}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ {\bfseries wskPoprzedni}}
+\label{classdrzewo_a7700a05d55b353d0c9f419b1428c75ad}
+
+\item 
+\hypertarget{classdrzewo_abf545a65e743e70d70a1947ac35c73d9}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ \hyperlink{classdrzewo_abf545a65e743e70d70a1947ac35c73d9}{wskPoczatek}}
+\label{classdrzewo_abf545a65e743e70d70a1947ac35c73d9}
+
+\begin{DoxyCompactList}\small\item\em Trzyma adres poczatku listy. \item\end{DoxyCompactList}\item 
+\hypertarget{classdrzewo_acba6bb799cb3d30c63eff67ac2bc2225}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ \hyperlink{classdrzewo_acba6bb799cb3d30c63eff67ac2bc2225}{wskSrodek}}
+\label{classdrzewo_acba6bb799cb3d30c63eff67ac2bc2225}
+
+\begin{DoxyCompactList}\small\item\em Trzyma adres srodka listy. \item\end{DoxyCompactList}\item 
+\hypertarget{classdrzewo_af5da627dbc719e872f654ea31105c41f}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ \hyperlink{classdrzewo_af5da627dbc719e872f654ea31105c41f}{wskKoniec}}
+\label{classdrzewo_af5da627dbc719e872f654ea31105c41f}
+
+\begin{DoxyCompactList}\small\item\em Trzyma adres konca listy. \item\end{DoxyCompactList}\item 
+\hypertarget{classdrzewo_a633af0796f4cd10721a9d256813709f2}{
+\hyperlink{classdrzewo_1_1lisc}{lisc} $\ast$ {\bfseries wskPomocniczy}}
+\label{classdrzewo_a633af0796f4cd10721a9d256813709f2}
+
+\item 
+\hypertarget{classdrzewo_a1be4229048eaebb61e07f955596fa27b}{
+int \hyperlink{classdrzewo_a1be4229048eaebb61e07f955596fa27b}{intLiczbaElementow}}
+\label{classdrzewo_a1be4229048eaebb61e07f955596fa27b}
+
+\begin{DoxyCompactList}\small\item\em Liczba elementow, w celu sprawdzenia spojnosc. \item\end{DoxyCompactList}\item 
+\hypertarget{classdrzewo_a15026b316679570014d43185bf92d317}{
+int {\bfseries intUnikalnyIndex}}
+\label{classdrzewo_a15026b316679570014d43185bf92d317}
+
+\item 
+\hypertarget{classdrzewo_aa1e5d533332e767d70b7feab0f506b0b}{
+int \hyperlink{classdrzewo_aa1e5d533332e767d70b7feab0f506b0b}{intSrodekListy}}
+\label{classdrzewo_aa1e5d533332e767d70b7feab0f506b0b}
+
+\begin{DoxyCompactList}\small\item\em Mniej wiecej, ile elementow jest do srodka. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Drzewo jest klasa, ktora inicjuje i obsluguje liste. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classdrzewo_a555c14101f8c11cf9344ecf8f8cf87b0}{
+\index{drzewo@{drzewo}!drzewo@{drzewo}}
+\index{drzewo@{drzewo}!drzewo@{drzewo}}
+\subsubsection[{drzewo}]{\setlength{\rightskip}{0pt plus 5cm}drzewo::drzewo ()}}
+\label{classdrzewo_a555c14101f8c11cf9344ecf8f8cf87b0}
+
+
+Globals Varuabels. 
+
+Inicujej wartosci w sposob maksymalnie oszczedzajacy pamiec \hypertarget{classdrzewo_a5d91af876b63be1f89bd93c9e8745aa7}{
+\index{drzewo@{drzewo}!$\sim$drzewo@{$\sim$drzewo}}
+\index{$\sim$drzewo@{$\sim$drzewo}!drzewo@{drzewo}}
+\subsubsection[{$\sim$drzewo}]{\setlength{\rightskip}{0pt plus 5cm}drzewo::$\sim$drzewo ()}}
+\label{classdrzewo_a5d91af876b63be1f89bd93c9e8745aa7}
+
+
+Ostateczne sprzatanie 
+
+\subsection{Member Function Documentation}
+\hypertarget{classdrzewo_a69c8619ac7339ce26f1c092c918c42dc}{
+\index{drzewo@{drzewo}!AutoTest@{AutoTest}}
+\index{AutoTest@{AutoTest}!drzewo@{drzewo}}
+\subsubsection[{AutoTest}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::AutoTest ()}}
+\label{classdrzewo_a69c8619ac7339ce26f1c092c918c42dc}
+
+
+Ta metoda testuje czy lista dziala poprawnie dzieki\hypertarget{classdrzewo_affe40fef12dfebfca7e1b46a73bdbb8d}{
+\index{drzewo@{drzewo}!DodajLisc@{DodajLisc}}
+\index{DodajLisc@{DodajLisc}!drzewo@{drzewo}}
+\subsubsection[{DodajLisc}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::DodajLisc (string {\em Nazwa}, \/  string {\em text})}}
+\label{classdrzewo_affe40fef12dfebfca7e1b46a73bdbb8d}
+
+
+Dodaje nowe elementy w sposob posortowany odrazu sprawdzajac gdzie powinno byc ich miejsce. Wyszukiwanie zaczyna sie od srodka listy dla oszczednosci czasu.
+
+Jezeli cos pojdzie nie tak petla zostanie przerwana po 5sekundach, a element trafi na koniec. Dzieki temu nie bedzie wycieku pameci. \hypertarget{classdrzewo_af129795d6fd7898310227906056f6d41}{
+\index{drzewo@{drzewo}!RysujMenu@{RysujMenu}}
+\index{RysujMenu@{RysujMenu}!drzewo@{drzewo}}
+\subsubsection[{RysujMenu}]{\setlength{\rightskip}{0pt plus 5cm}int drzewo::RysujMenu ()}}
+\label{classdrzewo_af129795d6fd7898310227906056f6d41}
+
+
+Wypisuje textowe Menu i czekam na wpisanie znaku, ktory zostanie zwrocony\hypertarget{classdrzewo_a01f1a0204f7353311e2015d18347e383}{
+\index{drzewo@{drzewo}!UsunLisc@{UsunLisc}}
+\index{UsunLisc@{UsunLisc}!drzewo@{drzewo}}
+\subsubsection[{UsunLisc}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::UsunLisc (int {\em intNrIndexu})}}
+\label{classdrzewo_a01f1a0204f7353311e2015d18347e383}
+
+
+Usuwa element o danym unikalnym indexie. Przesuwa srodek na aktualna pozycje\hypertarget{classdrzewo_a05086f97ce01ade43dc3ff7a441d9f55}{
+\index{drzewo@{drzewo}!UsunLisc@{UsunLisc}}
+\index{UsunLisc@{UsunLisc}!drzewo@{drzewo}}
+\subsubsection[{UsunLisc}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::UsunLisc (string {\em intNrIndexu})}}
+\label{classdrzewo_a05086f97ce01ade43dc3ff7a441d9f55}
+
+
+Usuwa element o danej nazwie. Przesuwa srodek na aktualna pozycje\hypertarget{classdrzewo_aae2e7025da136b328c490706677a66b5}{
+\index{drzewo@{drzewo}!UsunListe@{UsunListe}}
+\index{UsunListe@{UsunListe}!drzewo@{drzewo}}
+\subsubsection[{UsunListe}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::UsunListe ()}}
+\label{classdrzewo_aae2e7025da136b328c490706677a66b5}
+
+
+Kasuje elementy od ostatniego do 2 w petli element 1 jest kasowany osobno, poniewaz nie skasowanie elemntu, na ktorym jestemy uniemozliwi odczytanie poprzednika. \hypertarget{classdrzewo_a42f04ceb16b668eb4c326d70753249c1}{
+\index{drzewo@{drzewo}!WypiszElementy@{WypiszElementy}}
+\index{WypiszElementy@{WypiszElementy}!drzewo@{drzewo}}
+\subsubsection[{WypiszElementy}]{\setlength{\rightskip}{0pt plus 5cm}void drzewo::WypiszElementy ()}}
+\label{classdrzewo_a42f04ceb16b668eb4c326d70753249c1}
+
+
+Wypisuje elementy od pierwszego do ostatniego Sprawdza zadeklarowna ilosc elementow ze stanem faktycznym
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+listaV2.hpp\item 
+listaV2.cpp\end{DoxyCompactItemize}

@@ -1,0 +1,82 @@
+\hypertarget{ServerFilesLoader_8hpp_source}{
+\section{ServerFilesLoader.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef SERVERFILESLOADER\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define SERVERFILESLOADER\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00013 \textcolor{preprocessor}{#include <cstdlib>}
+00014 \textcolor{preprocessor}{#include <iostream>}
+00015 \textcolor{preprocessor}{#include <string>}
+00016 \textcolor{preprocessor}{#include <sys/types.h>}
+00017 \textcolor{preprocessor}{#include <dirent.h>}
+00018 \textcolor{preprocessor}{#include <errno.h>}
+00019 \textcolor{preprocessor}{#include <vector>}
+00020 \textcolor{preprocessor}{#include <fstream>}
+00021 \textcolor{preprocessor}{#include "dbase.hpp"}
+00022 \textcolor{preprocessor}{#include "myHash.hpp"}
+00023 \textcolor{preprocessor}{#include "XMLParser.hpp"}
+00024 \textcolor{preprocessor}{#include "boost/filesystem/operations.hpp"}
+00025 \textcolor{preprocessor}{#include "boost/filesystem/path.hpp"}
+00026 \textcolor{preprocessor}{#include <boost/bind.hpp>}
+00027 \textcolor{preprocessor}{#include <boost/thread/thread.hpp>}
+00028 \textcolor{preprocessor}{#include <boost/shared\_ptr.hpp>}
+00029 
+00031 \textcolor{keyword}{using} std::string;
+00032 \textcolor{keyword}{using} std::cout;
+00033 \textcolor{keyword}{using} std::cerr;
+00034 \textcolor{keyword}{using} std::cin;
+00035 \textcolor{keyword}{using} std::endl;
+00036 \textcolor{keyword}{namespace }boostfs = boost::filesystem;
+00038 
+\hypertarget{ServerFilesLoader_8hpp_source_l00039}{}\hyperlink{classServerFilesLoader}{00039} \textcolor{keyword}{class }\hyperlink{classServerFilesLoader}{ServerFilesLoader}: \textcolor{keyword}{public} \hyperlink{classdBase}{dBase}\{
+00040     \textcolor{keyword}{private}:
+00041         \textcolor{keywordtype}{string} strClassName;
+00042         \textcolor{keywordtype}{string} strWorkDir;
+00043         \textcolor{keywordtype}{string} strPathToXMLFile;
+00044         \textcolor{keywordtype}{string} *p\_strFileBuf;
+00045         \textcolor{keywordtype}{int} intDirScanDepth;
+00046         \textcolor{keywordtype}{int} intDirScanCounter;
+00047         XMLParser *p\_xmlFile;
+00048         \textcolor{comment}{//boost::shared\_ptr<boost::thread> m\_thread;//!<wskaznik do watku}
+00049 
+00050         \textcolor{keywordtype}{void} clearFileBuf();
+00051         \textcolor{keywordtype}{void} clearXML();
+00052         \textcolor{keywordtype}{bool} LoadFileToBuf(\textcolor{keyword}{const} \textcolor{keywordtype}{string}*);
+00053         \textcolor{comment}{//bool SetWorkDir();}
+00054         \textcolor{keywordtype}{bool} RunCheck();
+00055         \textcolor{keywordtype}{void} ListDir(\textcolor{keyword}{const} boostfs::path &);
+00056         \textcolor{keywordtype}{void} InsertTodBase();
+00057         \textcolor{comment}{//save}
+00058         \textcolor{keywordtype}{void} SaveList();
+00059     \textcolor{keyword}{public}:
+00060         \hyperlink{classServerFilesLoader_a663068c34adbc6f88781b2caac5cb14e}{ServerFilesLoader}(\textcolor{keywordtype}{int});
+00061         ~\hyperlink{classServerFilesLoader}{ServerFilesLoader}();
+00062         \textcolor{keywordtype}{void} Die();
+00063         \textcolor{keywordtype}{void} Run()\{
+00064             \textcolor{keywordflow}{if}(RunCheck())\{
+00065                 ListDir( strWorkDir );
+00066                 SaveList();
+00067                 cerr<<GetLocalTime()<<strClassName<<\textcolor{stringliteral}{"All works has been done"}<<en
+      dl;
+00068             \}
+00069             Die();
+00070         \}
+00071         \textcolor{keywordtype}{void} operator()()\{
+00072             Run();
+00073         \}
+00074 
+00075 \};
+00076 
+00077 \textcolor{preprocessor}{#endif // SERVERFILESLOADER\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

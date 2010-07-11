@@ -1,0 +1,230 @@
+\hypertarget{classdBase}{
+\section{dBase Class Reference}
+\label{classdBase}\index{dBase@{dBase}}
+}
+Inheritance diagram for dBase:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classdBase}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classdBase_aa6b988b284296519d767b538c201f3d7}{dBase} (int)
+\begin{DoxyCompactList}\small\item\em Headers. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classdBase_a91351d88d15c348fdfb3ef93be1c20d7}{$\sim$dBase} ()
+\item 
+void \hyperlink{classdBase_a0c8962454c0efe44b216c28bbd04eb9a}{Close} ()
+\item 
+\hypertarget{classdBase_ae26cd777403e29e70cd76d650c4a58de}{
+void {\bfseries mClose} (bool=true)}
+\label{classdBase_ae26cd777403e29e70cd76d650c4a58de}
+
+\item 
+bool \hyperlink{classdBase_ac5b1d43710622a869134a0f7504f6661}{insertFile} (const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$)
+\item 
+bool \hyperlink{classdBase_a26e59ac97985d95287948445a07acd71}{insertBanned} (char $\ast$, char $\ast$)
+\item 
+void \hyperlink{classdBase_ae3f64548cd601248838741b7704a0884}{del} (int=0)
+\item 
+bool \hyperlink{classdBase_aea02faef6ec0330213d2d5e6e7449940}{dBaseRun} ()
+\item 
+bool \hyperlink{classdBase_a9e9715965ba80d3c7a9c401d62a43f6a}{Rebuild\_\-SharedFilesTable} ()
+\item 
+bool \hyperlink{classdBase_a05d94436a22bf5e3c52c1ab0f67c2d4c}{Rebuild\_\-BannedTable} ()
+\item 
+bool \hyperlink{classdBase_a7a5431d74f4b1f7b201c25b7d3a52ffa}{Rebuild\_\-Ordered} ()
+\item 
+bool \hyperlink{classdBase_a8dcd257825f5b4543cf07b766b0e6cd8}{CheckForTable} (char $\ast$cTable)
+\item 
+bool \hyperlink{classdBase_a91269d6744d42078ac8880d32e3a1229}{SearchByMatched} (const char $\ast$, char $\ast$=\char`\"{}FileOwner\char`\"{}, char $\ast$=\char`\"{}OrderTable\char`\"{})
+\item 
+bool \hyperlink{classdBase_aa6aba86beb506496929ea8ff8aef8245}{SearchByMatched2} (const char $\ast$, const char $\ast$, char $\ast$=\char`\"{}FileOwner\char`\"{}, char $\ast$=\char`\"{}FilePath\char`\"{}, char $\ast$=\char`\"{}SharedFiles\char`\"{})
+\item 
+bool \hyperlink{classdBase_a568417f1966cdad5e64f553a96ef201b}{SearchFiles} (XMLParser $\ast$, string $\ast$, string $\ast$, bool=true, char $\ast$=\char`\"{}FileName\char`\"{})
+\item 
+bool \hyperlink{classdBase_a9afd72b6a6dbb29f0ae100d5f04cc119}{AskIfBanned} (char $\ast$, char $\ast$, bool=true, char $\ast$=\char`\"{}UserIP\char`\"{}, char $\ast$=\char`\"{}UserLocalName\char`\"{})
+\item 
+bool \hyperlink{classdBase_ae4b52702ff5312ee8a21b13552c67f7f}{UpdateBanned} (char $\ast$, char $\ast$, bool=true, char $\ast$=\char`\"{}UserIP\char`\"{}, char $\ast$=\char`\"{}UserLocalName\char`\"{})
+\item 
+\hypertarget{classdBase_aa4e6053dc3789225d7ce404ad77c5d0d}{
+bool {\bfseries UpdateOrder} (const char $\ast$, const char $\ast$, int, string)}
+\label{classdBase_aa4e6053dc3789225d7ce404ad77c5d0d}
+
+\item 
+\hypertarget{classdBase_adb58d468160d6c498b08bdc2ca5e023e}{
+int {\bfseries newOrder} (const char $\ast$, const char $\ast$, string \&)}
+\label{classdBase_adb58d468160d6c498b08bdc2ca5e023e}
+
+\item 
+\hypertarget{classdBase_a2d01930e89fba0728272e7dac7ffea6e}{
+string {\bfseries checkIfOrdered} (bool)}
+\label{classdBase_a2d01930e89fba0728272e7dac7ffea6e}
+
+\item 
+\hypertarget{classdBase_a8de8d27b4eb83725f8dc3e470f3b2af5}{
+string {\bfseries GetHashInfo} (const char $\ast$, int)}
+\label{classdBase_a8de8d27b4eb83725f8dc3e470f3b2af5}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classdBase_aa6b988b284296519d767b538c201f3d7}{
+\index{dBase@{dBase}!dBase@{dBase}}
+\index{dBase@{dBase}!dBase@{dBase}}
+\subsubsection[{dBase}]{\setlength{\rightskip}{0pt plus 5cm}dBase::dBase (int {\em opid})}}
+\label{classdBase_aa6b988b284296519d767b538c201f3d7}
+
+
+Headers. 
+
+
+
+Sprawdza czy udalo sie zainicjalizowac elementy biblioteki mysql jezeli nie to konczy forka 
+
+\hypertarget{classdBase_a91351d88d15c348fdfb3ef93be1c20d7}{
+\index{dBase@{dBase}!$\sim$dBase@{$\sim$dBase}}
+\index{$\sim$dBase@{$\sim$dBase}!dBase@{dBase}}
+\subsubsection[{$\sim$dBase}]{\setlength{\rightskip}{0pt plus 5cm}dBase::$\sim$dBase ()\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classdBase_a91351d88d15c348fdfb3ef93be1c20d7}
+
+
+Zwalnia pamieci w tym o czym czesto ludzie nie wiedza zwalnia zaladowane elementy biblioteki mysql 
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classdBase_a9afd72b6a6dbb29f0ae100d5f04cc119}{
+\index{dBase@{dBase}!AskIfBanned@{AskIfBanned}}
+\index{AskIfBanned@{AskIfBanned}!dBase@{dBase}}
+\subsubsection[{AskIfBanned}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::AskIfBanned (char $\ast$ {\em cSearch1}, \/  char $\ast$ {\em cSearch2}, \/  bool {\em Coma} = {\ttfamily true}, \/  char $\ast$ {\em cToSearch1} = {\ttfamily \char`\"{}UserIP\char`\"{}}, \/  char $\ast$ {\em cToSearch2} = {\ttfamily \char`\"{}UserLocalName\char`\"{}})}}
+\label{classdBase_a9afd72b6a6dbb29f0ae100d5f04cc119}
+
+
+Pytam sie bazy czy uzytkownik o takiej nazwie lokalnej i ip zostal dodany do bazy jezeli tak sprawdzam czy juz dostal bana.
+
+\hypertarget{classdBase_a8dcd257825f5b4543cf07b766b0e6cd8}{
+\index{dBase@{dBase}!CheckForTable@{CheckForTable}}
+\index{CheckForTable@{CheckForTable}!dBase@{dBase}}
+\subsubsection[{CheckForTable}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::CheckForTable (char $\ast$ {\em cTable})}}
+\label{classdBase_a8dcd257825f5b4543cf07b766b0e6cd8}
+
+
+Sprawdza czy tabela istnieje, jezeli nie to ja tworzy 
+
+\hypertarget{classdBase_a0c8962454c0efe44b216c28bbd04eb9a}{
+\index{dBase@{dBase}!Close@{Close}}
+\index{Close@{Close}!dBase@{dBase}}
+\subsubsection[{Close}]{\setlength{\rightskip}{0pt plus 5cm}void dBase::Close ()}}
+\label{classdBase_a0c8962454c0efe44b216c28bbd04eb9a}
+
+
+Zamyka polaczenie z baza 
+
+\hypertarget{classdBase_aea02faef6ec0330213d2d5e6e7449940}{
+\index{dBase@{dBase}!dBaseRun@{dBaseRun}}
+\index{dBaseRun@{dBaseRun}!dBase@{dBase}}
+\subsubsection[{dBaseRun}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::dBaseRun ()}}
+\label{classdBase_aea02faef6ec0330213d2d5e6e7449940}
+
+
+Laczy sie baza Sprawdza czy istnieja tablice
+
+\hypertarget{classdBase_ae3f64548cd601248838741b7704a0884}{
+\index{dBase@{dBase}!del@{del}}
+\index{del@{del}!dBase@{dBase}}
+\subsubsection[{del}]{\setlength{\rightskip}{0pt plus 5cm}void dBase::del (int {\em intSw} = {\ttfamily 0})}}
+\label{classdBase_ae3f64548cd601248838741b7704a0884}
+
+
+Kasuje wskazana wpisy po pid uzytkownika 
+
+\hypertarget{classdBase_a26e59ac97985d95287948445a07acd71}{
+\index{dBase@{dBase}!insertBanned@{insertBanned}}
+\index{insertBanned@{insertBanned}!dBase@{dBase}}
+\subsubsection[{insertBanned}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::insertBanned (char $\ast$ {\em ip}, \/  char $\ast$ {\em lname})}}
+\label{classdBase_a26e59ac97985d95287948445a07acd71}
+
+
+Dodaje do bazy infromacje o uzytkownku ktory dostal 1 ostrzezenie 
+
+\hypertarget{classdBase_ac5b1d43710622a869134a0f7504f6661}{
+\index{dBase@{dBase}!insertFile@{insertFile}}
+\index{insertFile@{insertFile}!dBase@{dBase}}
+\subsubsection[{insertFile}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::insertFile (const char $\ast$ {\em fp}, \/  const char $\ast$ {\em fn}, \/  const char $\ast$ {\em fs}, \/  const char $\ast$ {\em fht}, \/  const char $\ast$ {\em fh}, \/  const char $\ast$ {\em flmd})}}
+\label{classdBase_ac5b1d43710622a869134a0f7504f6661}
+
+
+Dodaje do bazy udostepniony plik uzytkownika 
+
+\hypertarget{classdBase_a05d94436a22bf5e3c52c1ab0f67c2d4c}{
+\index{dBase@{dBase}!Rebuild\_\-BannedTable@{Rebuild\_\-BannedTable}}
+\index{Rebuild\_\-BannedTable@{Rebuild\_\-BannedTable}!dBase@{dBase}}
+\subsubsection[{Rebuild\_\-BannedTable}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::Rebuild\_\-BannedTable ()}}
+\label{classdBase_a05d94436a22bf5e3c52c1ab0f67c2d4c}
+
+
+Tworzy tablice Banned 
+
+\hypertarget{classdBase_a7a5431d74f4b1f7b201c25b7d3a52ffa}{
+\index{dBase@{dBase}!Rebuild\_\-Ordered@{Rebuild\_\-Ordered}}
+\index{Rebuild\_\-Ordered@{Rebuild\_\-Ordered}!dBase@{dBase}}
+\subsubsection[{Rebuild\_\-Ordered}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::Rebuild\_\-Ordered ()}}
+\label{classdBase_a7a5431d74f4b1f7b201c25b7d3a52ffa}
+
+
+Tworzy tablice Order 
+
+\hypertarget{classdBase_a9e9715965ba80d3c7a9c401d62a43f6a}{
+\index{dBase@{dBase}!Rebuild\_\-SharedFilesTable@{Rebuild\_\-SharedFilesTable}}
+\index{Rebuild\_\-SharedFilesTable@{Rebuild\_\-SharedFilesTable}!dBase@{dBase}}
+\subsubsection[{Rebuild\_\-SharedFilesTable}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::Rebuild\_\-SharedFilesTable ()}}
+\label{classdBase_a9e9715965ba80d3c7a9c401d62a43f6a}
+
+
+Tworzy tablice Shared 
+
+\hypertarget{classdBase_a91269d6744d42078ac8880d32e3a1229}{
+\index{dBase@{dBase}!SearchByMatched@{SearchByMatched}}
+\index{SearchByMatched@{SearchByMatched}!dBase@{dBase}}
+\subsubsection[{SearchByMatched}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::SearchByMatched (const char $\ast$ {\em data}, \/  char $\ast$ {\em row} = {\ttfamily \char`\"{}FileOwner\char`\"{}}, \/  char $\ast$ {\em tab} = {\ttfamily \char`\"{}OrderTable\char`\"{}})}}
+\label{classdBase_a91269d6744d42078ac8880d32e3a1229}
+
+
+wyszukje we wskazanej tabeli i wierszu wyszukuje dane o wskazanej wartosci 
+
+\hypertarget{classdBase_aa6aba86beb506496929ea8ff8aef8245}{
+\index{dBase@{dBase}!SearchByMatched2@{SearchByMatched2}}
+\index{SearchByMatched2@{SearchByMatched2}!dBase@{dBase}}
+\subsubsection[{SearchByMatched2}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::SearchByMatched2 (const char $\ast$ {\em data}, \/  const char $\ast$ {\em data2}, \/  char $\ast$ {\em row} = {\ttfamily \char`\"{}FileOwner\char`\"{}}, \/  char $\ast$ {\em row2} = {\ttfamily \char`\"{}FilePath\char`\"{}}, \/  char $\ast$ {\em tab} = {\ttfamily \char`\"{}SharedFiles\char`\"{}})}}
+\label{classdBase_aa6aba86beb506496929ea8ff8aef8245}
+
+
+wyszukje we wskazanej tabeli i wierszu wyszukuje dane o wskazanej wartosci 
+
+\hypertarget{classdBase_a568417f1966cdad5e64f553a96ef201b}{
+\index{dBase@{dBase}!SearchFiles@{SearchFiles}}
+\index{SearchFiles@{SearchFiles}!dBase@{dBase}}
+\subsubsection[{SearchFiles}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::SearchFiles (XMLParser $\ast$ {\em p\_\-xmlStructPointer}, \/  string $\ast$ {\em strctrl}, \/  string $\ast$ {\em strSearch}, \/  bool {\em Coma} = {\ttfamily true}, \/  char $\ast$ {\em cToSearch} = {\ttfamily \char`\"{}FileName\char`\"{}})}}
+\label{classdBase_a568417f1966cdad5e64f553a96ef201b}
+
+
+Szukana wskazanego pliku wysyalajac zapytanie do bazy Jezeli wyszukanie bylo bez bledow tworzy dokument xml Do dokumentu trafiaja wyniki wyszukiwania jezeli byly jakie kolwiek strctrl jest lista utworzona ze stringa w celu \char`\"{}zmagazynowania unikalnych wartosci plikow\char`\"{} jakie uzytkownik wyszukiwal (ochrona przed wymuszeniami)
+
+\hypertarget{classdBase_ae4b52702ff5312ee8a21b13552c67f7f}{
+\index{dBase@{dBase}!UpdateBanned@{UpdateBanned}}
+\index{UpdateBanned@{UpdateBanned}!dBase@{dBase}}
+\subsubsection[{UpdateBanned}]{\setlength{\rightskip}{0pt plus 5cm}bool dBase::UpdateBanned (char $\ast$ {\em cSearch1}, \/  char $\ast$ {\em cSearch2}, \/  bool {\em Coma} = {\ttfamily true}, \/  char $\ast$ {\em cToSearch1} = {\ttfamily \char`\"{}UserIP\char`\"{}}, \/  char $\ast$ {\em cToSearch2} = {\ttfamily \char`\"{}UserLocalName\char`\"{}})}}
+\label{classdBase_ae4b52702ff5312ee8a21b13552c67f7f}
+
+
+Pytam sie bazy czy uzytkownik o takiej nazwie lokalnej i ip zostal dodany do bazy. jezeli tak inkrementuje mu wartosc ostrzezen jezeli nie utwarzam record
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+dbase.hpp\item 
+dbase.cpp\end{DoxyCompactItemize}

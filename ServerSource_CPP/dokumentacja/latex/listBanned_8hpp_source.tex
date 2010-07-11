@@ -1,0 +1,61 @@
+\hypertarget{listBanned_8hpp_source}{
+\section{listBanned.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef LISTBANNED\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define LISTBANNED\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00013 \textcolor{preprocessor}{#include <cstdlib>}
+00014 \textcolor{preprocessor}{#include <iostream>}
+00015 \textcolor{preprocessor}{#include <string>}
+00017 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00018 
+00020 \textcolor{keyword}{using} std::string;
+00021 \textcolor{keyword}{using} std::cout;
+00022 \textcolor{keyword}{using} std::cerr;
+00023 \textcolor{keyword}{using} std::cin;
+00024 \textcolor{keyword}{using} std::endl;
+00026 
+\hypertarget{listBanned_8hpp_source_l00027}{}\hyperlink{classBannedNode}{00027} \textcolor{keyword}{class }\hyperlink{classBannedNode}{BannedNode}: \textcolor{keyword}{public} TimeCout\{
+00028     \textcolor{keyword}{private}:
+00029         \textcolor{keywordtype}{string} strClientIP;
+00030         \textcolor{keywordtype}{string} strLocalName;
+00031         \textcolor{keywordtype}{double} dCreationTime;
+00032         \textcolor{keywordtype}{int} intCounterToBeBanned;
+00033         \textcolor{keywordtype}{int} intNodeIndex;
+00034     \textcolor{keyword}{public}:
+00035         \hyperlink{classBannedNode_a7554d4749594dc5b3dc26dbc32c7aba4}{BannedNode}(\textcolor{keywordtype}{string},\textcolor{keywordtype}{string},\textcolor{keywordtype}{int});
+00036         ~\hyperlink{classBannedNode}{BannedNode}();
+00037         \textcolor{comment}{//}
+00038         \textcolor{keywordtype}{void} BanClient();
+00039         \textcolor{keywordtype}{bool} WarnClient();
+00040         \textcolor{comment}{//}
+00041         \textcolor{keywordtype}{void} PrintInfo();
+00042         \textcolor{keywordtype}{bool} AskIfBanned();
+00043         \textcolor{keywordtype}{bool} SearchForIP(\textcolor{keywordtype}{string});
+00044         \textcolor{keywordtype}{bool} SearchForLocalName(\textcolor{keywordtype}{string});
+00045         \textcolor{keywordtype}{bool} SearchForIPandLocalName(\textcolor{keywordtype}{string},\textcolor{keywordtype}{string});
+00046         \textcolor{keywordtype}{bool} SearchForBanned();
+00047         \textcolor{keywordtype}{bool} SearchFotWarned();
+00048 \};\textcolor{comment}{/*}
+00049 \textcolor{comment}{template <class T>}
+00050 \textcolor{comment}{class BannedList: public myList<T>\{}
+00051 \textcolor{comment}{    public:}
+00052 \textcolor{comment}{        BannedList();}
+00053 \textcolor{comment}{        ~BannedList();}
+00054 \textcolor{comment}{        void AddNode(T*,string,string);}
+00055 \textcolor{comment}{        void PrintNodes();}
+00056 \textcolor{comment}{\};}
+00057 \textcolor{comment}{*/}
+00058 \textcolor{preprocessor}{#endif // LISTBANNED\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

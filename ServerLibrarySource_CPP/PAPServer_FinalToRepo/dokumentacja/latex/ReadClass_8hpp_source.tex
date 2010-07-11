@@ -1,0 +1,100 @@
+\hypertarget{ReadClass_8hpp_source}{
+\section{ReadClass.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef READCLASS\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define READCLASS\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00012 
+00014 \textcolor{preprocessor}{#include <cstdlib>}
+00015 \textcolor{preprocessor}{#include <iostream>}
+00016 \textcolor{preprocessor}{#include <cstdio>}
+00017 \textcolor{preprocessor}{#include <string>}
+00018 \textcolor{preprocessor}{#include <ctime>}
+00019 
+00021 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00022 
+00024 \textcolor{keyword}{using} std::string;
+00025 \textcolor{keyword}{using} std::cout;
+00026 \textcolor{keyword}{using} std::cerr;
+00027 \textcolor{keyword}{using} std::cin;
+00028 \textcolor{keyword}{using} std::endl;
+00029 
+\hypertarget{ReadClass_8hpp_source_l00030}{}\hyperlink{classFileRead}{00030} \textcolor{keyword}{class }\hyperlink{classFileRead}{FileRead}: \textcolor{keyword}{public} \hyperlink{classdebugMsg}{debugMsg}\{
+00031     \textcolor{keyword}{protected}:
+00032         \textcolor{keywordtype}{string} *p\_strClassName;
+00033     \textcolor{keyword}{public}:
+00034         \hyperlink{classFileRead_ad19f0ae8129a9e0750f37ba4741ab32b}{FileRead}();
+00035         ~\hyperlink{classFileRead}{FileRead}();
+00042         \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>
+\hypertarget{ReadClass_8hpp_source_l00043}{}\hyperlink{classFileRead_afd22580b16770d0abaf75c63098e6103}{00043}         T &\hyperlink{classFileRead_afd22580b16770d0abaf75c63098e6103}{ReadByLine}(\textcolor{keywordtype}{string} *p\_strFileName, int16\_t &ErrorCode, T ValueOnError)\{
+      
+00047             \textcolor{keywordtype}{string} *p\_strMethodName = \textcolor{keyword}{new} string (*p\_strClassName+\textcolor{stringliteral}{"[ReadByLine]->
+      "});
+00048             \textcolor{keywordtype}{char} *buffer;
+00049             int64\_t *length;
+00050             \textcolor{keywordtype}{double} *start,*end;
+00051             FILE *readfile;
+00052             T *wskReturn = NULL;
+00053 
+00054             start = \textcolor{keyword}{new} double ((\textcolor{keywordtype}{double})clock()/CLOCKS\_PER\_SEC);
+00055 
+00056             readfile = fopen(p\_strFileName->c\_str(), \textcolor{stringliteral}{"rb"});
+00057             \textcolor{keywordflow}{if}(readfile)\{
+00058                 \textcolor{comment}{// get length of file:}
+00059                 fseek(readfile, 0, SEEK\_END);
+00060                 length = \textcolor{keyword}{new} int64\_t (ftell(readfile));
+00061                 fseek(readfile, 0, SEEK\_SET);
+00062                 \textcolor{comment}{// allocate memory:}
+00063                 buffer=(\textcolor{keywordtype}{char} *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char})* (*length)+1);
+00064                 \textcolor{keywordflow}{if} (buffer)\{
+00065                     buffer[*length]=\textcolor{charliteral}{'\(\backslash\)0'};
+00066                     \textcolor{comment}{// read data as a block:}
+00067                     fread(buffer, *length, 1, readfile);
+00068                     wskReturn = \textcolor{keyword}{new} T(buffer);
+00069                     free(buffer);
+00070                 \}\textcolor{keywordflow}{else}\{
+00071                     ErrorCode = 2;
+00072                     \textcolor{comment}{/*SEND INFO TO LOGGER*/}
+00073                 \}
+00074                 fclose(readfile);
+00075                 \textcolor{comment}{//cout.write (buffer,*length); // wypisanie na ekran}
+00076                 cout<<*p\_strMethodName+\textcolor{stringliteral}{"File Size: "}<<*length<<\textcolor{stringliteral}{" B"}<<endl;
+00077             \}\textcolor{keywordflow}{else}\{
+00078                 ErrorCode = 1;
+00079                 \textcolor{comment}{/*SEND INFO TO LOGGER*/}
+00080                 cout<<*p\_strMethodName+\textcolor{stringliteral}{"Failed to read: "}+ *p\_strFileName<<endl;
+00081             \}
+00082             end = \textcolor{keyword}{new} double((\textcolor{keywordtype}{double})clock()/CLOCKS\_PER\_SEC);
+00083             \textcolor{keywordflow}{if} ( ErrorCode == 0)\{
+00084                 Bandwidth(p\_strMethodName,end,start,length);
+00085             \}\textcolor{keywordflow}{else}\{
+00086                 cout<<*p\_strMethodName+\textcolor{stringliteral}{"ErrorCode: "}<<ErrorCode<<endl;
+00087                 \textcolor{keyword}{delete} wskReturn;
+00088                 wskReturn = \textcolor{keyword}{new} T (ValueOnError);
+00089             \}
+00090             cout<<*p\_strMethodName+\textcolor{stringliteral}{"Excecution time: "}<<*end-*start<<\textcolor{stringliteral}{"s"}<<endl;
+00091             \textcolor{comment}{//}
+00092             \textcolor{keywordflow}{if} ( ErrorCode != 1)\{
+00093                 \textcolor{keyword}{delete} length;
+00094             \}
+00095             \textcolor{keyword}{delete} p\_strMethodName;
+00096             \textcolor{keyword}{delete} start;
+00097             \textcolor{keyword}{delete} end;
+00098 
+00099             \textcolor{keywordflow}{return} *wskReturn;
+00100             \}
+00101 \};
+00102 
+00103 \textcolor{preprocessor}{#endif // READCLASS\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

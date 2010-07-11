@@ -1,0 +1,80 @@
+\hypertarget{classmyServerAPP}{
+\section{myServerAPP Class Reference}
+\label{classmyServerAPP}\index{myServerAPP@{myServerAPP}}
+}
+
+
+Główna klasa serwera.  
+
+
+
+
+{\ttfamily \#include $<$myServerAPP.hpp$>$}
+
+Inheritance diagram for myServerAPP:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classmyServerAPP}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classmyServerAPP_a1683e57c122e19f851e350fc3095caed}{RunServer} ()
+\item 
+\hypertarget{classmyServerAPP_ac7e5b2a8b38dee34c64b5c6e9ca5fba1}{
+void {\bfseries ClearVal} ()}
+\label{classmyServerAPP_ac7e5b2a8b38dee34c64b5c6e9ca5fba1}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmyServerAPP_ae183443a38d0b8e96762083c42385db3}{
+static int \hyperlink{classmyServerAPP_ae183443a38d0b8e96762083c42385db3}{intValueOnExit} = 1}
+\label{classmyServerAPP_ae183443a38d0b8e96762083c42385db3}
+
+\begin{DoxyCompactList}\small\item\em Wartość błędu. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Główna klasa serwera. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classmyServerAPP_a1683e57c122e19f851e350fc3095caed}{
+\index{myServerAPP@{myServerAPP}!RunServer@{RunServer}}
+\index{RunServer@{RunServer}!myServerAPP@{myServerAPP}}
+\subsubsection[{RunServer}]{\setlength{\rightskip}{0pt plus 5cm}void myServerAPP::RunServer ()}}
+\label{classmyServerAPP_a1683e57c122e19f851e350fc3095caed}
+
+
+Tutaj dzieje sie magia czyli, serwer przyjmuje połączenia oraz tworzy procesy potomne Sprawdzane jest tez czy klient dostal bana na podstawie ostrzezen Bezpieczne Wylaczanie i resetowania serwera Decyzja czy serwer jest interacyjny wielowatkowy/procesowy.
+
+Test
+
+!-\/-\/-\/-\/-\/-\/-\/
+
+Potrzebne do połączenia z klientem
+
+Potrzebne do połączenia z klientem
+
+Potrzebne do połączenia z klientem
+
+Nieskonczona pętla
+
+Wyjście/Wejście socketa
+
+Sprawdzam czy uzytownik dostala bana przy poprzednich polaczeniach
+
+Wielo watkowa oblsuga klientow
+
+Klient 1 w jednym czasie brak wyciekow pamieci Nie dziala Odlaczanie klientow
+
+Fork powoduje wyciek pamieci Tworze client handler w forku. 
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+myServerAPP.hpp\item 
+myServerAPP.cpp\end{DoxyCompactItemize}

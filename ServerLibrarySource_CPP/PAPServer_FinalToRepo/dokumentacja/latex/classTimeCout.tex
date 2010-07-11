@@ -1,0 +1,113 @@
+\hypertarget{classTimeCout}{
+\section{TimeCout Class Reference}
+\label{classTimeCout}\index{TimeCout@{TimeCout}}
+}
+
+
+Ta klasa dba o właściwe obliczanie czasu przetwarzania.  
+
+
+
+
+{\ttfamily \#include $<$SupportClass.hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classTimeCout_ac8c0cffeea3afdc63d2d9cb86320c89f}{Cout} (double, double)
+\item 
+double \hyperlink{classTimeCout_ad88edc4a3eccda520f2bdf7d69f852b9}{GetTime} ()
+\item 
+string \hyperlink{classTimeCout_a6ed7a20e4510642d6ffdf1cdbffd2b9f}{ExcutionTime} (double, double)
+\item 
+string \hyperlink{classTimeCout_a343b4ea828779afff35c01bbfc4fa506}{GetLocalTime} ()
+\item 
+\hypertarget{classTimeCout_a9086322580eec557a48841f43ad83a65}{
+string {\bfseries GetYMD} ()}
+\label{classTimeCout_a9086322580eec557a48841f43ad83a65}
+
+\item 
+\hypertarget{classTimeCout_a9c09ef549f3f5a26c1f4555f887f1dcc}{
+string {\bfseries GetTimeAfter1970} ()}
+\label{classTimeCout_a9c09ef549f3f5a26c1f4555f887f1dcc}
+
+\item 
+\hypertarget{classTimeCout_a15170e990cfc32d0a59ca768119d9b19}{
+string {\bfseries AliveTime} (time\_\-t, time\_\-t)}
+\label{classTimeCout_a15170e990cfc32d0a59ca768119d9b19}
+
+\item 
+\hypertarget{classTimeCout_a6fd1f7b09ccd8472adb0e350a0d4d466}{
+time\_\-t {\bfseries GetTimeAfter1970AsTime} ()}
+\label{classTimeCout_a6fd1f7b09ccd8472adb0e350a0d4d466}
+
+\item 
+\hypertarget{classTimeCout_a5a1188c0b81f212922a82c8fb3765180}{
+long int {\bfseries CoutTimeAfter1970} (time\_\-t, time\_\-t)}
+\label{classTimeCout_a5a1188c0b81f212922a82c8fb3765180}
+
+\item 
+\hypertarget{classTimeCout_a774d3e20476e97321cb07b83d50eb57e}{
+void {\bfseries Set\_\-strTimeFormatter} (string)}
+\label{classTimeCout_a774d3e20476e97321cb07b83d50eb57e}
+
+\item 
+\hypertarget{classTimeCout_ad0a132c052a5ccfc49ce155c85fd71e0}{
+void {\bfseries Set\_\-intFormatterLenght} (int)}
+\label{classTimeCout_ad0a132c052a5ccfc49ce155c85fd71e0}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Ta klasa dba o właściwe obliczanie czasu przetwarzania. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classTimeCout_ac8c0cffeea3afdc63d2d9cb86320c89f}{
+\index{TimeCout@{TimeCout}!Cout@{Cout}}
+\index{Cout@{Cout}!TimeCout@{TimeCout}}
+\subsubsection[{Cout}]{\setlength{\rightskip}{0pt plus 5cm}double TimeCout::Cout (double {\em dLiczbaA}, \/  double {\em dLiczbaB})}}
+\label{classTimeCout_ac8c0cffeea3afdc63d2d9cb86320c89f}
+
+
+Zwraca różnice czasów 
+
+\hypertarget{classTimeCout_a6ed7a20e4510642d6ffdf1cdbffd2b9f}{
+\index{TimeCout@{TimeCout}!ExcutionTime@{ExcutionTime}}
+\index{ExcutionTime@{ExcutionTime}!TimeCout@{TimeCout}}
+\subsubsection[{ExcutionTime}]{\setlength{\rightskip}{0pt plus 5cm}string TimeCout::ExcutionTime (double {\em A}, \/  double {\em B})}}
+\label{classTimeCout_a6ed7a20e4510642d6ffdf1cdbffd2b9f}
+
+
+Zwraca stringa składający się z opis + rożnice czasu 
+
+\hypertarget{classTimeCout_a343b4ea828779afff35c01bbfc4fa506}{
+\index{TimeCout@{TimeCout}!GetLocalTime@{GetLocalTime}}
+\index{GetLocalTime@{GetLocalTime}!TimeCout@{TimeCout}}
+\subsubsection[{GetLocalTime}]{\setlength{\rightskip}{0pt plus 5cm}string TimeCout::GetLocalTime ()}}
+\label{classTimeCout_a343b4ea828779afff35c01bbfc4fa506}
+
+
+Pobiera czas wedlug zdefinowanego formatowania
+
+$<$ pobranie czasu
+
+$<$ struktura czasu, dzieki ktorej dziala formatowanie
+
+$<$ buffor do ktorego zostanie wpisany string 
+
+\hypertarget{classTimeCout_ad88edc4a3eccda520f2bdf7d69f852b9}{
+\index{TimeCout@{TimeCout}!GetTime@{GetTime}}
+\index{GetTime@{GetTime}!TimeCout@{TimeCout}}
+\subsubsection[{GetTime}]{\setlength{\rightskip}{0pt plus 5cm}double TimeCout::GetTime ()}}
+\label{classTimeCout_ad88edc4a3eccda520f2bdf7d69f852b9}
+
+
+Zwraca własciwie obliczony czas od właczenia programu 
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+SupportClass.hpp\item 
+SupportClass.cpp\end{DoxyCompactItemize}

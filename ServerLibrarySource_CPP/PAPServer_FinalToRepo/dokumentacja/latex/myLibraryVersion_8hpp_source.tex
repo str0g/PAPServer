@@ -1,0 +1,35 @@
+\hypertarget{myLibraryVersion_8hpp_source}{
+\section{myLibraryVersion.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef MYLIBRARY4SERVER\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define MYLIBRARY4SERVER\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00012 
+00013 \textcolor{preprocessor}{#include "versionl.h"}
+\hypertarget{myLibraryVersion_8hpp_source_l00015}{}\hyperlink{classmyLibraryVersion}{00015} \textcolor{keyword}{class }\hyperlink{classmyLibraryVersion}{myLibraryVersion}\{
+00016     \textcolor{keyword}{public}:
+00017         \textcolor{keyword}{static} \textcolor{keywordtype}{void} ShowVersion()\{
+00018             fprintf(stdout,\textcolor{stringliteral}{"myLibrary4Server\(\backslash\)nVersion: %s Build: %ld Date: %s.%s.
+      %s\(\backslash\)n"},
+00019                     AutoVersionL::FULLVERSION\_STRING,AutoVersionL::BUILDS\_COUNT,
+00020                     AutoVersionL::YEAR,AutoVersionL::MONTH,AutoVersionL::DATE);
+00021             cout<<\textcolor{stringliteral}{"External libraries:\(\backslash\)n -minixml 2.6 www.minixml.com"}<<endl;
+00022             cout<<\textcolor{stringliteral}{"Author: Łukasz Buśko\(\backslash\)nContact: buskol.waw.pl@gmail.com\(\backslash\)nCopyri
+      ght 2010\(\backslash\)nLicense:GNU/GPL"}<<endl;
+00023         \}
+00024 \};
+00025 
+00026 
+00032 \textcolor{preprocessor}{#endif // MYLIBRARY4SERVER\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

@@ -1,0 +1,80 @@
+\hypertarget{classmyClientHandler}{
+\section{myClientHandler Class Reference}
+\label{classmyClientHandler}\index{myClientHandler@{myClientHandler}}
+}
+
+
+Ta klasa obsluguje klienta.  
+
+
+
+
+{\ttfamily \#include $<$myClientHandler.hpp$>$}
+
+Inheritance diagram for myClientHandler:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classmyClientHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classmyClientHandler_a17fd65171450b843b12f28b3c53c058b}{
+{\bfseries myClientHandler} (boost::asio::ip::tcp::socket \&, char $\ast$, char $\ast$, string, int, int, int)}
+\label{classmyClientHandler_a17fd65171450b843b12f28b3c53c058b}
+
+\item 
+virtual \hyperlink{classmyClientHandler_a20a6d3fcd1d40b107df3b508872e4342}{$\sim$myClientHandler} ()
+\item 
+void \hyperlink{classmyClientHandler_ab189bfb1e7dba2f101a187161bd03e4d}{myClientRun} ()
+\item 
+\hypertarget{classmyClientHandler_a0cb77a19ccda06ae987490dec1e98a69}{
+void {\bfseries myclientShutdownServer} ()}
+\label{classmyClientHandler_a0cb77a19ccda06ae987490dec1e98a69}
+
+\item 
+int \hyperlink{classmyClientHandler_a9a158082b71de6585113cfbad406ddf5}{GetSessionID} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Ta klasa obsluguje klienta. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classmyClientHandler_a20a6d3fcd1d40b107df3b508872e4342}{
+\index{myClientHandler@{myClientHandler}!$\sim$myClientHandler@{$\sim$myClientHandler}}
+\index{$\sim$myClientHandler@{$\sim$myClientHandler}!myClientHandler@{myClientHandler}}
+\subsubsection[{$\sim$myClientHandler}]{\setlength{\rightskip}{0pt plus 5cm}myClientHandler::$\sim$myClientHandler ()\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classmyClientHandler_a20a6d3fcd1d40b107df3b508872e4342}
+
+
+Zwalnianie nie zwolnionej wczesniej pamieci oraz wyswietlnie/wyslanie podsumowania. 
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmyClientHandler_a9a158082b71de6585113cfbad406ddf5}{
+\index{myClientHandler@{myClientHandler}!GetSessionID@{GetSessionID}}
+\index{GetSessionID@{GetSessionID}!myClientHandler@{myClientHandler}}
+\subsubsection[{GetSessionID}]{\setlength{\rightskip}{0pt plus 5cm}int myClientHandler::GetSessionID ()}}
+\label{classmyClientHandler_a9a158082b71de6585113cfbad406ddf5}
+
+
+Zwraca czy sesja jest aktywna 
+
+\hypertarget{classmyClientHandler_ab189bfb1e7dba2f101a187161bd03e4d}{
+\index{myClientHandler@{myClientHandler}!myClientRun@{myClientRun}}
+\index{myClientRun@{myClientRun}!myClientHandler@{myClientHandler}}
+\subsubsection[{myClientRun}]{\setlength{\rightskip}{0pt plus 5cm}void myClientHandler::myClientRun ()}}
+\label{classmyClientHandler_ab189bfb1e7dba2f101a187161bd03e4d}
+Main Loop 
+
+Tutaj przebiega cala interakcja z clietem.; Przerywalna petela dba o poprawnosc komunikacji pod warunkiem pozytywnej autoryzacji.;Tutaj zwracana jest infromacja o zakonczeniu polaczenie. 
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+myClientHandler.hpp\item 
+myClientHandler.cpp\end{DoxyCompactItemize}

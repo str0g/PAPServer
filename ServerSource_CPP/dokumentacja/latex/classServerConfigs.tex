@@ -1,0 +1,187 @@
+\hypertarget{classServerConfigs}{
+\section{ServerConfigs Class Reference}
+\label{classServerConfigs}\index{ServerConfigs@{ServerConfigs}}
+}
+
+
+Ta klasa trzyma ustawienia serwera oraz lokalizacje językową.  
+
+
+
+
+{\ttfamily \#include $<$ServerConfigs.hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classServerConfigs_a43fcad67198113bd7160841e95a302c1}{
+{\bfseries ServerConfigs} (string $\ast$, string $\ast$)}
+\label{classServerConfigs_a43fcad67198113bd7160841e95a302c1}
+
+\item 
+void \hyperlink{classServerConfigs_a79b1527bcb676e9f100ea5c2bc5849a3}{SetVaruables} ()
+\item 
+\hypertarget{classServerConfigs_aa571c2b65a26a2b872d3d8cbdd351b38}{
+void {\bfseries ShowConfigs} ()}
+\label{classServerConfigs_aa571c2b65a26a2b872d3d8cbdd351b38}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classServerConfigs_ada5336549c853844928049dc5a5aedbc}{
+static void {\bfseries Clean} ()}
+\label{classServerConfigs_ada5336549c853844928049dc5a5aedbc}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classServerConfigs_a25ce60fcec7cc2b3a2d6e527d086e6c3}{
+static string \hyperlink{classServerConfigs_a25ce60fcec7cc2b3a2d6e527d086e6c3}{p\_\-cMySqlServerAddress}}
+\label{classServerConfigs_a25ce60fcec7cc2b3a2d6e527d086e6c3}
+
+\begin{DoxyCompactList}\small\item\em Adres serwera mysql. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_ac394f376322427f07ce2de08f3dabdf2}{
+static string \hyperlink{classServerConfigs_ac394f376322427f07ce2de08f3dabdf2}{p\_\-cMySqlUser}}
+\label{classServerConfigs_ac394f376322427f07ce2de08f3dabdf2}
+
+\begin{DoxyCompactList}\small\item\em Uzytkownik serwera mysql. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_ac1a3f46a9e789a3e82e5f00e79d459ee}{
+static string \hyperlink{classServerConfigs_ac1a3f46a9e789a3e82e5f00e79d459ee}{p\_\-cMySqlPass}}
+\label{classServerConfigs_ac1a3f46a9e789a3e82e5f00e79d459ee}
+
+\begin{DoxyCompactList}\small\item\em Haslo uzytkownika mysql. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a48a736c392a19e149f14a83dffda0e6a}{
+static string \hyperlink{classServerConfigs_a48a736c392a19e149f14a83dffda0e6a}{p\_\-cMySqldBase}}
+\label{classServerConfigs_a48a736c392a19e149f14a83dffda0e6a}
+
+\begin{DoxyCompactList}\small\item\em Nazwa bazy mysql. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a11c31d078a6bd272d4eca05aba33c0bc}{
+static string \hyperlink{classServerConfigs_a11c31d078a6bd272d4eca05aba33c0bc}{strFormatter}}
+\label{classServerConfigs_a11c31d078a6bd272d4eca05aba33c0bc}
+
+\begin{DoxyCompactList}\small\item\em Formatownaie logow. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_adeb37d83ae4db09b26aecdcd5e593d00}{
+static string \hyperlink{classServerConfigs_adeb37d83ae4db09b26aecdcd5e593d00}{strServerIP}}
+\label{classServerConfigs_adeb37d83ae4db09b26aecdcd5e593d00}
+
+\begin{DoxyCompactList}\small\item\em Ustawienia IP naszego serwera. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a6c9fa39932b507f17cd0cfc8753f32fa}{
+static string \hyperlink{classServerConfigs_a6c9fa39932b507f17cd0cfc8753f32fa}{strLoggingFileDir}}
+\label{classServerConfigs_a6c9fa39932b507f17cd0cfc8753f32fa}
+
+\begin{DoxyCompactList}\small\item\em Scieżka do pliku logowania. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_afcf905ce23547206d835f6b2281bbc8f}{
+static int $\ast$ \hyperlink{classServerConfigs_afcf905ce23547206d835f6b2281bbc8f}{p\_\-intClientTimeOut} = NULL}
+\label{classServerConfigs_afcf905ce23547206d835f6b2281bbc8f}
+
+\begin{DoxyCompactList}\small\item\em Czas, po którym klient zostanie odłaczony w przypadku błedów/zerwania połaczenia. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a3ce8a0c3c2fc7f7c85e82b903c2e421f}{
+static uint64\_\-t $\ast$ \hyperlink{classServerConfigs_a3ce8a0c3c2fc7f7c85e82b903c2e421f}{p\_\-intChunkSize} = NULL}
+\label{classServerConfigs_a3ce8a0c3c2fc7f7c85e82b903c2e421f}
+
+\begin{DoxyCompactList}\small\item\em Rozmiar pakietu danych. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a7b9ef5a59901632542066b8677de2d53}{
+static int \hyperlink{classServerConfigs_a7b9ef5a59901632542066b8677de2d53}{intStdErr} = 0}
+\label{classServerConfigs_a7b9ef5a59901632542066b8677de2d53}
+
+\begin{DoxyCompactList}\small\item\em Informacja o użyciu cerr. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a1d80afb91cdd8cd80e58b4259bd28087}{
+static int \hyperlink{classServerConfigs_a1d80afb91cdd8cd80e58b4259bd28087}{intStdOut} = 0}
+\label{classServerConfigs_a1d80afb91cdd8cd80e58b4259bd28087}
+
+\begin{DoxyCompactList}\small\item\em Informacja o użyciu cout. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_aefa14f4b1ff6da3032d89d9e844c745e}{
+static int \hyperlink{classServerConfigs_aefa14f4b1ff6da3032d89d9e844c745e}{intStdIn} = 0}
+\label{classServerConfigs_aefa14f4b1ff6da3032d89d9e844c745e}
+
+\begin{DoxyCompactList}\small\item\em Informacja o użyciu cin. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a4879aafc26d5e1838b7198eaf944ad81}{
+static int \hyperlink{classServerConfigs_a4879aafc26d5e1838b7198eaf944ad81}{intDemonize} = 0}
+\label{classServerConfigs_a4879aafc26d5e1838b7198eaf944ad81}
+
+\begin{DoxyCompactList}\small\item\em Informacja o demonizacji. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a09e16704f3fc242e56568679c5bb9056}{
+static int $\ast$ \hyperlink{classServerConfigs_a09e16704f3fc242e56568679c5bb9056}{p\_\-intMultiThreading} = NULL}
+\label{classServerConfigs_a09e16704f3fc242e56568679c5bb9056}
+
+\begin{DoxyCompactList}\small\item\em Informacja o tym czy serwer bedze interacyjny lub wielowatkowy. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_ab99e0262c9839e2bccdb0cd12465f88e}{
+static int $\ast$ \hyperlink{classServerConfigs_ab99e0262c9839e2bccdb0cd12465f88e}{p\_\-intMaxClients} = NULL}
+\label{classServerConfigs_ab99e0262c9839e2bccdb0cd12465f88e}
+
+\begin{DoxyCompactList}\small\item\em Maksymalna ilosc klientow. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a430ce54c5e6da45788eabf7abae43ced}{
+static int $\ast$ \hyperlink{classServerConfigs_a430ce54c5e6da45788eabf7abae43ced}{p\_\-intMaxWarnings} = NULL}
+\label{classServerConfigs_a430ce54c5e6da45788eabf7abae43ced}
+
+\begin{DoxyCompactList}\small\item\em Maksymalan ilosc ostrzez po jakich serwer zbanuje klienta. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a3c93e632afec4434ee4bba607c4258cf}{
+static int \hyperlink{classServerConfigs_a3c93e632afec4434ee4bba607c4258cf}{intLoggingToFile} = 0}
+\label{classServerConfigs_a3c93e632afec4434ee4bba607c4258cf}
+
+\begin{DoxyCompactList}\small\item\em Informacja o logowaniu. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a1d5ee582c4eed5b579fb9beb1e973472}{
+static int \hyperlink{classServerConfigs_a1d5ee582c4eed5b579fb9beb1e973472}{intServerPort} = 0}
+\label{classServerConfigs_a1d5ee582c4eed5b579fb9beb1e973472}
+
+\begin{DoxyCompactList}\small\item\em Port na którym serwer będzie nasłuchiwać. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a60d8f33244a4b2dd862aea73162f827c}{
+static string $\ast$ \hyperlink{classServerConfigs_a60d8f33244a4b2dd862aea73162f827c}{p\_\-strConfigPath} = NULL}
+\label{classServerConfigs_a60d8f33244a4b2dd862aea73162f827c}
+
+\begin{DoxyCompactList}\small\item\em Scieżka do pliku logów. \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_abe785e74a7d0891434c1ba47a80322a2}{
+static string $\ast$ \hyperlink{classServerConfigs_abe785e74a7d0891434c1ba47a80322a2}{p\_\-strMyPath} = NULL}
+\label{classServerConfigs_abe785e74a7d0891434c1ba47a80322a2}
+
+\begin{DoxyCompactList}\small\item\em Sćieżka, z której odpalamy serwer(pobierana z getpwd). \item\end{DoxyCompactList}\item 
+\hypertarget{classServerConfigs_a00f95326c29a3eb81c2c1233f1b0a3ab}{
+static string $\ast$ \hyperlink{classServerConfigs_a00f95326c29a3eb81c2c1233f1b0a3ab}{p\_\-strMyPath2} = NULL}
+\label{classServerConfigs_a00f95326c29a3eb81c2c1233f1b0a3ab}
+
+\begin{DoxyCompactList}\small\item\em Pobierana z argv\mbox{[}0\mbox{]};. \item\end{DoxyCompactList}\item 
+static string \hyperlink{classServerConfigs_ac2063e674b25db88fdea31ced792937e}{g\_\-strSlash} = \char`\"{}/\char`\"{}
+\begin{DoxyCompactList}\small\item\em Trzyma Slasha, kiedys mozna zrobic porotwalnosc serwera. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Ta klasa trzyma ustawienia serwera oraz lokalizacje językową. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classServerConfigs_a79b1527bcb676e9f100ea5c2bc5849a3}{
+\index{ServerConfigs@{ServerConfigs}!SetVaruables@{SetVaruables}}
+\index{SetVaruables@{SetVaruables}!ServerConfigs@{ServerConfigs}}
+\subsubsection[{SetVaruables}]{\setlength{\rightskip}{0pt plus 5cm}void ServerConfigs::SetVaruables ()}}
+\label{classServerConfigs_a79b1527bcb676e9f100ea5c2bc5849a3}
+
+
+Logger
+
+Server
+
+MySQL
+
+connection
+
+Setting up static values 
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classServerConfigs_ac2063e674b25db88fdea31ced792937e}{
+\index{ServerConfigs@{ServerConfigs}!g\_\-strSlash@{g\_\-strSlash}}
+\index{g\_\-strSlash@{g\_\-strSlash}!ServerConfigs@{ServerConfigs}}
+\subsubsection[{g\_\-strSlash}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf ServerConfigs::g\_\-strSlash} = \char`\"{}/\char`\"{}\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classServerConfigs_ac2063e674b25db88fdea31ced792937e}
+
+
+Trzyma Slasha, kiedys mozna zrobic porotwalnosc serwera. 
+
+Globals Varuabels. 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+ServerConfigs.hpp\item 
+ServerConfigs.cpp\end{DoxyCompactItemize}

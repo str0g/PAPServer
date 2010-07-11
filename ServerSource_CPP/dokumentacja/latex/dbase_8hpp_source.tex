@@ -1,0 +1,92 @@
+\hypertarget{dbase_8hpp_source}{
+\section{dbase.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef DBASE\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define DBASE\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}\textcolor{comment}{/***************************************************************}
+00004 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00005 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00006 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00007 \textcolor{comment}{ * Created:   <Input date>}
+00008 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00009 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00010 \textcolor{comment}{ **************************************************************/}
+00012 \textcolor{preprocessor}{#include <cstdlib>}
+00013 \textcolor{preprocessor}{#include <iostream>}
+00014 \textcolor{preprocessor}{#include <stdio.h>}
+00015 \textcolor{preprocessor}{#include <string>}
+00016 \textcolor{preprocessor}{#include <mysql++.h>}
+00017 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00018 \textcolor{preprocessor}{#include "XMLParser.hpp"}
+00019 \textcolor{preprocessor}{#include "ServerConfigs.hpp"}
+00020 \textcolor{preprocessor}{#include "myConv.hpp"}
+00021 
+00023 \textcolor{keyword}{using} std::string;
+00024 \textcolor{keyword}{using} std::cout;
+00025 \textcolor{keyword}{using} std::cerr;
+00026 \textcolor{keyword}{using} std::cin;
+00027 \textcolor{keyword}{using} std::endl;
+00028 \textcolor{comment}{//ZAMIEN SPRAWDZANIE TABLI NA ENUMERATORY}
+\hypertarget{dbase_8hpp_source_l00029}{}\hyperlink{classdBase}{00029} \textcolor{keyword}{class }\hyperlink{classdBase}{dBase}:\textcolor{keyword}{public} TimeCout\{
+00030     \textcolor{keyword}{public}:
+00031         \hyperlink{classdBase}{dBase}(\textcolor{keywordtype}{int} );
+00032         \hyperlink{classdBase}{dBase}();
+00033         \textcolor{keyword}{virtual} \hyperlink{classdBase_a91351d88d15c348fdfb3ef93be1c20d7}{~dBase}();
+00034         \textcolor{keywordtype}{void} \hyperlink{classdBase_a0c8962454c0efe44b216c28bbd04eb9a}{Close}();
+00035         \textcolor{keywordtype}{void} mClose(\textcolor{keywordtype}{bool} = \textcolor{keyword}{true});
+00036         \textcolor{keywordtype}{bool} \hyperlink{classdBase_ac5b1d43710622a869134a0f7504f6661}{insertFile}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *,\textcolor{keyword}{const} \textcolor{keywordtype}{char} *,\textcolor{keyword}{const} \textcolor{keywordtype}{char}* ,\textcolor{keyword}{const} \textcolor{keywordtype}{char} *,\textcolor{keyword}{const
+      } \textcolor{keywordtype}{char}* ,\textcolor{keyword}{const} \textcolor{keywordtype}{char}*);
+00037         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a26e59ac97985d95287948445a07acd71}{insertBanned}(\textcolor{keywordtype}{char} *,\textcolor{keywordtype}{char} *);
+00038         \textcolor{keywordtype}{void} \hyperlink{classdBase_ae3f64548cd601248838741b7704a0884}{del}(\textcolor{keywordtype}{int} =0);
+00039         \textcolor{keywordtype}{bool} \hyperlink{classdBase_aea02faef6ec0330213d2d5e6e7449940}{dBaseRun}();
+00040         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a9e9715965ba80d3c7a9c401d62a43f6a}{Rebuild_SharedFilesTable}();
+00041         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a05d94436a22bf5e3c52c1ab0f67c2d4c}{Rebuild_BannedTable}();
+00042         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a7a5431d74f4b1f7b201c25b7d3a52ffa}{Rebuild_Ordered}();
+00043         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a8dcd257825f5b4543cf07b766b0e6cd8}{CheckForTable}(\textcolor{keywordtype}{char} *cTable);
+00044         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a91269d6744d42078ac8880d32e3a1229}{SearchByMatched}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"FileOwner"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"OrderTable"});
+      
+00045         \textcolor{keywordtype}{bool} \hyperlink{classdBase_aa6aba86beb506496929ea8ff8aef8245}{SearchByMatched2}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"FileOwner"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"
+      FilePath"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"SharedFiles"});
+00046         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a568417f1966cdad5e64f553a96ef201b}{SearchFiles}(XMLParser *,\textcolor{keywordtype}{string} *,\textcolor{keywordtype}{string} *,\textcolor{keywordtype}{bool} =\textcolor{keyword}{true},\textcolor{keywordtype}{char} * =\textcolor{stringliteral}{"FileNa
+      me"});
+00047         \textcolor{keywordtype}{bool} \hyperlink{classdBase_a9afd72b6a6dbb29f0ae100d5f04cc119}{AskIfBanned}(\textcolor{keywordtype}{char} *,\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{bool} =\textcolor{keyword}{true},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserIP"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserLoca
+      lName"});
+00048         \textcolor{keywordtype}{bool} \hyperlink{classdBase_ae4b52702ff5312ee8a21b13552c67f7f}{UpdateBanned}(\textcolor{keywordtype}{char} *,\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{bool} =\textcolor{keyword}{true},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserIP"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserLoc
+      alName"});
+00049         \textcolor{keywordtype}{bool} UpdateOrder(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keywordtype}{int},\textcolor{keywordtype}{string});
+00050         \textcolor{keywordtype}{int} newOrder(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keywordtype}{string} &);
+00051         \textcolor{keywordtype}{string} checkIfOrdered(\textcolor{keywordtype}{bool});
+00052         \textcolor{keywordtype}{string} GetHashInfo(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*, \textcolor{keywordtype}{int});
+00053     \textcolor{keyword}{private}:
+00054         \textcolor{keywordtype}{string} *p\_strClassNameD;
+00055         \textcolor{comment}{//Data}
+00056         MYSQL *pConnection;
+00057         MYSQL\_RES *pResult; 
+00058         MYSQL\_ROW Row; 
+00059         \textcolor{keyword}{const} \textcolor{keywordtype}{char} *p\_cAdrress; 
+00060         \textcolor{keyword}{const} \textcolor{keywordtype}{char} *p\_cUser; 
+00061         \textcolor{keyword}{const} \textcolor{keywordtype}{char} *p\_cPass; 
+00062         \textcolor{keyword}{const} \textcolor{keywordtype}{char} *p\_cBassName; 
+00063         \textcolor{keywordtype}{char} *p\_cTableName; 
+00064         \textcolor{keywordtype}{char} *p\_cTableBanned; 
+00065         \textcolor{keywordtype}{char} *p\_cTableOrdered;
+00066         \textcolor{keywordtype}{int} intOwnerPID; 
+00067         \textcolor{comment}{//metods}
+00068         \textcolor{keywordtype}{int} dBaseTemplate()\{\}
+00069         \textcolor{keywordtype}{bool} dbQuery(\textcolor{keywordtype}{char} *,\textcolor{keywordtype}{string});
+00070         \textcolor{keywordtype}{bool} drop(\textcolor{keywordtype}{char} *cTable);
+00071         \textcolor{keywordtype}{bool} createShared();
+00072         \textcolor{keywordtype}{bool} createBanned();
+00073         \textcolor{keywordtype}{bool} createOrdered();
+00074         \textcolor{keywordtype}{bool} Search(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *,\textcolor{keywordtype}{bool} =\textcolor{keyword}{true},\textcolor{keywordtype}{char} * =\textcolor{stringliteral}{"FileName"});
+00075         \textcolor{keywordtype}{bool} Search2(\textcolor{keywordtype}{char} *,\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{bool} =\textcolor{keyword}{true},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserIP"},\textcolor{keywordtype}{char}* =\textcolor{stringliteral}{"UserLocalNam
+      e"});
+00076         \textcolor{keywordtype}{bool} SearchOrder(\textcolor{keyword}{const} \textcolor{keywordtype}{char}*,\textcolor{keyword}{const} \textcolor{keywordtype}{char}*);
+00077 \};
+00078 
+00079 
+00080 \textcolor{preprocessor}{#endif // DBASE\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

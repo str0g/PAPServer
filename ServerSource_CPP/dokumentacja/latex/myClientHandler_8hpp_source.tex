@@ -1,0 +1,128 @@
+\hypertarget{myClientHandler_8hpp_source}{
+\section{myClientHandler.hpp}
+}
+
+
+\begin{footnotesize}\begin{alltt}
+00001 \textcolor{preprocessor}{#ifndef MYCLIENTHANDLER\_HPP\_INCLUDED}
+00002 \textcolor{preprocessor}{}\textcolor{preprocessor}{#define MYCLIENTHANDLER\_HPP\_INCLUDED}
+00003 \textcolor{preprocessor}{}
+00004 \textcolor{comment}{/***************************************************************}
+00005 \textcolor{comment}{ * Name:      <Input name>.cpp/h}
+00006 \textcolor{comment}{ * Purpose:   Code for Application <Name>}
+00007 \textcolor{comment}{ * Author:    Łukasz Buśko (buskol.waw.pl@gmail.com)}
+00008 \textcolor{comment}{ * Created:   <Input date>}
+00009 \textcolor{comment}{ * Copyright: Łukasz Buśko (www.SoonWillBe.pl)}
+00010 \textcolor{comment}{ * License:   GNU / General Public Licens}
+00011 \textcolor{comment}{ **************************************************************/}
+00013 \textcolor{preprocessor}{#include <cstdlib>}
+00014 \textcolor{preprocessor}{#include <ctime>}
+00015 \textcolor{preprocessor}{#include <iostream>}
+00016 \textcolor{preprocessor}{#include <fstream>}
+00017 \textcolor{preprocessor}{#include <string>}
+00018 \textcolor{preprocessor}{#include <fcntl.h>}
+00019 \textcolor{preprocessor}{#include <vector>}
+00020 \textcolor{comment}{//#include <sys/types.h>}
+00021 \textcolor{comment}{//#include <sys/wait.h>}
+00022 \textcolor{preprocessor}{#include <syslog.h>}
+00023 \textcolor{preprocessor}{#include <mxml.h>}
+00024 \textcolor{comment}{//#include <libxml++/libxml++.h>}
+00025 \textcolor{comment}{//#include <libxml++/parsers/textreader.h>}
+00026 \textcolor{preprocessor}{#include <boost/asio.hpp>}
+00027 \textcolor{preprocessor}{#include <boost/filesystem/operations.hpp>}
+00028 \textcolor{preprocessor}{#include <boost/ptr\_container/ptr\_list.hpp>}
+00030 \textcolor{preprocessor}{#include "SupportClass.hpp"}
+00031 \textcolor{preprocessor}{#include "XMLParser.hpp"}
+00032 \textcolor{preprocessor}{#include "ServerConfigs.hpp"}
+00033 \textcolor{preprocessor}{#include "version.h"}
+00034 \textcolor{preprocessor}{#include "myDefines.hpp"}
+00035 \textcolor{preprocessor}{#include "listBanned.hpp"}
+00036 \textcolor{preprocessor}{#include "dbase.hpp"}
+00037 \textcolor{preprocessor}{#include "myConv.hpp"}
+00038 \textcolor{preprocessor}{#include "ServerFilesLoader.hpp"}
+00040 \textcolor{keyword}{using} std::string;
+00041 \textcolor{keyword}{using} std::cout;
+00042 \textcolor{keyword}{using} std::cerr;
+00043 \textcolor{keyword}{using} std::cin;
+00044 \textcolor{keyword}{using} std::endl;
+00045 
+\hypertarget{myClientHandler_8hpp_source_l00047}{}\hyperlink{classmyClientHandler}{00047} \textcolor{keyword}{class }\hyperlink{classmyClientHandler}{myClientHandler}:\textcolor{keyword}{public} \hyperlink{classdBase}{dBase}\{
+00048     \textcolor{keyword}{private}:
+00050         \textcolor{keywordtype}{string} *p\_strClassNameX;
+00051 
+00052         boost::asio::ip::tcp::socket &ClientSocket;
+00053         \textcolor{keywordtype}{char} *ClientIP;
+00054         \textcolor{keywordtype}{char} *ClientUserLocal;
+00055         \textcolor{keywordtype}{string} ClientUser;
+00056         \textcolor{keywordtype}{string} ClientPassword;
+00057         \textcolor{keywordtype}{int} intPID;
+00058         \textcolor{keywordtype}{int} id\_Session;
+00059         \textcolor{keywordtype}{int} intGID;
+00060         \textcolor{keywordtype}{int} intUserLimit;
+00061         \textcolor{keywordtype}{int} intChunkSizeUP;
+00062         \textcolor{keywordtype}{int} intChunkSizeDL;
+00063         \textcolor{keywordtype}{int} intChunkSize;
+00064         \textcolor{keywordtype}{string} strLineEnd;
+00065         \textcolor{keywordtype}{bool} bLoop;
+00066 
+00067         \textcolor{keywordtype}{int} intIndex4Zombie;
+00068         \textcolor{keywordtype}{double} dCreationTime;
+00069         time\_t tt\_CreationTime;
+00070         ui64 ui64DataSend;
+00071         ui64 ui64DataRecieved;
+00072         ui64 ui64SendMsgCouter;
+00073         ui64 ui64RecivedMsgCouter;
+00074 
+00075         XMLParser *p\_strSharedXmlList;
+00076         XMLParser *p\_strSearchRezualt;
+00077         XMLParser *p\_xmlOrder;
+00078         XMLParser *p\_xmlIN;
+00079         XMLParser *p\_xmlOUT;
+00080         \textcolor{keywordtype}{string} *p\_strSearchCtrl;
+00081         \textcolor{keywordtype}{string} *p\_strOtherClientPidFile;
+00082         \textcolor{keywordtype}{string} *p\_strWhoOrder;
+00083         \textcolor{keywordtype}{string} *p\_strMyPidFile;
+00084         \textcolor{keywordtype}{string} *p\_strTodayWorkFolder;
+00085         \textcolor{keywordtype}{bool} bOrderFileStatus;
+00086         uint64\_t intFilePossition;
+00087         std::vector<uint64\_t> v\_PosstionList;
+00088 
+00089         \textcolor{comment}{//Actions}
+00090         \textcolor{keywordtype}{string} SendInfoAboutServer();
+00091         \textcolor{keywordtype}{void} Authorization();\textcolor{comment}{//#}
+00092         \textcolor{keywordtype}{bool} SetNewSharedListFromClient(\textcolor{keywordtype}{string}*);
+00093         \textcolor{keywordtype}{bool} GetSharedListFromClient(\textcolor{keywordtype}{bool});
+00094         \textcolor{keywordtype}{void} GetDoneFileFromOtherClient();
+00095         \textcolor{keywordtype}{void} SetNewFileList(\textcolor{keywordtype}{string}*);
+00096         \textcolor{keywordtype}{void} GetFileFromOtherClient(\textcolor{keyword}{const} \textcolor{keywordtype}{string}*);
+00097         \textcolor{keywordtype}{void} RecivedDataParser(\textcolor{keywordtype}{string}*);
+00098         \textcolor{keywordtype}{bool} setWhoOrder();
+00099         \textcolor{keywordtype}{void} SendFile();
+00100         \textcolor{comment}{//comunication}
+00101         \textcolor{keywordtype}{string} &GetDataFromSocket();
+00102         \textcolor{keywordtype}{string} GetDataFromSocket2();
+00103         \textcolor{keywordtype}{bool} Send(\textcolor{keywordtype}{string} =\textcolor{stringliteral}{""});
+00104         \textcolor{comment}{//dbg}
+00105         \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>
+00106         \textcolor{keywordtype}{void} MsgToOut(T);
+00107         \textcolor{comment}{//dbase}
+00108         \textcolor{keywordtype}{void} Serach4Files(\textcolor{keywordtype}{string}*,\textcolor{keywordtype}{string}*);
+00109         \textcolor{keywordtype}{void} OrderFiles(\textcolor{keywordtype}{string}*);
+00111         \textcolor{keywordtype}{void} RestartShutdownServer(\textcolor{keywordtype}{string});
+00112         \textcolor{keywordtype}{void} DisconnectAllClients();\textcolor{comment}{//#}
+00114 \textcolor{comment}{}        \textcolor{keywordtype}{void} CleanSharedList();
+00115         \textcolor{keywordtype}{void} CleanSearchRezualt();
+00116     \textcolor{keyword}{public}:
+00117         \textcolor{comment}{//Methods}
+00118         \hyperlink{classmyClientHandler}{myClientHandler}(boost::asio::ip::tcp::socket &,
+00119                         \textcolor{keywordtype}{char}*,\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{string},
+00120                         \textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});
+00121         \textcolor{keyword}{virtual} \hyperlink{classmyClientHandler_a20a6d3fcd1d40b107df3b508872e4342}{~myClientHandler}();
+00122         \textcolor{keywordtype}{void} \hyperlink{classmyClientHandler_ab189bfb1e7dba2f101a187161bd03e4d}{myClientRun}();
+00123         \textcolor{keywordtype}{void} myclientShutdownServer();
+00124         \textcolor{keywordtype}{int} \hyperlink{classmyClientHandler_a9a158082b71de6585113cfbad406ddf5}{GetSessionID}();
+00125 \};
+00126 
+00127 
+00128 \textcolor{preprocessor}{#endif // MYCLIENTHANDLER\_HPP\_INCLUDED}
+\end{alltt}\end{footnotesize}

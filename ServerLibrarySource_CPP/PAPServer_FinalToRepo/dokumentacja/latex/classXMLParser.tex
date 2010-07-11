@@ -1,0 +1,314 @@
+\hypertarget{classXMLParser}{
+\section{XMLParser Class Reference}
+\label{classXMLParser}\index{XMLParser@{XMLParser}}
+}
+
+
+Ta klasa przetwarza plik XML w celu pobrania z niego wyszukiwanej wartości. Zwaraca dane jako string lub dowolną okresloną.  
+
+
+
+
+{\ttfamily \#include $<$XMLParser.hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classXMLParser_a60004d4b50ef242bbd191a494fd750f1}{
+\hyperlink{classXMLParser_a60004d4b50ef242bbd191a494fd750f1}{XMLParser} ()}
+\label{classXMLParser_a60004d4b50ef242bbd191a494fd750f1}
+
+\begin{DoxyCompactList}\small\item\em Globals Varuabels. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classXMLParser_a995bf6dfb911fab6db31ffb0d7d12b96}{LoadXMLFile} (string $\ast$)
+\item 
+bool \hyperlink{classXMLParser_a3d960023705bd1d8ef357bda9efdf73a}{LoadXMLFromBuf} (const char $\ast$)
+\item 
+bool \hyperlink{classXMLParser_a73350cfff1a1dc52d8250df480f2b796}{createXMLDoc} (string, string=\char`\"{}1.0\char`\"{})
+\item 
+virtual \hyperlink{classXMLParser_af833ecdb0e07ead08dfda925b4af86ad}{$\sim$XMLParser} ()
+\item 
+void \hyperlink{classXMLParser_ac4725bcded634f7acdbc3cb9608d8d09}{vCleanXMLTree} ()
+\item 
+\hypertarget{classXMLParser_a188c0c6172df9b6e0f12afbe32ff6de3}{
+bool {\bfseries delCurrentElement} ()}
+\label{classXMLParser_a188c0c6172df9b6e0f12afbe32ff6de3}
+
+\item 
+\hypertarget{classXMLParser_a50cab9ef3bb1612d710055c93b89d325}{
+bool {\bfseries delSearchedElement} (string $\ast$)}
+\label{classXMLParser_a50cab9ef3bb1612d710055c93b89d325}
+
+\item 
+bool \hyperlink{classXMLParser_aff335a6c46a39700c013d2996cde7c52}{GoDeeper} ()
+\item 
+bool \hyperlink{classXMLParser_a694016bf62d05c8834d189510f2189ed}{GoUpper} ()
+\item 
+bool \hyperlink{classXMLParser_ab67f961bd0f1db53d7bd57f2ae18610d}{NextElement} ()
+\item 
+bool \hyperlink{classXMLParser_a5a860f3cc8d9f72ffbb062683f9c2e18}{PrevElement} ()
+\item 
+bool \hyperlink{classXMLParser_ab05e61d34c570a1d08271a73203966a0}{SetWorkNode} (string)
+\item 
+bool \hyperlink{classXMLParser_aed814f771d1ed12b0f27288c12d9a59d}{Seatch4Value} (const string $\ast$)
+\item 
+\hypertarget{classXMLParser_af91f5f27f5c2d7b5faed921831d02ff1}{
+void {\bfseries ResetWorkPointer} ()}
+\label{classXMLParser_af91f5f27f5c2d7b5faed921831d02ff1}
+
+\item 
+void \hyperlink{classXMLParser_a29bc5cb3c6c35cdc5020df21a8f9ad28}{Print} (string=\char`\"{}\char`\"{})
+\item 
+bool \hyperlink{classXMLParser_ac5ac0a78d6f4db3d7361d7397e7ff925}{insertXMLSearch} (const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, const char $\ast$, char $\ast$=\char`\"{}File\char`\"{})
+\item 
+\hypertarget{classXMLParser_af34d73d67ff8772381665867fd4f136a}{
+void {\bfseries setCurrentElementValue} (const char $\ast$)}
+\label{classXMLParser_af34d73d67ff8772381665867fd4f136a}
+
+\item 
+\hypertarget{classXMLParser_a4ba3530ec5ad32c46232d61b37e55ce7}{
+void {\bfseries setCurrentElementValueAsText} (const char $\ast$)}
+\label{classXMLParser_a4ba3530ec5ad32c46232d61b37e55ce7}
+
+\item 
+\hypertarget{classXMLParser_a81328b723e9f1eef28b3c93f87220aa5}{
+bool {\bfseries addElement} (const char $\ast$, const char $\ast$)}
+\label{classXMLParser_a81328b723e9f1eef28b3c93f87220aa5}
+
+\item 
+string \hyperlink{classXMLParser_a800ac601a76d6ced7b7f79268b95077e}{GetCurrentElement} ()
+\item 
+string \hyperlink{classXMLParser_a0e2b4757fe54a8166f1e1eea31af1da3}{GetCurrentElementValue} ()
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \hyperlink{classXMLParser_aa5edec062cd6333162a4c1906e55f9f0}{GetNumericValue} (string strWordToSearch, string strValueOnError)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \& \hyperlink{classXMLParser_adb8af1fd3397c7e39e95a4e336afc445}{p\_\-GetNumericValue} (string strWordToSearch, string strValueOnError)
+\item 
+string \hyperlink{classXMLParser_a055eba0b19ffb778cb3d2e5eb958c8ab}{GetStringValue} (string, string)
+\item 
+string \& \hyperlink{classXMLParser_aaf87e1c22bbd0b91b2facef25f4b5965}{p\_\-GetStringValue} (string, string)
+\item 
+char \& \hyperlink{classXMLParser_a986fd0d42f960d80fbc8bbab76757600}{GetXMLAsChar} ()
+\item 
+string \hyperlink{classXMLParser_af3a6c6210160027795f1261524f76ea3}{GetXMLAsString} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classXMLParser_abb381f2220e4b0130644494cdd3a5454}{
+mxml\_\-node\_\-t $\ast$ \hyperlink{classXMLParser_abb381f2220e4b0130644494cdd3a5454}{p\_\-WorkNode}}
+\label{classXMLParser_abb381f2220e4b0130644494cdd3a5454}
+
+\begin{DoxyCompactList}\small\item\em Wskaznik do galezi, ktora bede przegladac w poszukiwaniu lisci i ich wartosci. \item\end{DoxyCompactList}\item 
+\hypertarget{classXMLParser_a479311b5147f4f8ed5559bafb2cc1c69}{
+mxml\_\-node\_\-t $\ast$ \hyperlink{classXMLParser_a479311b5147f4f8ed5559bafb2cc1c69}{p\_\-childNode}}
+\label{classXMLParser_a479311b5147f4f8ed5559bafb2cc1c69}
+
+\begin{DoxyCompactList}\small\item\em Wskaznik do galezi zawierajacej dane. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Ta klasa przetwarza plik XML w celu pobrania z niego wyszukiwanej wartości. Zwaraca dane jako string lub dowolną okresloną. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classXMLParser_af833ecdb0e07ead08dfda925b4af86ad}{
+\index{XMLParser@{XMLParser}!$\sim$XMLParser@{$\sim$XMLParser}}
+\index{$\sim$XMLParser@{$\sim$XMLParser}!XMLParser@{XMLParser}}
+\subsubsection[{$\sim$XMLParser}]{\setlength{\rightskip}{0pt plus 5cm}XMLParser::$\sim$XMLParser ()\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classXMLParser_af833ecdb0e07ead08dfda925b4af86ad}
+
+
+Desctruktor 
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classXMLParser_a73350cfff1a1dc52d8250df480f2b796}{
+\index{XMLParser@{XMLParser}!createXMLDoc@{createXMLDoc}}
+\index{createXMLDoc@{createXMLDoc}!XMLParser@{XMLParser}}
+\subsubsection[{createXMLDoc}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::createXMLDoc (string {\em EleName}, \/  string {\em standard} = {\ttfamily \char`\"{}1.0\char`\"{}})}}
+\label{classXMLParser_a73350cfff1a1dc52d8250df480f2b796}
+
+
+Tworzy document o okreslonym standardzie domyslen xml 1.0 oraz wstawia pierwszy element Zwraca true jezeli sie udalo jezeli nie zwaraca false
+
+\hypertarget{classXMLParser_a800ac601a76d6ced7b7f79268b95077e}{
+\index{XMLParser@{XMLParser}!GetCurrentElement@{GetCurrentElement}}
+\index{GetCurrentElement@{GetCurrentElement}!XMLParser@{XMLParser}}
+\subsubsection[{GetCurrentElement}]{\setlength{\rightskip}{0pt plus 5cm}string XMLParser::GetCurrentElement ()}}
+\label{classXMLParser_a800ac601a76d6ced7b7f79268b95077e}
+
+
+Zwraca wartosc elementu,mozna nim pobrac nazwe tego elementu lub przechowywana wartosc 
+
+\hypertarget{classXMLParser_a0e2b4757fe54a8166f1e1eea31af1da3}{
+\index{XMLParser@{XMLParser}!GetCurrentElementValue@{GetCurrentElementValue}}
+\index{GetCurrentElementValue@{GetCurrentElementValue}!XMLParser@{XMLParser}}
+\subsubsection[{GetCurrentElementValue}]{\setlength{\rightskip}{0pt plus 5cm}string XMLParser::GetCurrentElementValue ()}}
+\label{classXMLParser_a0e2b4757fe54a8166f1e1eea31af1da3}
+
+
+Zwraca wartosc elementu,mozna nim pobrac nazwe tego elementu lub przechowywana wartosc 
+
+\hypertarget{classXMLParser_aa5edec062cd6333162a4c1906e55f9f0}{
+\index{XMLParser@{XMLParser}!GetNumericValue@{GetNumericValue}}
+\index{GetNumericValue@{GetNumericValue}!XMLParser@{XMLParser}}
+\subsubsection[{GetNumericValue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T XMLParser::GetNumericValue (string {\em strWordToSearch}, \/  string {\em strValueOnError})\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classXMLParser_aa5edec062cd6333162a4c1906e55f9f0}
+
+
+Zwraca rezlutat wyszukania stringa po konwersji do określonego typu. 
+
+\hypertarget{classXMLParser_a055eba0b19ffb778cb3d2e5eb958c8ab}{
+\index{XMLParser@{XMLParser}!GetStringValue@{GetStringValue}}
+\index{GetStringValue@{GetStringValue}!XMLParser@{XMLParser}}
+\subsubsection[{GetStringValue}]{\setlength{\rightskip}{0pt plus 5cm}string XMLParser::GetStringValue (string {\em strWordToSearch}, \/  string {\em strValueOnError})}}
+\label{classXMLParser_a055eba0b19ffb778cb3d2e5eb958c8ab}
+
+
+Ta metoda szuka podanego słowa w strukturze, następnie pobiera jego wartość. Jeżeli nie zostało znalezione lub nie ma wartości to użyte zostanie wartość w przypadku błedu
+
+\hypertarget{classXMLParser_a986fd0d42f960d80fbc8bbab76757600}{
+\index{XMLParser@{XMLParser}!GetXMLAsChar@{GetXMLAsChar}}
+\index{GetXMLAsChar@{GetXMLAsChar}!XMLParser@{XMLParser}}
+\subsubsection[{GetXMLAsChar}]{\setlength{\rightskip}{0pt plus 5cm}char \& XMLParser::GetXMLAsChar ()}}
+\label{classXMLParser_a986fd0d42f960d80fbc8bbab76757600}
+
+
+Zwraca strukture w formie dynamicznie alkowanej tablicy char, zwalnianie free() 
+
+\hypertarget{classXMLParser_af3a6c6210160027795f1261524f76ea3}{
+\index{XMLParser@{XMLParser}!GetXMLAsString@{GetXMLAsString}}
+\index{GetXMLAsString@{GetXMLAsString}!XMLParser@{XMLParser}}
+\subsubsection[{GetXMLAsString}]{\setlength{\rightskip}{0pt plus 5cm}string XMLParser::GetXMLAsString ()}}
+\label{classXMLParser_af3a6c6210160027795f1261524f76ea3}
+
+
+Strumieniem operatora dokonuje konwersji z char$\ast$ na stringa 
+
+\hypertarget{classXMLParser_aff335a6c46a39700c013d2996cde7c52}{
+\index{XMLParser@{XMLParser}!GoDeeper@{GoDeeper}}
+\index{GoDeeper@{GoDeeper}!XMLParser@{XMLParser}}
+\subsubsection[{GoDeeper}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::GoDeeper ()}}
+\label{classXMLParser_aff335a6c46a39700c013d2996cde7c52}
+
+
+Jezeli istnieje dziecko element wskaznik operacyjny struktury zostanie na niego ustawiony i wartosc true zostanie zworcona 
+
+\hypertarget{classXMLParser_a694016bf62d05c8834d189510f2189ed}{
+\index{XMLParser@{XMLParser}!GoUpper@{GoUpper}}
+\index{GoUpper@{GoUpper}!XMLParser@{XMLParser}}
+\subsubsection[{GoUpper}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::GoUpper ()}}
+\label{classXMLParser_a694016bf62d05c8834d189510f2189ed}
+
+
+Jezeli istnieje rodzic elementu wskaznik operacyjny struktury zostanie na niego ustawiony i wartosc true zostanie zworcona 
+
+\hypertarget{classXMLParser_ac5ac0a78d6f4db3d7361d7397e7ff925}{
+\index{XMLParser@{XMLParser}!insertXMLSearch@{insertXMLSearch}}
+\index{insertXMLSearch@{insertXMLSearch}!XMLParser@{XMLParser}}
+\subsubsection[{insertXMLSearch}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::insertXMLSearch (const char $\ast$ {\em fp}, \/  const char $\ast$ {\em fn}, \/  const char $\ast$ {\em fs}, \/  const char $\ast$ {\em fht}, \/  const char $\ast$ {\em fh}, \/  const char $\ast$ {\em flm}, \/  const char $\ast$ {\em fo}, \/  char $\ast$ {\em mojaNazwa} = {\ttfamily \char`\"{}File\char`\"{}})}}
+\label{classXMLParser_ac5ac0a78d6f4db3d7361d7397e7ff925}
+
+
+Wklada elemnety do struktury
+
+\hypertarget{classXMLParser_a995bf6dfb911fab6db31ffb0d7d12b96}{
+\index{XMLParser@{XMLParser}!LoadXMLFile@{LoadXMLFile}}
+\index{LoadXMLFile@{LoadXMLFile}!XMLParser@{XMLParser}}
+\subsubsection[{LoadXMLFile}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::LoadXMLFile (string $\ast$ {\em p\_\-strConfigPath})}}
+\label{classXMLParser_a995bf6dfb911fab6db31ffb0d7d12b96}
+
+
+Laduje plik XML do pamiecie, jako struckturę XML. Zwraca czy się udało 0 -\/ udalo sie 1 -\/ nie udało się otworzyć pliku 2 -\/ buffor struktury jest w użyciu i nie został zwolniony.
+
+\hypertarget{classXMLParser_a3d960023705bd1d8ef357bda9efdf73a}{
+\index{XMLParser@{XMLParser}!LoadXMLFromBuf@{LoadXMLFromBuf}}
+\index{LoadXMLFromBuf@{LoadXMLFromBuf}!XMLParser@{XMLParser}}
+\subsubsection[{LoadXMLFromBuf}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::LoadXMLFromBuf (const char $\ast$ {\em p\_\-cBuf})}}
+\label{classXMLParser_a3d960023705bd1d8ef357bda9efdf73a}
+
+
+Metoda akceptuje tylko char$\ast$ i const char$\ast$ Metoda laduje dane z bufora do struktory xml sprawdzajac czy wskaznik struktory nie jest juz w urzyciu, trzeba go zwalniac recznie. Domyslan flaga to OPAQUE, aby mozna bylo pobierac dane ze struktory bez problemow Metoda zwraca kody bledow 0-\/ sukces, 1 -\/ podano pusty buffor, 2 -\/ nie zwolniono bufora struktry.
+
+\hypertarget{classXMLParser_ab67f961bd0f1db53d7bd57f2ae18610d}{
+\index{XMLParser@{XMLParser}!NextElement@{NextElement}}
+\index{NextElement@{NextElement}!XMLParser@{XMLParser}}
+\subsubsection[{NextElement}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::NextElement ()}}
+\label{classXMLParser_ab67f961bd0f1db53d7bd57f2ae18610d}
+
+
+Jezeli istnieje nastepny element wskaznik operacyjny struktury zostanie na niego ustawiony i wartosc true zostanie zworcona 
+
+\hypertarget{classXMLParser_adb8af1fd3397c7e39e95a4e336afc445}{
+\index{XMLParser@{XMLParser}!p\_\-GetNumericValue@{p\_\-GetNumericValue}}
+\index{p\_\-GetNumericValue@{p\_\-GetNumericValue}!XMLParser@{XMLParser}}
+\subsubsection[{p\_\-GetNumericValue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T\& XMLParser::p\_\-GetNumericValue (string {\em strWordToSearch}, \/  string {\em strValueOnError})\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classXMLParser_adb8af1fd3397c7e39e95a4e336afc445}
+
+
+Zwraca wskaznik do rezlutatu wyszukania stringa po konwersji do określonego typu. 
+
+\hypertarget{classXMLParser_aaf87e1c22bbd0b91b2facef25f4b5965}{
+\index{XMLParser@{XMLParser}!p\_\-GetStringValue@{p\_\-GetStringValue}}
+\index{p\_\-GetStringValue@{p\_\-GetStringValue}!XMLParser@{XMLParser}}
+\subsubsection[{p\_\-GetStringValue}]{\setlength{\rightskip}{0pt plus 5cm}string \& XMLParser::p\_\-GetStringValue (string {\em strWordToSearch}, \/  string {\em strValueOnError})}}
+\label{classXMLParser_aaf87e1c22bbd0b91b2facef25f4b5965}
+
+
+Ta metoda szuka podanego słowa w strukturze, następnie pobiera jego wartość. Jeżeli nie zostało znalezione lub nie ma wartości to użyte zostanie wartość w przypadku błedu Zwraca wskaznik
+
+\hypertarget{classXMLParser_a5a860f3cc8d9f72ffbb062683f9c2e18}{
+\index{XMLParser@{XMLParser}!PrevElement@{PrevElement}}
+\index{PrevElement@{PrevElement}!XMLParser@{XMLParser}}
+\subsubsection[{PrevElement}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::PrevElement ()}}
+\label{classXMLParser_a5a860f3cc8d9f72ffbb062683f9c2e18}
+
+
+Jezeli istnieje poprzedni element wskaznik operacyjny struktury zostanie na niego ustawiony i wartosc true zostanie zworcona 
+
+\hypertarget{classXMLParser_a29bc5cb3c6c35cdc5020df21a8f9ad28}{
+\index{XMLParser@{XMLParser}!Print@{Print}}
+\index{Print@{Print}!XMLParser@{XMLParser}}
+\subsubsection[{Print}]{\setlength{\rightskip}{0pt plus 5cm}void XMLParser::Print (string {\em tmp} = {\ttfamily \char`\"{}\char`\"{}})}}
+\label{classXMLParser_a29bc5cb3c6c35cdc5020df21a8f9ad28}
+
+
+Rekurencyjny algorytm potrafiacy przepokac sie przez elementy kazdego dokumentu xml. Schodzenie na nizsze elementy powoduje dodanie spacji w celu logicznej interpretacji graficznej
+
+$<$ Przechowuje wartosc wskaznika operacyjnego struktury, poniewaz przeszukiwanie odbywa sie na glownym wskazniku struktory 
+
+\hypertarget{classXMLParser_aed814f771d1ed12b0f27288c12d9a59d}{
+\index{XMLParser@{XMLParser}!Seatch4Value@{Seatch4Value}}
+\index{Seatch4Value@{Seatch4Value}!XMLParser@{XMLParser}}
+\subsubsection[{Seatch4Value}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::Seatch4Value (const string $\ast$ {\em str\_\-value})}}
+\label{classXMLParser_aed814f771d1ed12b0f27288c12d9a59d}
+
+
+Rekurencyjny algorytm potrafiacy przepokac sie przez elementy kazdego dokumentu xml.
+
+$<$ Przechowuje wartosc wskaznika operacyjnego struktury, poniewaz przeszukiwanie odbywa sie na glownym wskazniku struktory 
+
+\hypertarget{classXMLParser_ab05e61d34c570a1d08271a73203966a0}{
+\index{XMLParser@{XMLParser}!SetWorkNode@{SetWorkNode}}
+\index{SetWorkNode@{SetWorkNode}!XMLParser@{XMLParser}}
+\subsubsection[{SetWorkNode}]{\setlength{\rightskip}{0pt plus 5cm}bool XMLParser::SetWorkNode (string {\em strWordToSearch})}}
+\label{classXMLParser_ab05e61d34c570a1d08271a73203966a0}
+
+
+Wyszukiwanie wskazanego elementu Jezeli znaleziony operacyjny wskaznik struktury zostanie na niego ustawiony, true zostanie zwrocone. W Przypadku nie znalezienia lub bledu, wskaznik opreacyjny strukty zostanie ustawiony na pierwszy element Wskaznik dziecka zostanie ustawiony na pierwszy element struktury, Wyswietlony zostaine komunikat o bledzie, oraz zwrocony false.
+
+\hypertarget{classXMLParser_ac4725bcded634f7acdbc3cb9608d8d09}{
+\index{XMLParser@{XMLParser}!vCleanXMLTree@{vCleanXMLTree}}
+\index{vCleanXMLTree@{vCleanXMLTree}!XMLParser@{XMLParser}}
+\subsubsection[{vCleanXMLTree}]{\setlength{\rightskip}{0pt plus 5cm}void XMLParser::vCleanXMLTree ()}}
+\label{classXMLParser_ac4725bcded634f7acdbc3cb9608d8d09}
+
+
+Zwalnia pamiec zajetą przez strukturę XML 
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+XMLParser.hpp\item 
+XMLParser.cpp\end{DoxyCompactItemize}
