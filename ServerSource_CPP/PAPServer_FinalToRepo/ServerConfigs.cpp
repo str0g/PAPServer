@@ -37,7 +37,7 @@ int ServerConfigs::intLoggingToFile = 0;
 int ServerConfigs::intStdIn = 0;
 int ServerConfigs::intServerPort = 0;
 int *ServerConfigs::p_intClientTimeOut = NULL;
-int *ServerConfigs::p_intChunkSize = NULL;
+uint64_t *ServerConfigs::p_intChunkSize = NULL;
 
 
 void ServerConfigs::SetVaruables(){
@@ -76,7 +76,7 @@ void ServerConfigs::SetVaruables(){
     strServerIP = X->GetStringValue("Address","127.0.0.1");
     intServerPort = X->GetNumericValue<int>("Port","6666");
     p_intClientTimeOut = &X->p_GetNumericValue<int>("ClientTimeOut","60");
-    p_intChunkSize = &X->p_GetNumericValue<int>("ChunkSize","1024");
+    p_intChunkSize = &X->p_GetNumericValue<uint64_t>("ChunkSize","1024");
     *p_intChunkSize *= 1024;
     p_intMaxClients = &X->p_GetNumericValue<int>("MaxClients","100");
     p_intMaxWarnings = &X->p_GetNumericValue<int>("BanAfterWarnings","3");

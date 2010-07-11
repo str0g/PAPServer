@@ -90,6 +90,16 @@ string TimeCout::GetLocalTime(){
     return buffer2;
 }
 
+string TimeCout::GetYMD(){
+    string strTMP = strTimeFormatter;
+    strTimeFormatter = "%Y%m%d";
+    string buf = GetLocalTime();
+
+    strTimeFormatter = strTMP;
+
+    return buf;
+}
+
 string TimeCout::GetTimeAfter1970(){
     char *buffer = new char[BUFFER];
 

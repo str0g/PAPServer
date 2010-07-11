@@ -21,7 +21,7 @@
 #include <boost/bind.hpp>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
+//#include <sys/stat.h>
 #include <signal.h>
 
 ///Moje
@@ -30,7 +30,7 @@
 #include "SupportClass.hpp"
 #include "myClientHandler.hpp"
 #include "myDefines.hpp"
-#include "listBanned.hpp"
+//#include "listBanned.hpp"
 #include "dbase.hpp"
 
 ///Specials
@@ -45,8 +45,6 @@ using std::endl;
 ///Główna klasa serwera
 class myServerAPP:public dBase{
     private:
-        bool chk4file(string);
-    protected:
         string *p_strClassNameE;//!<Nazwa klasy
         bool bServerLoop;//!<Petla servera zalezy od tej zmiennej
         double dCreationTime;

@@ -40,13 +40,13 @@ using std::endl;
 void openlog(const char *ident, int option, int facility);
 void syslog(int priority, const char *format, ...);
 void closelog(void);
-
+/*
 ///Globals Varuabels
 extern string g_strSlash;
 #ifdef WIN64 or WIN32
 g_strSlash ="\\";
 #endif
-
+*/
 
 int main(int argc,char **argv){
     string *strArgv = NULL;//!<Wskaźnik, do którego zostanie skopiowana wartość argv[index].

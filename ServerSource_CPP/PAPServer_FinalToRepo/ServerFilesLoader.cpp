@@ -17,14 +17,15 @@ using std::endl;
 ///Globals Varuabels
 
 
-ServerFilesLoader::ServerFilesLoader(int pid):strClassName("[ServerFilesLoader]->"),
+ServerFilesLoader::ServerFilesLoader(int pid):dBase(pid),
+                                        strClassName("[ServerFilesLoader]->"),
                                         strWorkDir(*ServerConfigs::p_strMyPath+"Pool"),
                                         strPathToXMLFile(*ServerConfigs::p_strMyPath+"configs"+ServerConfigs::g_strSlash+"SharedFiles.xml"),
+                                        p_strFileBuf(NULL),
                                         intDirScanDepth(1024),
                                         intDirScanCounter(0),
-                                        p_strFileBuf(NULL),
-                                        p_xmlFile(new XMLParser),//m_thread(boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&ServerFilesLoader::Run, this)))),
-                                        dBase(pid){
+                                        p_xmlFile(new XMLParser)//m_thread(boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&ServerFilesLoader::Run, this)))),
+                                        {
 
 }
 ServerFilesLoader::~ServerFilesLoader(){

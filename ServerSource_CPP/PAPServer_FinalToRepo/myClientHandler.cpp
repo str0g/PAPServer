@@ -18,19 +18,28 @@ using std::endl;
 myClientHandler::myClientHandler(boost::asio::ip::tcp::socket &Socket,
                                  char *IP,char *user, string pass,
                                  int index,int pid,int ulimit):
-                                 p_strClassNameX(NULL), ClientSocket(Socket),
+                                 dBase(pid),
+                                 p_strClassNameX(new string("[myClassHandler]->[Zombie::"+myConv::ToString(intIndex4Zombie)+"]->")), ClientSocket(Socket),
                                  ClientIP(IP),ClientUserLocal(user),ClientUser("unknow"),ClientPassword(pass),
                                  intPID(pid),id_Session(0),intGID(0),intUserLimit(ulimit),
                                  intChunkSizeUP(BUFFER_1024),intChunkSizeDL(BUFFER_1024),intChunkSize(BUFFER_1024),
                                  strLineEnd("\r\n\r\n"),bLoop(true),
                                  intIndex4Zombie(index), dCreationTime(GetTime()),tt_CreationTime(GetTimeAfter1970AsTime()),
-                                 ui64DataSend(0),ui64DataRecieved(0),ui64SendMsgCouter(0),ui64RecivedMsgCouter(0),p_strSearchCtrl(NULL),
-                                 p_strSharedXmlList(NULL),p_strSearchRezualt(NULL),dBase(pid){
-    p_strClassNameX = new string("[myClassHandler]->[Zombie::"+myConv::ToString(intIndex4Zombie)+"]->");
+                                 ui64DataSend(0),ui64DataRecieved(0),ui64SendMsgCouter(0),ui64RecivedMsgCouter(0),
+                                 p_strSharedXmlList(NULL),p_strSearchRezualt(NULL),p_xmlOrder(NULL),p_xmlIN(NULL),p_xmlOUT(NULL),
+                                 p_strSearchCtrl(new string),p_strOtherClientPidFile(NULL),p_strWhoOrder(NULL),p_strMyPidFile(new string(*ServerConfigs::p_strMyPath+"Pool/tmp/"+myConv::ToString(pid)+"/"+myConv::ToString(pid)+".pid")),
+                                 p_strTodayWorkFolder(new string(*ServerConfigs::p_strMyPath+"Pool/")),
+                                 bOrderFileStatus(false),intFilePossition(0)
+                                 {
+    //p_strClassNameX = ;
     cerr<<GetLocalTime()<<*p_strClassNameX<<" Connecting::"<<ClientUser<<"@"<<ClientIP<<"("<<ClientUserLocal<<")"<<", PID:"<<intPID<<endl;
     p_strSharedXmlList = new XMLParser;
     p_strSearchRezualt = new XMLParser;
-    p_strSearchCtrl = new string;
+    p_xmlOrder = new XMLParser;
+    p_xmlIN = new XMLParser;
+    p_xmlOUT = new XMLParser;
+    //p_strSearchCtrl = new string;
+    p_strTodayWorkFolder->append(GetYMD());
 }
 
 myClientHandler::~myClientHandler(){
@@ -38,10 +47,21 @@ myClientHandler::~myClientHandler(){
     ClientSocket.close();
     CleanSharedList();
     CleanSearchRezualt();
-    //mClose();
+    del(1);
+    //Kasuje Ordery, ktore zelecilem
+    if (myIO::chk4file(p_strMyPidFile)){
+        remove(p_strMyPidFile->c_str());
+    }
+    delete p_xmlOrder;
+    delete p_xmlIN;
+    delete p_xmlOUT;
     delete p_strSharedXmlList;
     delete p_strSearchRezualt;
     delete p_strSearchCtrl;
+    delete p_strOtherClientPidFile;
+    delete p_strTodayWorkFolder;
+    delete p_strWhoOrder;
+    delete p_strMyPidFile;
     cerr<<GetLocalTime()<<*p_strClassNameX<<"Summary:\n"<<ExcutionTime(GetTime(),dCreationTime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<", Data in/out::"<<ui64DataRecieved<<"/"<<ui64DataSend<<"bajts, Msg in/out::"<<ui64RecivedMsgCouter<<"/"<<ui64SendMsgCouter<<"\n----------"<<endl;
     delete p_strClassNameX;
 }
@@ -67,7 +87,7 @@ void myClientHandler::Authorization(){
             intGID = 2;
             ClientUser = "user";
             if(intUserLimit > *ServerConfigs::p_intMaxClients){
-                Send("Clients Limit has been reached");
+                Send("221");
                 bLoop = false;
             }
         }else if (*p_strSocketBuffer == "root"){
@@ -91,7 +111,7 @@ void myClientHandler::myClientRun(){
     string *p_strSocketBuffer = NULL;
     string strSocketBuffer;
     string strError;
-
+    string strTMP = "";
     double XTime = GetTimeAfter1970AsTime();
         if (dBaseRun()){
             Authorization();
@@ -121,6 +141,24 @@ void myClientHandler::myClientRun(){
                     }//p_strSocketBuffer
                     //if (bLoop == true ) { bLoop = Send(); }
                     if (CoutTimeAfter1970(GetTimeAfter1970AsTime(),XTime)> *ServerConfigs::p_intClientTimeOut){ bLoop = false; }
+                    if (myIO::chk4file(p_strMyPidFile) and !bOrderFileStatus){// Tutaj bedzie sprawdzanie pliku.pid i wpisanie identyfikatora zadajacego procesu.
+                        strTMP = checkIfOrdered(bOrderFileStatus);
+                        if(strTMP!=""){
+                            if(true){// tu zostanie sprawdzony pid zamawiajacego i porownany z baza
+                                bOrderFileStatus = true;
+                                //zmiana status z get na trying
+                                Send(strTMP);
+                            }else{
+                                Send("Failed Setting pid file");
+                            }
+                        }
+                    }/*
+                    if(bOrderFileStatus){
+                        //Metoda wysylu pliku
+                        //Tu bedzie uzupelnianie licznikow
+                        //wpis do pidfile z trying na done [sciezka_do_pliku] lub failed
+                        bOrderFileStatus = false;
+                    }*/
                 }//while bLoop
             }else{
                 if (intGID == -1){ strError ="::Logging failed";}
@@ -188,19 +226,49 @@ void myClientHandler::RecivedDataParser(string *p_strData){
     }else
     //XML
     if((int)p_strData->find("<") != -1 and (int)p_strData->find("</") != -1){
-            if((int)p_strData->find("<SharedFiles>") != -1 and (int)p_strData->find("</SharedFiles>") != -1 ){
+            if((int)p_strData->find("<SharedFiles>") != -1 and (int)p_strData->rfind("</SharedFiles>") != -1 ){
                 SetNewFileList(p_strData);
-            }else if((int)p_strData->find("<Order>") != -1 and (int)p_strData->find("</Order>") != -1 ){
+            }else if((int)p_strData->find("<Order>") != -1 and (int)p_strData->rfind("</Order>") != -1 ){
                 OrderFiles(p_strData);
-            } if(false){
-                cout<<"Tu sypnie sie ban xmlparser..."<<*p_strData<<endl;
+            }else if((int)p_strData->find("<Upload>") != -1 and (int)p_strData->rfind("</Upload>") != -1 ){
+                p_xmlIN->vCleanXMLTree();
+                p_xmlIN->LoadXMLFromBuf(p_strData->c_str());
+                GetDoneFileFromOtherClient();
+                p_xmlIN->vCleanXMLTree();
+            }else if((int)p_strData->find("<Download>") != -1 and (int)p_strData->rfind("</Download>") != -1 ){//Tu jest blad?
+                p_xmlOUT->vCleanXMLTree();
+                p_xmlOUT->LoadXMLFromBuf(p_strData->c_str());
+                p_xmlOUT->GoDeeper();
+                p_xmlOUT->NextElement();
+                cout<<"Wyjscie:"<<p_xmlOUT->GetCurrentElement();
+                if (p_xmlOUT->GetCurrentElement() != "ABORT" or p_xmlOUT->GetCurrentElement() != "DONE"){
+                    p_xmlOUT->NextElement();
+                    intFilePossition = myConv::FromString<uint64_t>(p_xmlOUT->GetCurrentElement());
+                }else{
+                    intFilePossition = 0;
+                    MsgToOut("FileTransfer complited->"+p_xmlOUT->GetCurrentElement());
+                }
+                p_xmlOUT->vCleanXMLTree();
+            }else{
+                Send("900");
             }
     }else{
-        //Commandes for common super user
+        //Commandes for super user
         if (intGID == 0 or intGID == 1){
             if(*p_strData == "Shutdown"){
-                createFile(*ServerConfigs::p_strMyPath+ServerConfigs::g_strSlash+"ShutdownServer.pid");
+                if (myIO::touch(&(*ServerConfigs::p_strMyPath+ServerConfigs::g_strSlash+"ShutdownServer.pid"))){
+                    Send("102");
+                }else{
+                    Send("f");
+                }
+            }else if(*p_strData == "Restart"){
+                if( myIO::touch(&(*ServerConfigs::p_strMyPath+ServerConfigs::g_strSlash+"RestartServer.pid"))){
+                    Send("100");
+                }else{
+                    Send("f2");
+                }
             }else if (*p_strData == "ShowBannedList"){
+                Send("900");
             }else if (*p_strData == "ResetBanned"){
                 if (Rebuild_BannedTable()){
                     Send("OK");
@@ -209,23 +277,38 @@ void myClientHandler::RecivedDataParser(string *p_strData){
                 }
             }else if (*p_strData == "ResetShared"){
                 if(Rebuild_SharedFilesTable()){
+                    ServerFilesLoader *SFL = new ServerFilesLoader(0);//getpid());
+                    if(SFL){
+                        SFL->Run();
+                        delete SFL;
+                        Send("OK");
+                    }else{
+                        Send("Faild2");
+                    }
+                }else{
+                    Send("Faild");
+                }
+            }else if (*p_strData == "ResetOrdered"){
+                if(Rebuild_Ordered()){
                     Send("OK");
                 }else{
                     Send("Faild");
                 }
             }else if (*p_strData == "ShutdownForced"){
+                Send("103");
                 RestartShutdownServer("stop");
-            }else if(*p_strData == "Restart"){
+            }else if(*p_strData == "RestartForced"){
+                Send("101");
                 RestartShutdownServer("restart");
             }else if(*p_strData == "DisconnectEveryOne"){
                 cout<<"Nie zaimplementowane"<<endl;
                 Send("Nie zaimplementowane");
             }else{
-                Send("999");
+                Send("900");
             }
         }else{
             cout<<"Nie znane polecenie["<<*p_strData<<"]"<<endl;
-            Send("999");
+            Send("900");
         }
     }
 }
@@ -267,24 +350,246 @@ void myClientHandler::Serach4Files(string *p_strData,string *strSearchFor){
 }
 
 void myClientHandler::OrderFiles(string *p_strData){
-    Send("900");
+    int intTMP=0;
+    string strTMP="";
+    p_xmlOrder->vCleanXMLTree();
+    p_xmlOrder->LoadXMLFromBuf(p_strData->c_str());
+    if(p_xmlOrder->SetWorkNode("Order") or p_xmlOrder->GetCurrentElement()=="Order"){
+        if(p_xmlOrder->GoDeeper()){
+            do{
+                intTMP = newOrder(p_xmlOrder->GetStringValue("FilePath","-1").c_str(),
+                            p_xmlOrder->GetStringValue("FileOwner","-1").c_str(),strTMP
+                            );
+                switch (intTMP){
+                    case 0:
+                        intFilePossition = 0;
+                        SendFile();
+                        break;
+                    case 1:
+                        if (p_strOtherClientPidFile){
+                            delete p_strOtherClientPidFile;
+                            p_strOtherClientPidFile = NULL;
+                        }
+                        strTMP = p_xmlOrder->GetStringValue("FileOwner","-1");
+                        p_strOtherClientPidFile = new string(*ServerConfigs::p_strMyPath+"Pool/tmp/"+strTMP);
+                        if(p_strOtherClientPidFile){
+                            if(!myIO::chk4file(p_strOtherClientPidFile)){
+                                if(mkdir(p_strOtherClientPidFile->c_str(),0744)!=0){
+                                    MsgToOut("PidFolderCreationFailed");
+                                    Send("212");
+                                }
+                            }
+                            p_strOtherClientPidFile->append("/"+strTMP+".pid");
+                            GetFileFromOtherClient(&p_xmlOrder->GetStringValue("FilePath","-1"));
+                            cout<<"p_strToday:"<<*p_strTodayWorkFolder<<endl;
+                            if(p_strTodayWorkFolder->rfind("/"+myConv::ToString(intPID)+"/") > p_strTodayWorkFolder->length()){
+                                if(!myIO::chk4file(p_strTodayWorkFolder)){
+                                    if(mkdir(p_strTodayWorkFolder->c_str(),0744)!=0){
+                                        MsgToOut("TodayFolderCreationFailed");
+                                        Send("212");
+                                    }else{
+                                        p_strTodayWorkFolder->append("/"+myConv::ToString(intPID));
+                                        if(mkdir(p_strTodayWorkFolder->c_str(),0744)!=0){
+                                            MsgToOut("PIDinTodayFolderCreationFailed");
+                                            Send("212");
+                                        }else{
+                                            p_strTodayWorkFolder->append("/");
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            MsgToOut("OutOfMemmory");
+                            Send("200");
+                        }
+                        break;
+                    case 3:
+                        Send("333");//search failed
+                        break;
+                    case 4:
+                        Send("334");//file n/a
+                        break;
+                    case 5:
+                        Send("335");//faild to add order
+                        break;
+                    default:
+                        Send("366");//unknown error
+                        break;
+                }
+            }while(p_xmlOrder->NextElement());//while
+        }else{
+            Send("614");
+        }//if deeper
+    }else{
+        Send("613");
+    }
+    //Send("900");
+}
+
+void myClientHandler::SendFile(){
+    string *p_strBuf = new string;
+    uint64_t intTmp = intFilePossition;
+    p_xmlOUT->createXMLDoc("Download");
+    p_xmlOUT->addElement("FilePath",p_xmlOrder->GetStringValue("FilePath","-1").c_str());
+    p_xmlOUT->addElement("Status","ABORT");
+    p_xmlOUT->addElement("Chunk",myConv::ToString(intTmp).c_str());
+    p_xmlOUT->addElement("Data","");
+    if (p_xmlOUT->GoDeeper() or p_strBuf){
+        if (myIO::readFileChunk(&p_xmlOrder->GetStringValue("FilePath","-1"),
+                           p_strBuf,
+                           intFilePossition,
+                           *ServerConfigs::p_intChunkSize)){
+            p_xmlOUT->NextElement();
+            p_xmlOUT->GoDeeper();
+            p_xmlOUT->setCurrentElementValue("OK");
+            p_xmlOUT->GoUpper();
+            p_xmlOUT->NextElement();
+            p_xmlOUT->NextElement();
+            p_xmlOUT->GoDeeper();
+            /*char *cBuf = new char[p_strBuf->length()+1];
+            cBuf[p_strBuf->length()] = '\0';
+            p_strBuf->copy(cBuf,p_strBuf->length(),0);*/
+            p_xmlOUT->setCurrentElementValue(p_strBuf->c_str());//Tu jest blad z powodu EOF'ow... przy downloadzie po stronie klienta
+            intFilePossition += p_strBuf->length();
+//            delete cBuf;
+        }
+        Send(p_xmlOUT->GetXMLAsString());
+    }else{
+        Send("Blad w alokacji");//blad alkoacji pamieci
+    }
+    delete p_strBuf;
+    p_xmlOUT->vCleanXMLTree();
+}
+
+void myClientHandler::GetFileFromOtherClient(const string *strData){
+    //sprawdz czy plik istnieje jezeli tak ustaw go do zapisu
+    bool bGO = true;
+    if (myIO::chk4file(p_strOtherClientPidFile)){ chmod(p_strOtherClientPidFile->c_str(),0644)==0 ? bGO : bGO = false; }
+    if (bGO){
+        std::ofstream pidFile(p_strOtherClientPidFile->c_str(),std::ios::app);
+        if(pidFile.is_open()){
+            //pidFile << *strData +" get 0\n";// mapowanie pliku
+            pidFile.close();
+            Send("WaitFor [SCIEZKA PLIKU]");//success but file have to be downloaded from other client
+            chmod(p_strOtherClientPidFile->c_str(),0444);
+        }else{
+            delete p_strOtherClientPidFile;
+            p_strOtherClientPidFile = NULL;
+            MsgToOut("Failed to Open pidFile["+(*p_strClassNameX)+"] myPid["+myConv::ToString(intPID)+"]");
+            Send("211");
+        }
+    }else{
+        MsgToOut("File Premssion error::"+(*p_strOtherClientPidFile)+" Val: "+myConv::ToString(chmod(p_strOtherClientPidFile->c_str(),0644)));
+        Send("210");
+    }
+}
+
+void myClientHandler::GetDoneFileFromOtherClient(){//get zostanie zastapione statusem a 0 liczba [0-99], done sciezka do pool
+    uint8_t intFlag = 0;
+    bool bValid = false;
+    string strTMP;
+    string strTMPHASH;
+    if(p_xmlIN->SetWorkNode("Upload") or p_xmlIN->GetCurrentElement()=="Upload"){
+        if(p_xmlIN->GoDeeper()){
+            strTMP = p_xmlIN->GetCurrentElementValue().substr(p_xmlIN->GetCurrentElementValue().rfind("/"));//sciezka zdalna
+            cout<<"strTMP:"<<strTMP<<endl;
+            cout<<"Sciezka:"<<*p_strTodayWorkFolder+strTMP<<endl;
+            p_xmlIN->NextElement();
+            if (p_xmlIN->GetCurrentElementValue() == "DONE" ){
+                intFlag = 1;
+            }else if(p_xmlIN->GetCurrentElementValue() == "ABORT" ){
+                intFlag = 2;
+            }//status
+
+            if(!myIO::chk4file(&(p_strMyPidFile->substr(0,p_strMyPidFile->rfind("/"))+strTMP))){
+                myIO::touch(&(p_strMyPidFile->substr(0,p_strMyPidFile->rfind("/"))+strTMP));
+            }
+
+            switch (intFlag){
+                case 0:
+                    p_xmlIN->NextElement();
+                    p_xmlIN->GetCurrentElementValue();//chunk
+                    p_xmlIN->NextElement();
+                    myIO::appToFile(&(p_strMyPidFile->substr(0,p_strMyPidFile->rfind("/"))+strTMP),&p_xmlIN->GetCurrentElementValue());//dane
+                    p_xmlIN->PrevElement();
+                    p_xmlIN->setCurrentElementValue(myConv::ToString(myIO::GetFileSize(&(*p_strTodayWorkFolder+strTMP))).c_str());
+                    p_xmlIN->delCurrentElement();
+                    //Odeslij potwierdzenie
+                    break;
+                case 1:
+                    p_xmlIN->PrevElement();
+                    strTMPHASH = p_xmlIN->GetCurrentElementValue();
+                    p_xmlIN->NextElement();
+                    p_xmlIN->NextElement();
+                    p_xmlIN->NextElement();
+                    myIO::appToFile(&(p_strMyPidFile->substr(0,p_strMyPidFile->rfind("/"))+strTMP),&p_xmlIN->GetCurrentElementValue());//dane
+                    strTMPHASH = GetHashInfo(strTMPHASH.c_str(),intPID);
+                    if(!strTMPHASH.find("None:")){
+                        string *p_strHash = new string;
+                        myIO::readFile(&(p_strMyPidFile->substr(0,p_strMyPidFile->rfind("/"))+strTMP),p_strHash);
+                        if(strTMPHASH.find("sha512:")){
+                            strTMPHASH.erase(0,string("sha512:").length());
+                            p_strHash->assign(Hash::SHA512(*p_strHash),0,p_strHash->length());
+                            if (*p_strHash == strTMPHASH){
+                                bValid = true;
+                                cout<<"VALID!"<<endl;
+                            }else{
+                                MsgToOut("File Invalid: "+strTMP+"\nHash: "+*p_strHash+"\nExpected:"+strTMPHASH);
+                            }
+                            //jezeli sie nie zgadza kasuje plik i ustawiam status w dbase
+                        }
+                        else if(strTMPHASH.find("md5:")){
+                            strTMPHASH.erase(0,string("md5:").length());
+                            strTMPHASH.erase(0,string("sha512:").length());
+                            p_strHash->assign(Hash::SHA512(*p_strHash),0,p_strHash->length());
+                            if(*p_strHash == strTMPHASH){
+                                bValid = true;
+                                cout<<"VALID!"<<endl;
+                            }else{
+                                MsgToOut("File Invalid: "+strTMP+"\nHash: "+*p_strHash+"\nExpected:"+strTMPHASH);
+                            }
+                        }
+                        delete p_strHash;
+                    }else{
+                        bValid = true;
+                    }
+                    break;
+                case 2:
+                    p_xmlIN->NextElement();
+                    p_xmlIN->NextElement();
+                    MsgToOut("File Upload has been aborded reason:"+p_xmlIN->GetCurrentElementValue());
+                    //kasuje plik tmp
+                default:
+                    MsgToOut("Flag switch["+myConv::ToString(intFlag)+"], Error in GetDoneFileFromOtherClient------");
+                    MsgToOut(p_xmlIN->GetXMLAsString());
+                    MsgToOut("---------------------------");
+                    break;
+            }
+        if (bValid){
+        //Tutaj bedzie
+        //liczy syme kontrolna jezeli sie zgadza przenosze plik do folderu roboczego
+        //dodaje dodaje mapowanie do ordertable i dodaje do bazy danych
+        }
+        }
+    }
 }
 
 void myClientHandler::SetNewFileList(string *p_data){
     ///Laduje przeslane dane xml do bazy danych
+    int intCounterSharedFiles = 0;//!<Licznik ile plikow udalo sie dodac do bazy
     p_strSharedXmlList->LoadXMLFromBuf(p_data->c_str());
     if(p_strSharedXmlList->SetWorkNode("SharedFiles") or p_strSharedXmlList->GetCurrentElement()=="SharedFiles"){
         if(p_strSharedXmlList->GoDeeper()){
-            while(p_strSharedXmlList->NextElement()){
-                if(!insertFile(p_strSharedXmlList->GetStringValue("FilePath","-1").c_str(),
+            do{
+                if(insertFile(p_strSharedXmlList->GetStringValue("FilePath","-1").c_str(),
                             p_strSharedXmlList->GetStringValue("FileName","-1").c_str(),
                             p_strSharedXmlList->GetStringValue("FileSize","-1").c_str(),
                             p_strSharedXmlList->GetStringValue("FileHashType","-1").c_str(),
                             p_strSharedXmlList->GetStringValue("FileHash","-1").c_str(),
                             p_strSharedXmlList->GetStringValue("FileLastModification","-1").c_str()
-                            )){ cerr<<"Insertion faild"<<endl; }
-            }//while
-            Send();
+                            )){ ++intCounterSharedFiles;}
+            }while(p_strSharedXmlList->NextElement());//while
+            MsgToOut("Client Shared: "+myConv::ToString(intCounterSharedFiles)+" files");
         }else{
             Send("614");
         }//if deeper
@@ -306,8 +611,8 @@ bool myClientHandler::Send(string strData){
     catch (const std::exception &e)
     {
         fprintf(stderr,"%s[Send]-> %s\n",p_strClassNameX->c_str(),e.what());
-        exit(0);
-        //bLoop = false;
+        //exit(0);
+        bLoop = false;
         //return false;
 
     }
@@ -321,7 +626,7 @@ string myClientHandler::SendInfoAboutServer(){
     strCommandlist.append(AutoVersion::FULLVERSION_STRING);
     strCommandlist.append(",\nCommands=UploadFile,DisconnectMe,GetServerInfo,GetServerTime,SearchFor: <arg0 arg1 arg2>,RenewSharedList,Alive");
     if( intGID == 0 or intGID == 1){
-        strCommandlist.append("ResetBanned,ResetShared,Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
+        strCommandlist.append(",ResetBanned,ResetShared,ResetOrdered,Shutdown,ShutdownForced,Restart,DisconnectEveryOne");
     }
     strCommandlist.append("\nLoggedAs "+ClientUser+"~$");
     return strCommandlist;
@@ -484,15 +789,6 @@ void myClientHandler::CleanSearchRezualt(){
 /**
 *KILLSERVER
 */
-bool myClientHandler::createFile(string FileName){
-///Miekkie wyłaczanie serwera poprzez przerwanie glownej petli serwera
-    std::ofstream o(FileName.c_str());
-    if(o){
-        Send("Server is being shutdown in a moment");
-        return true;
-    }
-    return false;
-}
 
 void myClientHandler::RestartShutdownServer(string strOption){
 ///Wymuszenie wylaczenia lub restartu servera, ktory jest "zarzadzany przez usluge systemowej demonizacji"

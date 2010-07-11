@@ -25,29 +25,31 @@ using std::cout;
 using std::cerr;
 using std::cin;
 using std::endl;
-
+//ZAMIEN SPRAWDZANIE TABLI NA ENUMERATORY
 class dBase:public TimeCout{
     public:
         dBase(int );
         dBase();
         virtual ~dBase();
         void Close();
-        void mClose();
+        void mClose(bool = true);
         bool insertFile(const char *,const char *,const char* ,const char *,const char* ,const char*);
         bool insertBanned(char *,char *);
-        bool del();
+        void del(int =0);
         bool dBaseRun();
         bool Rebuild_SharedFilesTable();
         bool Rebuild_BannedTable();
-        bool Rebuild_Orderd();
+        bool Rebuild_Ordered();
         bool CheckForTable(char *cTable);
-        bool Search(const char *,bool =true,char * ="FileName");
-        bool Search2(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
-        bool Search3(const char*,const char*);
+        bool SearchByMatched(const char*,char* ="FileOwner",char* ="OrderTable");
+        bool SearchByMatched2(const char*,const char*,char* ="FileOwner",char* ="FilePath",char* ="SharedFiles");
         bool SearchFiles(XMLParser *,string *,string *,bool =true,char * ="FileName");
         bool AskIfBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
         bool UpdateBanned(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
-        int newOrder(const char*,const char*);
+        bool UpdateOrder(const char*,const char*,int,string);
+        int newOrder(const char*,const char*,string &);
+        string checkIfOrdered(bool);
+        string GetHashInfo(const char*, int);
     private:
         string *p_strClassNameD;//!<Nazwa klasy unikalna dla kazdnego procesu
         //Data
@@ -60,7 +62,7 @@ class dBase:public TimeCout{
         const char *p_cBassName; //!< Nazwa bazy
         char *p_cTableName; //!<Nazwa tabeli z udostepnionymi plikami
         char *p_cTableBanned; //!< Nazawa tabeli ze zbanowanymi lub ostrzezonymi uzytkownikami
-        char *p_cTableOrderd;//!<Nazwa tabeli zamowien
+        char *p_cTableOrdered;//!<Nazwa tabeli zamowien
         int intOwnerPID; //!< Pid procesu
         //metods
         int dBaseTemplate(){}
@@ -68,7 +70,10 @@ class dBase:public TimeCout{
         bool drop(char *cTable);
         bool createShared();
         bool createBanned();
-        bool createOrderd();
+        bool createOrdered();
+        bool Search(const char *,bool =true,char * ="FileName");
+        bool Search2(char *,char*,bool =true,char* ="UserIP",char* ="UserLocalName");
+        bool SearchOrder(const char*,const char*);
 };
 
 

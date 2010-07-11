@@ -1,8 +1,20 @@
-[Version 0.0.12]
+[Version 0.0.13]
 +Module which is doing its job in Pool runs in thread.
 +upload file
 +download file
 +Smart large files handler receiver
+
+[Version 0.0.12]
+Fixed last memory leak.
+Reduced memory consumption by every new client
+OrderTable is working
+Add error codes
+Client 0.1.0:
+Add support for new error codes
+Add send order request
+Some GUI updates
+Update connection handling
+
 
 [Version 0.0.11d]
 Client 0.0.9:

@@ -33,10 +33,10 @@ void sig_child(int sig)
 }
 
 int myServerAPP::intValueOnExit = 1;
-myServerAPP::myServerAPP(): p_strClassNameE(new string("[myServer]->")),
+myServerAPP::myServerAPP(): dBase(getpid()),
+                            p_strClassNameE(new string("[myServer]->")),
                             bServerLoop(true),dCreationTime(GetTime()),
-                            tt_CreationTime(GetTimeAfter1970AsTime()),
-                            dBase(getpid()){
+                            tt_CreationTime(GetTimeAfter1970AsTime()){
     //p_strClassNameE = new string("[myServer]->");
     cerr<<GetLocalTime()<<*p_strClassNameE<<"PID:"<<getpid()<<endl;
     intValueOnExit = 0;
@@ -49,19 +49,6 @@ void myServerAPP::ClearVal(){
     delete p_strClassNameE;
     p_strClassNameE = NULL;
 }
-
-bool myServerAPP::chk4file(string strFileName){
-    ///Tworzy plik we wskazanym miejscu o wskazanej nazwie, jezeli sie udalo zwroci true
-    struct stat stFileInfo;
-    int intStat;
-
-    intStat = stat(strFileName.c_str(),&stFileInfo);
-    if(intStat == 0) {
-        return true;
-    }
-    return false;
-}
-
 
 void myServerAPP::RunServer(){
     /**
@@ -108,10 +95,17 @@ void myServerAPP::RunServer(){
                 boost::asio::ip::tcp::endpoint endpoint = socket.local_endpoint();
                 ++intIndexZombie;
                 ++g_intNumerOfCurrentProcess;
-                if(chk4file(*strShutdown)){
+                if(myIO::chk4file(strShutdown)){
                     bServerLoop = false;
                     if (remove(strShutdown->c_str())==-1){
-                        cerr<<"Server ShutdownServer.pid hasn't been deleted!"<<endl;
+                        cerr<<GetLocalTime()<<*p_strClassNameE<<"ShutdownServer.pid hasn't been deleted!"<<endl;
+                    }
+                }else if(myIO::chk4file(strRestart)){
+                    bServerLoop = false;
+                    if (remove(strRestart->c_str())==-1){
+                        cerr<<GetLocalTime()<<*p_strClassNameE<<"RestartServer.pid hasn't been deleted!"<<endl;
+                    }else{
+                        system("sleep 60 && ./start.sh start&");
                     }
                 }
 
@@ -138,18 +132,19 @@ void myServerAPP::RunServer(){
                     *Tworze client handler w forku.*/
                         pid = fork();
                         if (pid == 0){
-                        myClientHandler *o = new myClientHandler(socket,
+                            mClose(false);
+                            myClientHandler *o = new myClientHandler(socket,
                                   p_cIPHelp,p_cLoclaHelp,"tu bedzie pass",
                                   intIndexZombie,getpid(),g_intNumerOfCurrentProcess);
-                        o->myClientRun();
-                        delete o;
-                        //waitpid ( pid, NULL,WNOHANG);
-                        ServerConfigs::Clean();
-                        ClearVal();
-                        delete strShutdown;
-                        delete strRestart;
-                        delete p_strMethodName;
-                        exit(0);
+                            o->myClientRun();
+                            delete o;
+                            //waitpid ( pid, NULL,WNOHANG);
+                            ServerConfigs::Clean();
+                            ClearVal();
+                            delete strShutdown;
+                            delete strRestart;
+                            delete p_strMethodName;
+                            exit(0);
                         }//if pid
                     }//if *ServerConfigs
                 }else{
@@ -159,12 +154,13 @@ void myServerAPP::RunServer(){
                 }// if ban
             }//while bServerLoop
             Rebuild_SharedFilesTable();
-            Rebuild_Orderd();
+            Rebuild_Ordered();
 
         }catch (std::exception& e){
             cerr<<GetLocalTime()<<*p_strMethodName<<e.what()<<endl;
         }
     }
+    myIO::rmAll(*ServerConfigs::p_strMyPath+"/Pool/tmp/");
     cout<<GetLocalTime()<<*p_strMethodName<<ExcutionTime(GetTime(),Xtime)<<" "<<AliveTime(GetTimeAfter1970AsTime(),tt_CreationTime)<<endl;
     delete strShutdown;
     delete strRestart;

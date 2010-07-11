@@ -42,7 +42,7 @@ class ServerConfigs: TimeCout{
         static string strServerIP;//!<Ustawienia IP naszego serwera
         static string strLoggingFileDir;//!<Scieżka do pliku logowania
         static int *p_intClientTimeOut;//!<Czas, po którym klient zostanie odłaczony w przypadku błedów/zerwania połaczenia.
-        static int *p_intChunkSize;//!<Rozmiar pakietu danych.
+        static uint64_t *p_intChunkSize;//!<Rozmiar pakietu danych.
         static int intStdErr;//!<Informacja o użyciu cerr
         static int intStdOut;//!<Informacja o użyciu cout
         static int intStdIn;//!<Informacja o użyciu cin

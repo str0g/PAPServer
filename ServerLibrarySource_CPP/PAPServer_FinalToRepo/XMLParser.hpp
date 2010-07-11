@@ -59,8 +59,11 @@ class XMLParser{
         //insert values
         bool insertXMLSearch(const char*,const char*,const char*,const char*,const char*,const char*,const char*,char* ="File");
         void setCurrentElementValue(const char*);
+        void setCurrentElementValueAsText(const char*);
+        bool addElement(const char*,const char*);
         //get values
         string GetCurrentElement();
+        string GetCurrentElementValue();
         template <typename T>
         T GetNumericValue(string strWordToSearch,string strValueOnError){
    ///Zwraca rezlutat wyszukania stringa po konwersji do określonego typu.

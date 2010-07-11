@@ -16,7 +16,10 @@ using std::cin;
 using std::endl;
 ///Globals Varuabels
 
-XMLParser::XMLParser():p_strClassName(NULL),p_PointerToXMLTree(NULL){
+XMLParser::XMLParser():p_strClassName(NULL),p_PointerToXMLTree(NULL),
+                        strUsedAs(""),strBufFrom(""),
+                        p_WorkNode(NULL),p_childNode(NULL)
+                        {
     p_strClassName = new string("XMLParser");
 }
 XMLParser::~XMLParser(){
@@ -259,6 +262,21 @@ string XMLParser::GetCurrentElement(){
         return "";
     }
 }
+string XMLParser::GetCurrentElementValue(){
+    ///Zwraca wartosc elementu,mozna nim pobrac nazwe tego elementu lub przechowywana wartosc
+    if (p_WorkNode){
+        if(p_WorkNode->child){
+            return p_WorkNode->child->value.opaque;
+        }else{
+            cerr<<"Element have no child"<<endl;
+            return "";
+        }
+        return p_WorkNode->value.opaque;
+    }else{
+        cerr<<"Work node pointer is NULL"<<endl;
+        return "";
+    }
+}
 
 string XMLParser::GetStringValue(string strWordToSearch,string strValueOnError){
     /**
@@ -340,7 +358,13 @@ bool XMLParser::insertXMLSearch(const char* fp,const char* fn,const char* fs,con
 
 void XMLParser::setCurrentElementValue(const char* cs_value){
     if(mxmlSetOpaque(p_WorkNode,cs_value)==-1){
-        cerr<<p_strClassName<<"Faild to set["<<cs_value<<"]"<<endl;
+        cerr<<*p_strClassName<<"Faild to set["<<cs_value<<"]"<<endl;
+    }
+}
+
+void XMLParser::setCurrentElementValueAsText(const char* cs_value){
+    if(mxmlSetText(p_WorkNode,1,cs_value)==-1){
+        cerr<<*p_strClassName<<"Faild to set["<<cs_value<<"]"<<endl;
     }
 }
 
@@ -357,3 +381,11 @@ string XMLParser::GetXMLAsString(){
     return ret;
 }
 
+bool XMLParser::addElement(const char *Element, const char*Data){
+    string MethodName = (*p_strClassName+"[addElement]->Failed to create: ");
+    if(!mxmlNewOpaque(mxmlNewElement(p_WorkNode, Element),Data)){
+        cerr<<MethodName<<" "<<Element<<" "<<Data<<endl;
+        return false;
+    }
+    return true;
+}

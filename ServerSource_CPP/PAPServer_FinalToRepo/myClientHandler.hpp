@@ -15,6 +15,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <fcntl.h>
+#include <vector>
 //#include <sys/types.h>
 //#include <sys/wait.h>
 #include <syslog.h>
@@ -33,6 +35,7 @@
 #include "listBanned.hpp"
 #include "dbase.hpp"
 #include "myConv.hpp"
+#include "ServerFilesLoader.hpp"
 ///Specials
 using std::string;
 using std::cout;
@@ -71,15 +74,29 @@ class myClientHandler:public dBase{
         ///Data
         XMLParser *p_strSharedXmlList;//!<Lista plikow udostepnianych przez klienta
         XMLParser *p_strSearchRezualt;//!<Lista plikow wyszukanych na rzadanie klienta
+        XMLParser *p_xmlOrder;//!<Lista plikow zamowionych przez klienta
+        XMLParser *p_xmlIN;//!<bufor wejsciowy dla pliku
+        XMLParser *p_xmlOUT;//!<bufor wyjsciowy dla pliku
         string *p_strSearchCtrl;//!< Trzyma unikalne wartosci wyszukiwania, zeby weryfikowac czy klient nie wymusza plikow.
+        string *p_strOtherClientPidFile;//!<Trzyma sciezke do pliku aktualnego zamowienia.
+        string *p_strWhoOrder;//!<Trzyma sciezke do pliku aktualnego zamowienia.
+        string *p_strMyPidFile;//!<Trzyma sciezke do wlasnego pliku pid.
+        string *p_strTodayWorkFolder;//!<Trzyma sciezke do folderu z dzisiejsza data i numerem procesu.
+        bool bOrderFileStatus;//!<Status pliku zamowionego true w trakcie obslugi.
+        uint64_t intFilePossition;//!<Licznik pozycji pliku
+        std::vector<uint64_t> v_PosstionList;//!< Trzyma liste pozycji pliku, ktorych dokanano zapisu danych.
         ///Methods
         //Actions
         string SendInfoAboutServer();
         void Authorization();//#
         bool SetNewSharedListFromClient(string*);
         bool GetSharedListFromClient(bool);
+        void GetDoneFileFromOtherClient();
         void SetNewFileList(string*);
+        void GetFileFromOtherClient(const string*);
         void RecivedDataParser(string*);
+        bool setWhoOrder();
+        void SendFile();
         //comunication
         string &GetDataFromSocket();
         string GetDataFromSocket2();
@@ -91,7 +108,6 @@ class myClientHandler:public dBase{
         void Serach4Files(string*,string*);
         void OrderFiles(string*);
         /// KillServer
-        bool createFile(string);
         void RestartShutdownServer(string);
         void DisconnectAllClients();//#
         ///Clean

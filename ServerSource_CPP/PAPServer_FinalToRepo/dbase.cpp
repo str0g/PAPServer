@@ -18,7 +18,7 @@ dBase::dBase(int opid):
             p_cBassName(ServerConfigs::p_cMySqldBase.c_str()),
             p_cTableName("SharedFiles"),
             p_cTableBanned("BannedList"),
-            p_cTableOrderd("OrderList"),
+            p_cTableOrdered("OrderTable"),
             intOwnerPID(opid){
     ///Sprawdza czy udalo sie zainicjalizowac elementy biblioteki mysql jezeli nie to konczy forka
     if(!pConnection){
@@ -35,16 +35,18 @@ dBase::~dBase(){
     mClose();
 }
 
-void dBase::mClose(){
-    if(pConnection){
+void dBase::mClose(bool bDis){
+    if(pConnection and bDis){
         if(intOwnerPID!=0){
             del();
         }
         Close();
     }
+    if(p_strClassNameD){
+        mysql_library_end();
+    }
     delete p_strClassNameD;
     p_strClassNameD = NULL;
-    mysql_library_end();
 
 }
 void dBase::Close(){
@@ -70,12 +72,18 @@ bool dBase::insertBanned(char *ip,char* lname){
             ,p_cTableBanned,ip,lname, 1,0);
     return dbQuery(Query,"Missbehaving user has been add to banedlist");
 }
-bool dBase::del(){
+void dBase::del(int intSw){
     ///Kasuje wskazana wpisy po pid uzytkownika
+    char *p_cNameBuf;
+    if (intSw==0){
+        p_cNameBuf = p_cTableName;
+    }else{
+        p_cNameBuf = p_cTableOrdered;
+    }
     char Query[192];
     sprintf(Query, "DELETE FROM %s WHERE FileOwner = %d\
-            ",p_cTableName,intOwnerPID);
-    return dbQuery(Query,"Data has been deleted from database");
+            ",p_cNameBuf,intOwnerPID);
+    dbQuery(Query,"Data has been deleted from database");
 }
 bool dBase::dBaseRun(){
     /**
@@ -93,7 +101,7 @@ bool dBase::dBaseRun(){
     if (!CheckForTable(p_cTableName)){
         return false;
     }
-    if(!CheckForTable(p_cTableOrderd)){
+    if(!CheckForTable(p_cTableOrdered)){
         return false;
     }
     return true;
@@ -112,10 +120,10 @@ bool dBase::Rebuild_BannedTable(){
     }
     return false;
 }
-bool dBase::Rebuild_Orderd(){
+bool dBase::Rebuild_Ordered(){
     ///Tworzy tablice Order
-    if(drop(p_cTableOrderd)){
-        return createOrderd();
+    if(drop(p_cTableOrdered)){
+        return createOrdered();
     }
     return false;
 }
@@ -132,8 +140,8 @@ bool dBase::CheckForTable(char *cTable){
             bRet = createBanned();
         }else if(cTable == p_cTableName){
             bRet = createShared();
-        }else if(cTable == p_cTableOrderd){
-            bRet = createOrderd();
+        }else if(cTable == p_cTableOrdered){
+            bRet = createOrdered();
         }else{
             cerr<<GetLocalTime()<<p_strClassNameD<<"This table is no supported: "<<cTable<<endl;
             bRet = false;
@@ -155,7 +163,7 @@ bool dBase::Search(const char *cSearch,bool Coma,char *cToSearch){
         sprintf(Query, "select * from %s where %s like %s%s%s and FileOwner != '%d'\
                 ",p_cTableName,cToSearch,cSpecial,cSearch,cSpecial,intOwnerPID);
     }
-    return dbQuery(Query,"Check results");
+    return dbQuery(Query,"Check forFiles");
 }
 bool dBase::Search2(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,char *cToSearch2){
     ///wyszukje banaowanych
@@ -167,17 +175,50 @@ bool dBase::Search2(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,cha
         sprintf(Query, "select * from %s where %s = %s and %s = %s\
                 ",p_cTableBanned,cToSearch1,cSearch1,cToSearch2,cSearch2);
     }
-    return dbQuery(Query,"Check results2");
+    return dbQuery(Query,"Check Banned");
 }
 
-bool dBase::Search3(const char *path,const char *pid){
+bool dBase::SearchOrder(const char *path,const char *pid){
     ///wyszukje orderd
     char Query[4096];
-    sprintf(Query, "select * from %s where %s = '%s' and %s = '%s'\
-                ",p_cTableOrderd,path,pid);
-    return dbQuery(Query,"Check results3");
+    sprintf(Query, "select * from %s where FilePath = '%s' and FileOwner = '%s'\
+                ",p_cTableOrdered,path,pid);
+    return dbQuery(Query,"Check SerachOrder");
 }
 
+bool dBase::SearchByMatched(const char*data,char* row,char* tab){
+    ///wyszukje we wskazanej tabeli i wierszu wyszukuje dane o wskazanej wartosci
+    char Query[4096];
+    sprintf(Query, "select * from %s where %s = '%s'\
+                ",tab,row,data);
+    return dbQuery(Query,"Check SearchByMatched");
+}
+
+bool dBase::SearchByMatched2(const char*data,const char *data2,char* row,char* row2,char* tab){
+    ///wyszukje we wskazanej tabeli i wierszu wyszukuje dane o wskazanej wartosci
+    char Query[4096];
+    sprintf(Query, "select * from %s where %s = '%s' and %s = '%s'\
+                ",tab,row,data,row2,data2);
+    return dbQuery(Query,"Check SearchByMatched2");
+}
+string dBase::GetHashInfo(const char *path,int pid){
+    string strRet ="";
+    char Query[4096];
+    sprintf(Query, "select * from %s where FilePath = '%s' and FileOwner = %d\
+                ", p_cTableName ,path,pid);
+    if (dbQuery(Query,"GetHashInfo")){
+        pResult = mysql_store_result(pConnection);
+        Row = mysql_fetch_row(pResult);
+        if(mysql_num_rows(pResult) > 0){
+            strRet.append(Row[4]);
+            strRet.append(":");
+            strRet.append(Row[5]);
+        }else{
+        }
+        mysql_free_result(pResult);
+    }
+    return strRet;
+}
 bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *strSearch,bool Coma,char *cToSearch){
     /**
     *Szukana wskazanego pliku wysyalajac zapytanie do bazy
@@ -204,23 +245,71 @@ bool dBase::SearchFiles(XMLParser *p_xmlStructPointer,string *strctrl,string *st
     return false;
 }
 
-int dBase::newOrder(const char* path, const char* pid){
+int dBase::newOrder(const char* path, const char* pid,string &strPid){//musi zwracac inta...
     char Query[4096];
-    int intRet=0;
-    if(Search3(path,pid)){
+    int bRet=1;
+    if(SearchByMatched2(pid,path)){
         pResult = mysql_store_result(pConnection);
-        if(mysql_num_rows(pResult)==0){
-            sprintf(Query,"update %s set FilePath = '%s',FileOwner ='%s'"
-                    ,p_cTableOrderd,path,pid);
-            if(!dbQuery(Query,"Table Orderd has been updated")){ intRet = 2;}
+        if(mysql_num_rows(pResult)>0){
+            Row = mysql_fetch_row(pResult);
+            if(string(Row[7]) == "0"){
+                strPid = Row[1];
+                bRet = 0;
+            }else{
+                if(string(Row[8]) != ""){
+                    strPid = Row[8];
+                    bRet = 0;
+                }
+            }
+            mysql_free_result(pResult);
+            if (bRet == 1){
+                if(SearchOrder(path,pid)){
+                    pResult = mysql_store_result(pConnection);
+                    if(mysql_num_rows(pResult)==0){
+                        sprintf(Query, "INSERT INTO %s\
+                        (ID,FilePath,FileOwner,FileStatus,FileLocalPath)\
+                        VALUES(NULL,'%s','%s','%d','%s')"\
+                        ,p_cTableOrdered,path,pid,2,"");
+                        /*sprintf(Query,"update %s set FilePath = '%s',FileOwner ='%s',FileStatus,= %d"
+                            ,p_cTableOrdered,path,pid,2);*/
+                        if(!dbQuery(Query,"Table Ordered has been updated")){ bRet = 4;} //blad w updacie bazy
+                    }
+                mysql_free_result(pResult);
+                }//if rows num
+            }//bRet
         }else{
-            intRet = 1;
-        }//if rows num
+            bRet = 3; //brak pliku w bazie
+        }
+    }else{
+        bRet = 2; // nie udane wyszukiwanie
     }
-    mysql_free_result(pResult);
-    return intRet;
+    return bRet;
 }
 
+bool dBase::UpdateOrder(const char* path, const char* pid,int status,string lpath){
+    char Query[3192];
+    sprintf(Query,"update %s set FileStatus = '%d',FileLocalPath ='%s' where FilePath ='%s' and FileOwner ='%s'"
+                    ,p_cTableOrdered,status,lpath.c_str(),path,pid);
+    if(!dbQuery(Query,"Table OrderList has been updated")){ return false; }
+    return true;
+}
+
+string dBase::checkIfOrdered(bool bStatus){
+    string strRet ="";
+    if (!bStatus){
+        if (SearchByMatched(myConv::ToString(intOwnerPID).c_str())){
+            pResult = mysql_store_result(pConnection);
+            if(Row = mysql_fetch_row(pResult)){
+                if ((string)Row[3] == "2"){
+                    strRet = "FileOrdered: ";
+                    strRet.append(Row[1]);
+                }
+            }
+        mysql_free_result(pResult);
+        }
+    }
+    return strRet;
+}
 bool dBase::AskIfBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,char *cToSearch2){
     /**
     *Pytam sie bazy czy uzytkownik o takiej nazwie lokalnej i ip zostal dodany do bazy jezeli tak sprawdzam czy juz dostal bana.
@@ -232,8 +321,8 @@ bool dBase::AskIfBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1
         while(Row = mysql_fetch_row(pResult)){
             myConv::FromString<int>(Row[4]) == 1 ? bBanned = true : bBanned;
         }
-        mysql_free_result(pResult);
     }
+    mysql_free_result(pResult);
     return bBanned;
 }
 bool dBase::UpdateBanned(char *cSearch1,char *cSearch2,bool Coma,char *cToSearch1,char *cToSearch2){
@@ -274,11 +363,11 @@ bool dBase::dbQuery(char *buf,string MsgOnSuccess){
 }
 bool dBase::drop(char *cTable){
     ///Usuwam wskazana tabele, ktora musi sie znajdowac w okreslonym zakresie
-    string strMsg="Table";
+    string strMsg="Table ";
     strMsg.append(cTable);
-    strMsg.append("has been droped");
+    strMsg.append(" has been droped");
     char Query[128];
-    if(cTable == p_cTableBanned or cTable == p_cTableName){
+    if(cTable == p_cTableBanned or cTable == p_cTableName or cTable == p_cTableOrdered){
         sprintf(Query, "DROP table %s\
                 ",cTable);
         return dbQuery(Query,strMsg);
@@ -287,7 +376,7 @@ bool dBase::drop(char *cTable){
 }
 bool dBase::createShared(){
     ///Tworzy table SharedFiles
-    char Query[2048];
+    char Query[8192];
     sprintf(Query,"create table %s\ (\
                            \
                            ID int unsigned not null auto_increment primary key,\
@@ -306,7 +395,7 @@ bool dBase::createShared(){
 }
 bool dBase::createBanned(){
     ///Tworzy tabele BannedList
-    char Query[512];
+    char Query[2048];
     sprintf(Query,"create table %s\ (\
                     \
                     ID int unsigned not null auto_increment primary key,\
@@ -322,19 +411,21 @@ bool dBase::createBanned(){
     return dbQuery(Query,"Table Banned has been created");
 }
 
-bool dBase::createOrderd(){
-    ///Tworzy tabele Orderd
-    char Query[512];
+bool dBase::createOrdered(){
+    ///Tworzy tabele Ordered
+    char Query[8192];
     sprintf(Query,"create table %s\ (\
                     \
                     ID int unsigned not null auto_increment primary key,\
                     \
                     FilePath varchar(2048) not null,\
                     FileOwner int unsigned not null,\
+                    FileStatus int unsigned not null,\
+                    FileLocalPath varchar(2048) not null,\
                     \
                     index(ID),\
                     unique(ID)\
-                    )",p_cTableOrderd);
-    return dbQuery(Query,"Table Orderd has been created");
+                    )",p_cTableOrdered);
+    return dbQuery(Query,"Table Ordered has been created");
 }
 
