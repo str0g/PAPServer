@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="myServer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option show_notes="1">
+			<notes>
+				<![CDATA[[TODO]
+<server>
+	<configi>
+		Wersja jezykowa folder locals pliku bez rozszerzen
+		Wsparcie dla cmd prompt
+	</configi>
+	<server>
+		Polecenia client server
+		Thread dla clienta
+	</server>
+	<bledy>
+		fork zawsze 0 czy 1 tez?
+		Brak walidacji XML przed proba utworzenia
+		brak obslugi innych formatowan niz ascii spowodowany string, byc moze trzeba bedzie uzyc qstring
+		Wyciek pamieci spowodowany nie uzyciem ptr_container dla fork()
+	</bledy>
+</server>
+<client>
+	<bledy>
+		bledy przy kasowaniu zawartosci widgeta tablica
+		validacja pliku xml...
+		rozroznialnosc plikow po indexowaniu zamiast po samej 			nazwie
+		Obsluzyc zawieszenie sie serwera
+	</bledy>
+</client>
+
+
+[Biblioteki]
+Serwer:
+boost 1.38 /1.40
+libxml++-2.6
+mysql++ 5.39
+Klient:
+PyQt4
+lxml
+
+
+[Zadanie]
+
+Aplikacja służąca do wzajemnego udostępniania plików. Zadania serwera: przyjmowanie nowych klientów oraz
+logowanie ich w sieci, prowadzenie bazy danych o udostępnianych plikach, odłączanie klientów od sieci. Zadania
+klienta: dołączanie/odłączanie się od sieci, tworzenie listy udostępnianych plików i przekazywanie jej serwerowi,
+wyszukiwanie pliku na serwerze i składanie zamówienia na wybrany plik, realizacja złożonych zamówień –
+przesyłanie pliku
+]]>
+			</notes>
+		</Option>
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/myServer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/myServer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-march=core2" />
+			<Add option="-Wall" />
+			<Add option="-I/usr/include/mysql -I/usr/include/mysql++" />
+			<Add directory="src_myLibrary4Server" />
+		</Compiler>
+		<Linker>
+			<Add option="-lboost_system-mt" />
+			<Add option="-lboost_thread-mt" />
+			<Add option="-lboost_filesystem-mt" />
+			<Add option="-L /usr/lib/mysql" />
+			<Add option="-lmysqlpp" />
+			<Add library="/home/lukasz/Pulpit/PAP_Proj2/myServer/bin/libmyLibrary4Server.so" />
+		</Linker>
+		<Unit filename="src/ServerConfigs.cpp" />
+		<Unit filename="src/ServerConfigs.hpp" />
+		<Unit filename="src/ServerFilesLoader.cpp" />
+		<Unit filename="src/ServerFilesLoader.hpp" />
+		<Unit filename="src/dbase.cpp" />
+		<Unit filename="src/dbase.hpp" />
+		<Unit filename="src/listBanned.cpp" />
+		<Unit filename="src/listBanned.hpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/myClientHandler.cpp" />
+		<Unit filename="src/myClientHandler.hpp" />
+		<Unit filename="src/myDefines.hpp" />
+		<Unit filename="src/myServerAPP.cpp" />
+		<Unit filename="src/myServerAPP.hpp" />
+		<Unit filename="src/version.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="1000" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="10000" />
+				<Settings autoincrement="0" date_declarations="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="src/version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
